@@ -1,0 +1,18 @@
+import("grDevices", "graphics", "methods", "utils")
+
+exportPattern("^[^\\.]")
+
+exportClasses("nifti",
+              "anlz",
+              "niftiExtension",
+              "niftiExtensionSection")
+
+exportMethods("audit.trail<-",
+              "audit.trail",
+              "aux.file<-",
+              "aux.file",
+              "descrip<-",
+              "descrip",
+              "orthographic",
+              "overlay",
+              "show")
