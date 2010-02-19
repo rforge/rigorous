@@ -1,7 +1,7 @@
-% Part of the dcemri package for R
-% Distributed under the BSD license: see dcemri/COPYING
+% Part of the oro.nifti package for R
+% Distributed under the BSD license: see oro.nifti/COPYING
 %
-% $Id: orthographic-methods.Rd 332 2010-01-29 16:54:07Z bjw34032 $
+% $Id: $
 
 \name{orthographic-methods}
 \docType{methods}
@@ -11,7 +11,7 @@
 \alias{orthographic,anlz-method}
 \alias{orthographic,array-method}
 \alias{orthographic.nifti}
-\title{Methods for Function `orthographic' in Package `dcemri'}
+\title{Methods for Function 'orthographic' in Package 'dcemri'}
 \description{
   Produce orthographic display for \code{nifti} objects.
 }
@@ -28,7 +28,8 @@
     all three orthogonal planes (default = TRUE).}
   \item{col.crosshairs}{is the color of the crosshairs (default = red).}
   \item{w}{is the time point to be displayed (4D arrays only).}
-  \item{zlim}{}
+  \item{zlim}{is the minimum and maximum \sQuote{z} values passed into
+    \code{image}.}
   \item{col}{is grayscale (by default).}
   \item{xlab}{is set to "" since all margins are set to zero.}
   \item{ylab}{is set to "" since all margins are set to zero.}

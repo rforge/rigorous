@@ -182,23 +182,29 @@ orthographic.nifti <- function(x, xyz=NULL, crosshairs=TRUE,
   ## check for z-limits in x; use internal by default
   if (is.null(zlim)) {
     zlim <- c(x@"cal_min", x@"cal_max")
-    if (max(zlim) == 0)
+    if (diff(zlim) == 0)
       zlim <- c(x@"glmin", x@"glmax")
+    if (diff(zlim) == 0)
+      zlim <- range(x, na.rm=TRUE)
   }
+  ## Force all elements of "x > max(zlim)" to be white, not black!
+  y <- array(x@.Data, c(X,Y,Z))
+  y[y > max(zlim)] <- max(zlim)
+  
   if (is.na(W)) { # three-dimensional array
     oldpar <- par(no.readonly=TRUE)
     par(mfrow=c(2,2), mar=rep(0,4))
-    graphics::image(1:X, 1:Z, x[,xyz[2],], col=col, zlim=zlim,
+    graphics::image(1:X, 1:Z, y[,xyz[2],], col=col, zlim=zlim,
                     asp=x@pixdim[4]/x@pixdim[2],
                     xlab=ylab, ylab=xlab, axes=axes, ...)
     if (crosshairs)
       abline(h=xyz[3], v=xyz[1], col=col.crosshairs)
-    graphics::image(1:Y, 1:Z, x[xyz[1],,], col=col, zlim=zlim,
+    graphics::image(1:Y, 1:Z, y[xyz[1],,], col=col, zlim=zlim,
                     asp=x@pixdim[4]/x@pixdim[3],
                     xlab=xlab, ylab=ylab, axes=axes, ...)
     if (crosshairs)
       abline(h=xyz[3], v=xyz[2], col=col.crosshairs)
-    graphics::image(1:X, 1:Y, x[,,xyz[3]], col=col, zlim=zlim,
+    graphics::image(1:X, 1:Y, y[,,xyz[3]], col=col, zlim=zlim,
                     asp=x@pixdim[3]/x@pixdim[2],
                     xlab=xlab, ylab=ylab, axes=axes, ...)
     if (crosshairs)
@@ -208,17 +214,17 @@ orthographic.nifti <- function(x, xyz=NULL, crosshairs=TRUE,
       stop("volume \"w\" out of range")
     oldpar <- par(no.readonly=TRUE)
     par(mfrow=c(2,2), mar=rep(0,4))
-    graphics::image(1:X, 1:Z, x[,xyz[2],,w], col=col, zlim=zlim,
+    graphics::image(1:X, 1:Z, y[,xyz[2],,w], col=col, zlim=zlim,
                     asp=x@pixdim[4]/x@pixdim[2],
                     xlab=ylab, ylab=xlab, axes=axes, ...)
     if (crosshairs)
       abline(h=xyz[3], v=xyz[1], col=col.crosshairs)
-    graphics::image(1:Y, 1:Z, x[xyz[1],,,w], col=col, zlim=zlim,
+    graphics::image(1:Y, 1:Z, y[xyz[1],,,w], col=col, zlim=zlim,
                     asp=x@pixdim[4]/x@pixdim[3],
                     xlab=xlab, ylab=ylab, axes=axes, ...)
     if (crosshairs)
       abline(h=xyz[3], v=xyz[2], col=col.crosshairs)
-    graphics::image(1:X, 1:Y, x[,,xyz[3],w], col=col, zlim=zlim,
+    graphics::image(1:X, 1:Y, y[,,xyz[3],w], col=col, zlim=zlim,
                     asp=x@pixdim[3]/x@pixdim[2],
                     xlab=xlab, ylab=ylab, axes=axes, ...)
     if (crosshairs)

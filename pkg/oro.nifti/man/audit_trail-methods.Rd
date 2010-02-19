@@ -1,7 +1,7 @@
-% Part of the dcemri package for R
-% Distributed under the BSD license: see dcemri/COPYING
+% Part of the oro.nifti package for R
+% Distributed under the BSD license: see oro.nifti/COPYING
 %
-% $Id: audit_trail-methods.Rd 329 2010-01-07 16:33:56Z bjw34032 $
+% $Id: $
 
 \name{audit.trail-methods}
 \docType{methods}

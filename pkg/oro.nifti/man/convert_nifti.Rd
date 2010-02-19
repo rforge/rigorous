@@ -1,7 +1,7 @@
-% Part of the dcemri package for R
-% Distributed under the BSD license: see dcemri/COPYING
+% Part of the oro.nifti package for R
+% Distributed under the BSD license: see oro.nifti/COPYING
 %
-% $Id: convert_nifti.Rd 334 2010-02-02 18:09:34Z bjw34032 $
+% $Id: $
 
 \name{Convert NIfTI Codes}
 \alias{convert.datatype}

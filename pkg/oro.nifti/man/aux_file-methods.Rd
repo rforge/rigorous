@@ -1,7 +1,7 @@
-% Part of the dcemri package for R
-% Distributed under the BSD license: see dcemri/COPYING
+% Part of the oro.nifti package for R
+% Distributed under the BSD license: see oro.nifti/COPYING
 %
-% $Id: aux_file-methods.Rd 332 2010-01-29 16:54:07Z bjw34032 $
+% $Id: $
 
 \name{aux.file-methods}
 \docType{methods}

@@ -1,7 +1,7 @@
-% Part of the dcemri package for R
-% Distributed under the BSD license: see dcemri/COPYING
-% Time-stamp: <2009-07-14 17:51:42 (bjw34032)>
-% $Id: tim_colors.Rd 332 2010-01-29 16:54:07Z bjw34032 $
+% Part of the oro.nifti package for R
+% Distributed under the BSD license: see oro.nifti/COPYING
+% 
+% $Id: $
 
 \name{tim.colors}
 \alias{tim.colors}

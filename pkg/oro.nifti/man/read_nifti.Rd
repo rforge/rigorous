@@ -1,7 +1,7 @@
-% Part of the dcemri package for R
-% Distributed under the BSD license: see dcemri/COPYING
+% Part of the oro.nifti package for R
+% Distributed under the BSD license: see oro.nifti/COPYING
 %
-% $Id: read_nifti.Rd 332 2010-01-29 16:54:07Z bjw34032 $
+% $Id: $
 
 \name{readNIfTI}
 \alias{readNIfTI}
@@ -23,13 +23,15 @@ read.nifti.content(fname, onefile=TRUE, gzipped=TRUE, verbose=FALSE,
     allows text-based feedback during execution of the function.}
   \item{warn}{is a number to regulate the display of warnings (default =
     -1).  See \code{options} for more details.}
-  \item{reorient}{}
+  \item{reorient}{is a logical variable (default = \code{TRUE}) that
+    enforces Qform/Sform transformations.}
   \item{onefile}{(logical) allows the scanning of single-file format
     (.nii) or dual-file format (.hdr and .img) NIfTI files (default =
     \code{TRUE}).} 
   \item{gzipped}{(logical) allows the importation of compressed (.gz)
     files (default = \code{TRUE}).}
-  \item{call}{}
+  \item{call}{keeps track of the current function call for use in the
+    NIfTI extension.}
 %  \item{ignoreQform}{is a logical variable (default = \code{FALSE}) that
 %    ignores any \sQuote{qform} infomration in the NIfTI header.}
 %  \item{ignoreSform}{is a logical variable (default = \code{FALSE}) that
@@ -71,4 +73,4 @@ orthographic(nim)
   Volker Schmid <\email{volkerschmid@users.sourceforge.net}>,
   Andrew Thornton <\email{zeripath@users.sourceforge.net}>
 }
-%\keyword{}
+\keyword{file}

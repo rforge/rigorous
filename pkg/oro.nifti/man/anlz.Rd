@@ -1,7 +1,7 @@
-% Part of the dcemri package for R
-% Distributed under the BSD license: see dcemri/COPYING
+% Part of the oro.nifti package for R
+% Distributed under the BSD license: see oro.nifti/COPYING
 %
-% $Id: anlz.Rd 332 2010-01-29 16:54:07Z bjw34032 $
+% $Id: $
 
 \name{anlz}
 \Rdversion{1.1}
@@ -34,7 +34,8 @@ is.anlz(x)
   Brandon Whitcher <\email{bjw34032@users.sourceforge.net}>
 }
 \seealso{
-  \code{\linkS4class{anlz}}, \code{\link{nifti}}
+  \code{\linkS4class{anlz}}, \code{\linkS4class{nifti}},
+  \code{\link{nifti}}
 }
 \examples{
 aim <- anlz() # default

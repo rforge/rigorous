@@ -1,7 +1,7 @@
-% Part of the dcemri package for R
-% Distributed under the BSD license: see dcemri/COPYING
+% Part of the oro.nifti package for R
+% Distributed under the BSD license: see oro.nifti/COPYING
 %
-% $Id: transformCoordinate.Rd 332 2010-01-29 16:54:07Z bjw34032 $
+% $Id: $
 
 \name{translateCoordinate}
 \alias{translateCoordinate}
@@ -13,7 +13,7 @@
 translateCoordinate(i, nim, verbose=FALSE)
 }
 \arguments{
-  \item{i}{An index vector in nim}
+  \item{i}{An index vector in \code{nim}}
   \item{nim}{A NIfTI object}
   \item{verbose}{Be verbose}
 }
