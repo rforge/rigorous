@@ -14,7 +14,7 @@
 }
 \usage{
 nifti(img = array(0, dim = rep(1, 4)), dim, datatype = 2, cal.min = NULL,
-      cal.max = NULL, ...)
+      cal.max = NULL, pixdim = NULL, ...)
 is.nifti(x)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -26,6 +26,7 @@ is.nifti(x)
     (visualization purposes only).}
   \item{cal.max}{allows user-specified minimum value in the array
     (visualization purposes only).}
+  \item{pixdim}{allows user-specified pixel dimension vector (length = 8).}
   \item{\dots}{allows for additional \sQuote{slots} to be specified.}
   \item{x}{is an object to be checked.}
 }

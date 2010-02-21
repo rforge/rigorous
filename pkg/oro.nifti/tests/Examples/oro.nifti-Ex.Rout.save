@@ -23,7 +23,7 @@ Type 'q()' to quit R.
 > library('oro.nifti')
 Loading required package: XML
 
-oro.nifti: S4 classes for Analyze and NIfTI data formats (version = 0.1.0)
+oro.nifti: Rigorous - NIfTI Input / Output (version = 0.1.1)
 
 > 
 > assign(".oldSearch", search(), pos = 'CheckExEnv')
@@ -658,6 +658,7 @@ Class:   numeric   numeric character
 > ### Name: readNIfTI
 > ### Title: readNIfTI
 > ### Aliases: readNIfTI read.nifti.content
+> ### Keywords: file
 > 
 > ### ** Examples
 > 
@@ -764,19 +765,19 @@ Loading required package: splines
 > writeNIfTI(img.nifti, "test-nifti-image-uint8", verbose=TRUE)
   niftiExtension detected!
   niftiAuditTrail detected!
-  vox_offset = 1216
+  vox_offset = 1200
   writing niftiExtension(s) at byte = 352
-  writing data at byte = 1216
+  writing data at byte = 1200
 > ## These files should be viewable in, for example, FSLview
 > ## Make sure you adjust the min/max values for proper visualization
 > data <- readNIfTI("test-nifti-image-uint8", verbose=TRUE)
   fname = test-nifti-image-uint8
   files = test-nifti-image-uint8.nii.gz
   nii   = test-nifti-image-uint8.nii.gz
-  vox_offset = 1216
+  vox_offset = 1200
   niftiExtension detected!
   seek(fid) = 352
-  seek(fid) = 1216
+  seek(fid) = 1200
 > image(img.nifti) # image(img.nifti, z=16, plot.type="single")
 > image(data)      # image(data, z=16, zlim=range(data), plot.type="single")
 > abs.err <- abs(data - img.nifti)
@@ -803,7 +804,7 @@ Loading required package: splines
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  8.865 0.316 9.771 0 0 
+Time elapsed:  4.86 0.09 4.957 0 0 
 > grDevices::dev.off()
 null device 
           1 

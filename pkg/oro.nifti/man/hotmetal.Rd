@@ -16,18 +16,19 @@ hotmetal(n=64)
   \item{n}{is the number of color levels (default = 64).}
 }
 \details{
-  Based on the \code{\link[fields]{tim.colors}} function in the
-  \pkg{fields} package.  The \code{hotmetal} function has been modified
-  to break any dependence on code in the \pkg{fields} package.  Spline
-  interpolation (\code{interpSpline}) is used when the number of
-  requested colors is not the default.
+  Based on the \code{tim.colors} function in the \pkg{fields} package.
+  The \code{hotmetal} function has been modified to break any dependence
+  on code in the \pkg{fields} package.  Spline interpolation
+  (\code{interpSpline}) is used when the number of requested colors is
+  not the default.
 }
 \value{
   A vector of character strings giving the colors in hexadecimal
   format.
 }
 \seealso{
-  \code{\link{topo.colors}}, \code{\link{terrain.colors}}
+  \code{\link{terrain.colors}}, \code{\link{tim.colors}},
+  \code{\link{topo.colors}}
 }
 \examples{
 hotmetal(10) 

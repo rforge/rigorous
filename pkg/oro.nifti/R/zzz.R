@@ -33,7 +33,7 @@
 ##
 
 .onAttach <- function (lib, pkg) {
-  cat("\n", pkg,": S4 classes for Analyze and NIfTI data formats (version = ",
+  cat("\n", pkg,": Rigorous - NIfTI Input / Output (version = ",
       as.character(sessionInfo()$otherPkgs$oro.nifti["Version"]), ")\n",
       sep="", fill=TRUE)
 }

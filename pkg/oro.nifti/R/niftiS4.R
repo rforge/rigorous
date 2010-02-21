@@ -281,7 +281,7 @@ setValidity("niftiExtensionSection", function(object) {
 #############################################################################
 
 nifti <- function(img=array(0, dim=rep(1,4)), dim, datatype=2, cal.min=NULL,
-                  cal.max=NULL, ...) {
+                  cal.max=NULL, pixdim=NULL, ...) {
   ## Set dimensions
   if (missing(dim)) {
     if (is.array(img))
@@ -299,7 +299,7 @@ nifti <- function(img=array(0, dim=rep(1,4)), dim, datatype=2, cal.min=NULL,
   y <- rep(0.0, 8)
   for (i in 2:length(x)) {
     x[i] <- ifelse(is.na(dim(img)[i-1]), 1, dim(img)[i-1])
-    y[i] <- ifelse(is.na(dim(img)[i-1]), 1.0, 1.0)
+    y[i] <- ifelse(is.na(dim(img)[i-1]) || is.null(pixdim), 1.0, pixdim[i])
   }
   ## min/max values for visualization
   if (is.null(cal.max))
