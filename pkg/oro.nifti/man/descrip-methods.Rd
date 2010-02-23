@@ -32,9 +32,12 @@
 }
 \author{Brandon Whitcher <\email{bjw34032@users.sourceforge.net}>}
 \examples{
+\dontrun{
 url <- "http://nifti.nimh.nih.gov/nifti-1/data/avg152T1_LR_nifti.nii.gz"
 urlfile <- file.path(system.file("nifti", package="oro.nifti"), "mniLR.nii.gz")
 download.file(url, urlfile, quiet=TRUE)
+}
+urlfile <- file.path(system.file("nifti", package="oro.nifti"), "mniLR.nii.gz")
 mniLR <- readNIfTI(urlfile)
 descrip(mniLR)
 descrip(mniLR) <- paste(descrip(mniLR), version$version.string, sep="; ")

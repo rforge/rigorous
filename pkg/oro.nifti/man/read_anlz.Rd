@@ -45,13 +45,15 @@ read.analyze.content(fname, gzipped = TRUE, verbose = FALSE, warn = -1)
 \dontrun{
 ## 27 scans of Colin Holmes (MNI) brain co-registered and averaged
 URL <- "http://imaging.mrc-cbu.cam.ac.uk/downloads/Colin/colin_1mm.tgz"
-tarball <- "colin_1mm.tgz"
-download.file(URL, dest=tarball)
-untar(tarball)
-colin <- readANALYZE("colin_1mm.img")
+urlpath <- system.file("anlz", package="oro.nifti")
+urlfile <- file.path(urlpath, "colin_1mm.tgz")
+download.file(URL, dest=urlfile, quiet=TRUE)
+untar(urlfile, exdir=urlpath)
+}
+urlpath <- system.file("anlz", package="oro.nifti")
+colin <- readANALYZE(file.path(urlpath, "colin_1mm"))
 image(colin)
 orthographic(colin)
-}
 }
 \author{Brandon Whitcher <\email{bjw34032@users.sourceforge.net}>,
   Volker Schmid <\email{volkerschmid@users.sourceforge.net}>}

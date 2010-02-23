@@ -63,9 +63,12 @@ read.nifti.content(fname, onefile=TRUE, gzipped=TRUE, verbose=FALSE,
   \code{\link{readANALYZE}}
 }
 \examples{
+\dontrun{
 url <- "http://nifti.nimh.nih.gov/nifti-1/data/filtered_func_data.nii.gz"
 urlfile <- file.path(system.file("nifti", package="oro.nifti"), "ffd.nii.gz")
 download.file(url, urlfile, quiet=TRUE)
+}
+urlfile <- file.path(system.file("nifti", package="oro.nifti"), "ffd.nii.gz")
 ffd <- readNIfTI(urlfile)
 par(bg="black")
 image(ffd)

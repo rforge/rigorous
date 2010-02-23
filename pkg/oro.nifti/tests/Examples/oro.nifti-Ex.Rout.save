@@ -201,9 +201,12 @@ ANALYZE 7.5 format
 > 
 > ### ** Examples
 > 
-> url <- "http://nifti.nimh.nih.gov/nifti-1/data/avg152T1_RL_nifti.nii.gz"
+> ## Not run: 
+> ##D url <- "http://nifti.nimh.nih.gov/nifti-1/data/avg152T1_RL_nifti.nii.gz"
+> ##D urlfile <- file.path(system.file("nifti", package="oro.nifti"), "mniRL.nii.gz")
+> ##D download.file(url, urlfile, quiet=TRUE)
+> ## End(Not run)
 > urlfile <- file.path(system.file("nifti", package="oro.nifti"), "mniRL.nii.gz")
-> download.file(url, urlfile, quiet=TRUE)
 > mniRL <- readNIfTI(urlfile)
 > aux.file(mniRL)
 [1] "none                   "
@@ -305,9 +308,12 @@ ANALYZE 7.5 format
 > 
 > ### ** Examples
 > 
-> url <- "http://nifti.nimh.nih.gov/nifti-1/data/avg152T1_LR_nifti.nii.gz"
+> ## Not run: 
+> ##D url <- "http://nifti.nimh.nih.gov/nifti-1/data/avg152T1_LR_nifti.nii.gz"
+> ##D urlfile <- file.path(system.file("nifti", package="oro.nifti"), "mniLR.nii.gz")
+> ##D download.file(url, urlfile, quiet=TRUE)
+> ## End(Not run)
 > urlfile <- file.path(system.file("nifti", package="oro.nifti"), "mniLR.nii.gz")
-> download.file(url, urlfile, quiet=TRUE)
 > mniLR <- readNIfTI(urlfile)
 > descrip(mniLR)
 [1] "FSL3.2beta"
@@ -642,13 +648,15 @@ Class:   numeric   numeric character
 > ## Not run: 
 > ##D ## 27 scans of Colin Holmes (MNI) brain co-registered and averaged
 > ##D URL <- "http://imaging.mrc-cbu.cam.ac.uk/downloads/Colin/colin_1mm.tgz"
-> ##D tarball <- "colin_1mm.tgz"
-> ##D download.file(URL, dest=tarball)
-> ##D untar(tarball)
-> ##D colin <- readANALYZE("colin_1mm.img")
-> ##D image(colin)
-> ##D orthographic(colin)
+> ##D urlpath <- system.file("anlz", package="oro.nifti")
+> ##D urlfile <- file.path(urlpath, "colin_1mm.tgz")
+> ##D download.file(URL, dest=urlfile, quiet=TRUE)
+> ##D untar(urlfile, exdir=urlpath)
 > ## End(Not run)
+> urlpath <- system.file("anlz", package="oro.nifti")
+> colin <- readANALYZE(file.path(urlpath, "colin_1mm"))
+> image(colin)
+> orthographic(colin)
 > 
 > 
 > 
@@ -665,9 +673,12 @@ Class:   numeric   numeric character
 > 
 > ### ** Examples
 > 
-> url <- "http://nifti.nimh.nih.gov/nifti-1/data/filtered_func_data.nii.gz"
+> ## Not run: 
+> ##D url <- "http://nifti.nimh.nih.gov/nifti-1/data/filtered_func_data.nii.gz"
+> ##D urlfile <- file.path(system.file("nifti", package="oro.nifti"), "ffd.nii.gz")
+> ##D download.file(url, urlfile, quiet=TRUE)
+> ## End(Not run)
 > urlfile <- file.path(system.file("nifti", package="oro.nifti"), "ffd.nii.gz")
-> download.file(url, urlfile, quiet=TRUE)
 > ffd <- readNIfTI(urlfile)
 > par(bg="black")
 > image(ffd)
@@ -772,21 +783,21 @@ Loading required package: splines
 > writeNIfTI(img.nifti, "test-nifti-image-uint8", verbose=TRUE)
   niftiExtension detected!
   niftiAuditTrail detected!
-  vox_offset = 1200
+  vox_offset = 1216
   writing niftiExtension(s) at byte = 352
-  writing data at byte = 1200
+  writing data at byte = 1216
 > ## These files should be viewable in, for example, FSLview
 > ## Make sure you adjust the min/max values for proper visualization
 > data <- readNIfTI("test-nifti-image-uint8", verbose=TRUE)
   fname = test-nifti-image-uint8
   files = test-nifti-image-uint8.nii.gz
   nii   = test-nifti-image-uint8.nii.gz
-  vox_offset = 1200
+  vox_offset = 1216
   niftiExtension detected!
   seek(fid) = 352
-  seek(fid) = 1200
-> image(img.nifti) # image(img.nifti, z=16, plot.type="single")
-> image(data)      # image(data, z=16, zlim=range(data), plot.type="single")
+  seek(fid) = 1216
+> image(img.nifti)
+> image(data)
 > abs.err <- abs(data - img.nifti)
 > image(as(abs.err, "nifti"), zlim=range(img.nifti))
 > 
@@ -811,7 +822,7 @@ Loading required package: splines
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  5.07 0.45 27.096 0 0 
+Time elapsed:  40.646 2.67 45.268 0 0 
 > grDevices::dev.off()
 null device 
           1 
