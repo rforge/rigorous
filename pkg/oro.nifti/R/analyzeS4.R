@@ -195,8 +195,8 @@ anlz <- function(img=array(0, dim=rep(1,4)), dim, ...) {
   x <- c(length(dim), dim[1], dim[2], dim[3],
          ifelse(is.na(dim[4]), 1, dim[4]), rep(1,3))
   y <- c(0.0, rep(1.0,length(dim)), rep(0.0,3))
-  cal.max <- quantile(img, probs=0.95, na.rm=TRUE)
-  cal.min <- quantile(img, probs=0.05, na.rm=TRUE)
+  cal.max <- max(img, na.rm=TRUE) # quantile(img, probs=0.95, na.rm=TRUE)
+  cal.min <- min(img, na.rm=TRUE) # quantile(img, probs=0.05, na.rm=TRUE)
   obj <- new("anlz", .Data=array(img, dim=dim), "dim_"=x, "pixdim"=y,
              "cal_max"=cal.max, "cal_min"=cal.min, ...)
   validObject(obj)

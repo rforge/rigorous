@@ -123,8 +123,7 @@ ANALYZE 7.5 format
 > ## Not run: 
 > ##D ## Sternberg Item Recognition Paradigm (SIRP) fMRI Study + XML Extension Data
 > ##D URL <- "http://nifti.nimh.nih.gov/nifti-1/data/sirp_fmri_study_ver4.tar.gz"
-> ##D download.file(URL, dest="sirp.tar.gz", method="wget", quiet=FALSE,
-> ##D               mode="wb", cacheOK=FALSE)
+> ##D download.file(URL, dest="sirp.tar.gz", quiet=TRUE)
 > ##D fnames <- system("tar zxvf sirp.tar.gz", intern=TRUE)
 > ##D sirp <- readNIfTI(fnames[1]) # newsirp_final_XML.nii
 > ##D sirp.xml <- xmlTreeParse(sirp@"extensions"[[1]]@"edata", asText=TRUE)
@@ -180,7 +179,7 @@ ANALYZE 7.5 format
 > 
 > ## Not run: 
 > ##D ## compare the trails
-> ##D if (getOption("NIfTI.audit.trail")) {
+> ##D if (getOption("niftiAuditTrail")) {
 > ##D   print((as.nifti(functionToWrap(nifti(), 4, 4), nifti()))@trail)
 > ##D   print(niftiizedForm(nifti(), 4, 4)@trail)
 > ##D }
@@ -202,8 +201,10 @@ ANALYZE 7.5 format
 > 
 > ### ** Examples
 > 
-> mniRL <- readNIfTI(system.file("nifti/avg152T1_RL_nifti.nii.gz",
-+                    package="dcemriS4"))
+> url <- "http://nifti.nimh.nih.gov/nifti-1/data/avg152T1_RL_nifti.nii.gz"
+> urlfile <- file.path(system.file("nifti", package="oro.nifti"), "mniRL.nii.gz")
+> download.file(url, urlfile, quiet=TRUE)
+> mniRL <- readNIfTI(urlfile)
 > aux.file(mniRL)
 [1] "none                   "
 > aux.file(mniRL) <- "avg152T1_RL_nifti"
@@ -304,12 +305,14 @@ ANALYZE 7.5 format
 > 
 > ### ** Examples
 > 
-> mniRL <- readNIfTI(system.file("nifti/avg152T1_RL_nifti.nii.gz",
-+                    package="dcemriS4"))
-> descrip(mniRL)
+> url <- "http://nifti.nimh.nih.gov/nifti-1/data/avg152T1_LR_nifti.nii.gz"
+> urlfile <- file.path(system.file("nifti", package="oro.nifti"), "mniLR.nii.gz")
+> download.file(url, urlfile, quiet=TRUE)
+> mniLR <- readNIfTI(urlfile)
+> descrip(mniLR)
 [1] "FSL3.2beta"
-> descrip(mniRL) <- paste(descrip(mniRL), version$version.string, sep="; ")
-> descrip(mniRL)
+> descrip(mniLR) <- paste(descrip(mniLR), version$version.string, sep="; ")
+> descrip(mniLR)
 [1] "FSL3.2beta; R version 2.10.1 (2009-12-14)"
 > 
 > 
@@ -662,13 +665,17 @@ Class:   numeric   numeric character
 > 
 > ### ** Examples
 > 
-> nim <- readNIfTI(system.file("nifti/avg152T1_LR_nifti.nii.gz",
-+                              package="dcemriS4")[1])
-> image(nim)
-> orthographic(nim)
+> url <- "http://nifti.nimh.nih.gov/nifti-1/data/filtered_func_data.nii.gz"
+> urlfile <- file.path(system.file("nifti", package="oro.nifti"), "ffd.nii.gz")
+> download.file(url, urlfile, quiet=TRUE)
+> ffd <- readNIfTI(urlfile)
+> par(bg="black")
+> image(ffd)
+> orthographic(ffd)
 > 
 > 
 > 
+> graphics::par(get("par.postscript", pos = 'CheckExEnv'))
 > cleanEx()
 > nameEx("tim_colors")
 > ### * tim_colors
@@ -804,7 +811,7 @@ Loading required package: splines
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  4.86 0.09 4.957 0 0 
+Time elapsed:  5.07 0.45 27.096 0 0 
 > grDevices::dev.off()
 null device 
           1 

@@ -187,12 +187,12 @@ orthographic.nifti <- function(x, xyz=NULL, crosshairs=TRUE,
     if (diff(zlim) == 0)
       zlim <- range(x, na.rm=TRUE)
   }
-  ## Force all elements of "x > max(zlim)" to be white, not black!
-  y <- array(x@.Data, c(X,Y,Z))
-  y[y > max(zlim)] <- max(zlim)
-  
   if (is.na(W)) { # three-dimensional array
     oldpar <- par(no.readonly=TRUE)
+    ## Force all elements of "x > max(zlim)" to be white, not black!
+    y <- array(x@.Data, c(X,Y,Z))
+    y[y > max(zlim)] <- max(zlim)
+    ##
     par(mfrow=c(2,2), mar=rep(0,4))
     graphics::image(1:X, 1:Z, y[,xyz[2],], col=col, zlim=zlim,
                     asp=x@pixdim[4]/x@pixdim[2],
@@ -213,6 +213,10 @@ orthographic.nifti <- function(x, xyz=NULL, crosshairs=TRUE,
     if (w < 1 || w > W)
       stop("volume \"w\" out of range")
     oldpar <- par(no.readonly=TRUE)
+    ## Force all elements of "x > max(zlim)" to be white, not black!
+    y <- array(x@.Data, c(X,Y,Z,W))
+    y[y > max(zlim)] <- max(zlim)
+    ##
     par(mfrow=c(2,2), mar=rep(0,4))
     graphics::image(1:X, 1:Z, y[,xyz[2],,w], col=col, zlim=zlim,
                     asp=x@pixdim[4]/x@pixdim[2],

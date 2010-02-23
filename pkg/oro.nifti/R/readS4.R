@@ -253,7 +253,8 @@ read.nifti.content <- function(fname, onefile=TRUE, gzipped=TRUE,
     if (is.null(call)) {
       call <- match.call()
     }
-    nim <- niftiExtensionToAuditTrail(nim, workingDirectory=getwd(), filename=fname, call=call)
+    nim <- niftiExtensionToAuditTrail(nim, workingDirectory=getwd(),
+                                      filename=fname, call=call)
   }
   return(nim)
 }

@@ -32,8 +32,10 @@
 }
 \author{Brandon Whitcher <\email{bjw34032@users.sourceforge.net}>}
 \examples{
-mniRL <- readNIfTI(system.file("nifti/avg152T1_RL_nifti.nii.gz",
-                   package="dcemriS4"))
+url <- "http://nifti.nimh.nih.gov/nifti-1/data/avg152T1_RL_nifti.nii.gz"
+urlfile <- file.path(system.file("nifti", package="oro.nifti"), "mniRL.nii.gz")
+download.file(url, urlfile, quiet=TRUE)
+mniRL <- readNIfTI(urlfile)
 aux.file(mniRL)
 aux.file(mniRL) <- "avg152T1_RL_nifti"
 aux.file(mniRL)

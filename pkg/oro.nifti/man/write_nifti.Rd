@@ -60,8 +60,8 @@ writeNIfTI(img.nifti, "test-nifti-image-uint8", verbose=TRUE)
 ## These files should be viewable in, for example, FSLview
 ## Make sure you adjust the min/max values for proper visualization
 data <- readNIfTI("test-nifti-image-uint8", verbose=TRUE)
-image(img.nifti) # image(img.nifti, z=16, plot.type="single")
-image(data)      # image(data, z=16, zlim=range(data), plot.type="single")
+image(img.nifti)
+image(data)
 abs.err <- abs(data - img.nifti)
 image(as(abs.err, "nifti"), zlim=range(img.nifti))
 

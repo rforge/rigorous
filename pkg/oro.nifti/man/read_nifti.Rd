@@ -63,10 +63,13 @@ read.nifti.content(fname, onefile=TRUE, gzipped=TRUE, verbose=FALSE,
   \code{\link{readANALYZE}}
 }
 \examples{
-nim <- readNIfTI(system.file("nifti/avg152T1_LR_nifti.nii.gz",
-                             package="dcemriS4")[1])
-image(nim)
-orthographic(nim)
+url <- "http://nifti.nimh.nih.gov/nifti-1/data/filtered_func_data.nii.gz"
+urlfile <- file.path(system.file("nifti", package="oro.nifti"), "ffd.nii.gz")
+download.file(url, urlfile, quiet=TRUE)
+ffd <- readNIfTI(urlfile)
+par(bg="black")
+image(ffd)
+orthographic(ffd)
 }
 \author{
   Brandon Whitcher <\email{bjw34032@users.sourceforge.net}>,

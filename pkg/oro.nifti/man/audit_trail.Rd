@@ -177,7 +177,7 @@ niftiizedForm <- function(nim,...) {
 
 \dontrun{
 ## compare the trails
-if (getOption("NIfTI.audit.trail")) {
+if (getOption("niftiAuditTrail")) {
   print((as.nifti(functionToWrap(nifti(), 4, 4), nifti()))@trail)
   print(niftiizedForm(nifti(), 4, 4)@trail)
 }

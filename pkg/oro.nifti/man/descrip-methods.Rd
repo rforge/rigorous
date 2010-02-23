@@ -32,10 +32,12 @@
 }
 \author{Brandon Whitcher <\email{bjw34032@users.sourceforge.net}>}
 \examples{
-mniRL <- readNIfTI(system.file("nifti/avg152T1_RL_nifti.nii.gz",
-                   package="dcemriS4"))
-descrip(mniRL)
-descrip(mniRL) <- paste(descrip(mniRL), version$version.string, sep="; ")
-descrip(mniRL)
+url <- "http://nifti.nimh.nih.gov/nifti-1/data/avg152T1_LR_nifti.nii.gz"
+urlfile <- file.path(system.file("nifti", package="oro.nifti"), "mniLR.nii.gz")
+download.file(url, urlfile, quiet=TRUE)
+mniLR <- readNIfTI(urlfile)
+descrip(mniLR)
+descrip(mniLR) <- paste(descrip(mniLR), version$version.string, sep="; ")
+descrip(mniLR)
 }
 \keyword{methods}
