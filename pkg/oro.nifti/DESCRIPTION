@@ -1,6 +1,6 @@
 Package: oro.nifti
-Version: 0.1.1
-Date: 2010-02-21
+Version: 0.1.2
+Date: 2010-02-26
 Title: Rigorous - NIfTI Input / Output
 Author: Brandon Whitcher, Volker Schmid and Andrew Thornton
 Maintainer: Brandon Whitcher <bjw34032@users.sourceforge.net>
@@ -10,4 +10,4 @@ ZipData: no
 Description: Data input/output functions for data that follow either
   Analyze or NIfTI standards, part of the Rigorous Analytics bundle.
 License: BSD
-URL: http://rig.oro.us.com/
+URL: http://rigorousanalytics.blogspot.com, http://rig.oro.us.com/

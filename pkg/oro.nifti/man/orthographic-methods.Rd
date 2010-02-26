@@ -19,7 +19,8 @@
 \S4method{orthographic}{nifti}(x, xyz = NULL, crosshairs = TRUE,
                        col.crosshairs = "red", w = 1, zlim = NULL,
                        col = gray(0:64/64), xlab = "", ylab = "",
-                       axes = FALSE, ...)
+                       axes = FALSE, oma=rep(0,4), mar=rep(0,4),
+                       bg="black", ...)
 }
 \arguments{
   \item{x}{is an object of class \code{"nifti"} or similar.}
@@ -34,6 +35,9 @@
   \item{xlab}{is set to "" since all margins are set to zero.}
   \item{ylab}{is set to "" since all margins are set to zero.}
   \item{axes}{is set to \code{FALSE} since all margins are set to zero.}
+  \item{oma}{is the size of the outer margins in the \code{par} function.}
+  \item{mar}{is the number of lines of margin in the \code{par} function.}
+  \item{bg}{is the background color in the \code{par} function.}
   \item{\dots}{other arguments to the \code{image} function may be
     provided here.}
 }

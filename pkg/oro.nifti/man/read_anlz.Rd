@@ -52,8 +52,8 @@ untar(urlfile, exdir=urlpath)
 }
 urlpath <- system.file("anlz", package="oro.nifti")
 colin <- readANALYZE(file.path(urlpath, "colin_1mm"))
-image(colin)
-orthographic(colin)
+image(colin, oma=rep(2,4))
+orthographic(colin, oma=rep(2,4))
 }
 \author{Brandon Whitcher <\email{bjw34032@users.sourceforge.net}>,
   Volker Schmid <\email{volkerschmid@users.sourceforge.net}>}

@@ -23,11 +23,11 @@
 \S4method{overlay}{nifti,nifti}(x, y, z=1, w=1, col.x=gray(0:64/64),
       col.y=hotmetal(), zlim.x=NULL, zlim.y=NULL,
       plot.type=c("multiple","single"), xlab="", ylab="",
-      axes=FALSE, ...)
+      axes=FALSE, oma=rep(0,4), mar=rep(0,4), bg="black", ...)
 \S4method{overlay}{anlz,anlz}(x, y, z=1, w=1, col.x=gray(0:64/64),
       col.y=hotmetal(), zlim.x=NULL, zlim.y=NULL,
       plot.type=c("multiple","single"), xlab="", ylab="",
-      axes=FALSE, ...)
+      axes=FALSE, oma=rep(0,4), mar=rep(0,4), bg="black", ...)
 }
 \arguments{
   \item{x,y}{is an object of class \code{"nifti"} or \code{"anlz"}.}
@@ -43,6 +43,9 @@
   \item{xlab}{is set to "" since all margins are set to zero.}
   \item{ylab}{is set to "" since all margins are set to zero.}
   \item{axes}{is set to \code{FALSE} since all margins are set to zero.}
+  \item{oma}{is the size of the outer margins in the \code{par} function.}
+  \item{mar}{is the number of lines of margin in the \code{par} function.}
+  \item{bg}{is the background color in the \code{par} function.}
   \item{\dots}{other arguments to the \code{image} function may be
     provided here.}
 }

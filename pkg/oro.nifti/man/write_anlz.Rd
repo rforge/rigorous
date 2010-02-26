@@ -51,10 +51,10 @@ writeANALYZE(img.anlz, "test-anlz-image-uint8", verbose=TRUE)
 ## These files should be viewable in, for example, FSLview
 ## Make sure you adjust the min/max values for proper visualization
 data <- readANALYZE("test-anlz-image-uint8", verbose=TRUE)
-image(img.anlz) # image(img.anlz, z=16, plot.type="single")
-image(data)     # image(data, z=16, zlim=range(data), plot.type="single")
+image(img.anlz, oma=rep(2,4), bg="white")
+image(data, oma=rep(2,4), bg="white")
 abs.err <- abs(data - img.anlz)
-image(as(abs.err, "anlz"), zlim=range(img.anlz))
+image(as(abs.err, "anlz"), zlim=range(img.anlz), oma=rep(2,4), bg="white")
 
 \dontrun{
 ## Loop through all possible data types
