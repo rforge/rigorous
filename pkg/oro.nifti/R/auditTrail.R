@@ -29,7 +29,7 @@
 ## (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 ## OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ## 
-## $Id: auditTrail.R 330 2010-01-18 15:04:59Z bjw34032 $
+## $Id: $
 ##
 
 oro.nifti.info <- function(type) {
@@ -142,10 +142,10 @@ niftiAuditTrailSystemNode <- function(type="system-info",
     currentDateTime <- format(Sys.time(), "%a %b %d %X %Y %Z")
     children <- .listToNodes(c("workingDirectory"=workingDirectory,
                                  "filename"=filename, "call"=call))
-    sysinfo <- .listToNodes(c("r-version"=version$version.string,
+    sysinfo <- .listToNodes(c("r-version"=R.version["version.string"],
                  "date"=currentDateTime,
                  "user"=Sys.getenv("LOGNAME"),
-                 "oro.nifti-version"=packageDescription("oro.nifti")$Version))
+                 "package-version"=packageDescription("oro.nifti")["Version"]))
     if(is.null(children)) {
       children <- sysinfo
     } else {
