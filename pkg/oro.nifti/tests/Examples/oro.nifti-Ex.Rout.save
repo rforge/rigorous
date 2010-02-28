@@ -23,7 +23,7 @@ Type 'q()' to quit R.
 > library('oro.nifti')
 Loading required package: XML
 
-oro.nifti: Rigorous - NIfTI Input / Output (version = 0.1.1)
+oro.nifti: Rigorous - NIfTI Input / Output (version = 0.1.2)
 
 > 
 > assign(".oldSearch", search(), pos = 'CheckExEnv')
@@ -140,7 +140,7 @@ ANALYZE 7.5 format
 > 
 > ### Name: Audit Trails
 > ### Title: Facilitate the Creation and Modification of Audit Trails
-> ### Aliases: dcemri.info enableAuditTrail newAuditTrail
+> ### Aliases: oro.nifti.info enableAuditTrail newAuditTrail
 > ###   niftiExtensionToAuditTrail niftiAuditTrailToExtension
 > ###   niftiAuditTrailSystemNode niftiAuditTrailSystemNodeEvent
 > ###   niftiAuditTrailCreated niftiAuditTrailEvent getLastCallWithName
@@ -655,8 +655,8 @@ Class:   numeric   numeric character
 > ## End(Not run)
 > urlpath <- system.file("anlz", package="oro.nifti")
 > colin <- readANALYZE(file.path(urlpath, "colin_1mm"))
-> image(colin)
-> orthographic(colin)
+> image(colin, oma=rep(2,4))
+> orthographic(colin, oma=rep(2,4))
 > 
 > 
 > 
@@ -675,18 +675,18 @@ Class:   numeric   numeric character
 > 
 > ## Not run: 
 > ##D url <- "http://nifti.nimh.nih.gov/nifti-1/data/filtered_func_data.nii.gz"
-> ##D urlfile <- file.path(system.file("nifti", package="oro.nifti"), "ffd.nii.gz")
+> ##D urlfile <- file.path(system.file("nifti", package="oro.nifti"),
+> ##D                      "ffd.nii.gz")
 > ##D download.file(url, urlfile, quiet=TRUE)
 > ## End(Not run)
-> urlfile <- file.path(system.file("nifti", package="oro.nifti"), "ffd.nii.gz")
+> urlfile <- file.path(system.file("nifti", package="oro.nifti"),
++                      "ffd.nii.gz")
 > ffd <- readNIfTI(urlfile)
-> par(bg="black")
-> image(ffd)
-> orthographic(ffd)
+> image(ffd, oma=rep(2,4))
+> orthographic(ffd, oma=rep(2,4))
 > 
 > 
 > 
-> graphics::par(get("par.postscript", pos = 'CheckExEnv'))
 > cleanEx()
 > nameEx("tim_colors")
 > ### * tim_colors
@@ -737,10 +737,10 @@ Loading required package: splines
   files = test-anlz-image-uint8.{hdr.gz,img.gz}
   hdr   = test-anlz-image-uint8.hdr.gz
   img   = test-anlz-image-uint8.img.gz
-> image(img.anlz) # image(img.anlz, z=16, plot.type="single")
-> image(data)     # image(data, z=16, zlim=range(data), plot.type="single")
+> image(img.anlz, oma=rep(2,4), bg="white")
+> image(data, oma=rep(2,4), bg="white")
 > abs.err <- abs(data - img.anlz)
-> image(as(abs.err, "anlz"), zlim=range(img.anlz))
+> image(as(abs.err, "anlz"), zlim=range(img.anlz), oma=rep(2,4), bg="white")
 > 
 > ## Not run: 
 > ##D ## Loop through all possible data types
@@ -796,10 +796,10 @@ Loading required package: splines
   niftiExtension detected!
   seek(fid) = 352
   seek(fid) = 1216
-> image(img.nifti)
-> image(data)
+> image(img.nifti, oma=rep(2,4), bg="white")
+> image(data, oma=rep(2,4), bg="white")
 > abs.err <- abs(data - img.nifti)
-> image(as(abs.err, "nifti"), zlim=range(img.nifti))
+> image(as(abs.err, "nifti"), zlim=range(img.nifti), oma=rep(2,4), bg="white")
 > 
 > ## Not run: 
 > ##D ## Loop through all possible data types
@@ -822,7 +822,7 @@ Loading required package: splines
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  40.646 2.67 45.268 0 0 
+Time elapsed:  19.97 0.49 20.543 0 0 
 > grDevices::dev.off()
 null device 
           1 

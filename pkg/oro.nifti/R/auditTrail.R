@@ -32,7 +32,7 @@
 ## $Id: auditTrail.R 330 2010-01-18 15:04:59Z bjw34032 $
 ##
 
-dcemri.info <- function(type) {
+oro.nifti.info <- function(type) {
   switch(type,
          ecode = 6,
          namespace = "http://www.dcemri.org/namespaces/audit-trail/1.0")
@@ -66,7 +66,7 @@ newAuditTrail <- function() {
   if (getOption("niftiAuditTrail")) {
     require("XML")
     trail <- newXMLNode("audit-trail",
-                     namespaceDefinitions=dcemri.info("namespace"))
+                     namespaceDefinitions=oro.nifti.info("namespace"))
     return(trail)
   }
 }
@@ -81,9 +81,9 @@ niftiExtensionToAuditTrail <- function(nim, workingDirectory=NULL,
     require("XML")
     if (!is(nim, "niftiAuditTrail"))
       nim <- as(nim, "niftiAuditTrail")
-    ## We enforce that there is a single extension with ecode == dcemri.ecode
+    ## We enforce that there is a single extension with ecode == oro.nifti.ecode
     ecodes <- lapply(nim@extensions, function(x) x@ecode)
-    oei <- which(ecodes == dcemri.info("ecode"))
+    oei <- which(ecodes == oro.nifti.info("ecode"))
     
     if (length(oei) == 0) {
       audit.trail(nim) <-
@@ -93,7 +93,7 @@ niftiExtensionToAuditTrail <- function(nim, workingDirectory=NULL,
       ## One Trail
       if (length(oei) > 1) {
 	warning("Found more than one extension with ecode ==",
-                dcemri.info("ecode"), ", Appending to last trail only")
+                oro.nifti.info("ecode"), ", Appending to last trail only")
 	oei <- oei[length(oei)]
       }
       oe <- nim@extensions[[oei]]@edata
@@ -114,7 +114,7 @@ niftiAuditTrailToExtension <- function(nim, workingDirectory=NULL,
   if (getOption("niftiAuditTrail") && is(nim, "niftiAuditTrail")) {
     require("XML")
     sec <- new("niftiExtensionSection")
-    sec@ecode <- dcemri.info("ecode")
+    sec@ecode <- oro.nifti.info("ecode")
     audit.trail(nim) <-
       niftiAuditTrailSystemNodeEvent(audit.trail(nim), "saved",
                                      workingDirectory=workingDirectory,
@@ -145,7 +145,7 @@ niftiAuditTrailSystemNode <- function(type="system-info",
     sysinfo <- .listToNodes(c("r-version"=version$version.string,
                  "date"=currentDateTime,
                  "user"=Sys.getenv("LOGNAME"),
-                 "dcemri-version"=packageDescription("dcemriS4")$Version))
+                 "oro.nifti-version"=packageDescription("oro.nifti")$Version))
     if(is.null(children)) {
       children <- sysinfo
     } else {

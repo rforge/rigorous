@@ -5,7 +5,7 @@
 
 \name{Audit Trails}
 \Rdversion{1.1}
-\alias{dcemri.info}
+\alias{oro.nifti.info}
 \alias{enableAuditTrail}
 \alias{newAuditTrail}
 \alias{niftiExtensionToAuditTrail}
@@ -21,7 +21,7 @@
   class objects.
 }
 \usage{
-dcemri.info(type)
+oro.nifti.info(type)
 enableAuditTrail()
 newAuditTrail()
 niftiExtensionToAuditTrail(nim, workingDirectory = NULL,
@@ -58,7 +58,7 @@ getLastCallWithName(functionName)
   \item{functionName}{The name of a function on the call stack.}
 }
 \details{
-  The function \code{dcemri.info} is used to find the \code{ecode} or
+  The function \code{oro.nifti.info} is used to find the \code{ecode} or
   the XML \code{namespace} relevant to the audit trail.
 
   The function \code{enableAuditTrail} is called as the package loads to
@@ -76,11 +76,11 @@ getLastCallWithName(functionName)
   The function \code{niftiExtensionToAuditTrail} takes an object
   representing a NIfTI object, casts it as a \code{niftiAuditTrail} and
   checks if there is an extension (a \code{niftiExtensionSection}) with
-  \code{ecode} equal to \code{dcemri.info("ecode")}; i.e. has a extension
-  with data representing a serialized audit trail.  The function will
-  then strip the object of this extension parsing the serialized
-  \code{edata} into an audit trail and adding a \sQuote{read} event to
-  the trail. 
+  \code{ecode} equal to \code{oro.nifti.info("ecode")}; i.e. has a
+  extension with data representing a serialized audit trail.  The
+  function will then strip the object of this extension parsing the
+  serialized \code{edata} into an audit trail and adding a \sQuote{read}
+  event to the trail. 
 
   The function \code{niftiAuditTrailToExtension} takes a
   \code{niftiAuditTrail} and returns a \code{niftiExtensionSection} with
