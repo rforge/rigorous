@@ -1,0 +1,14 @@
+Package: oro.dti
+Version: 0.1.0
+Date: 2010-03-12
+Title: Rigorous - Diffusion Tensor Imaging
+Author: Brandon Whitcher
+Maintainer: Brandon Whitcher <bjw34032@users.sourceforge.net>
+Depends: R (>= 2.10.0), grDevices, utils
+Suggests: cramer, oro.nifti
+ZipData: no
+Description: Medical imaging processing, visualization and statistical 
+  methods for diffusion tensor imaging (DTI) acquisitions, part of the 
+  Rigorous Analytics bundle.
+License: BSD
+URL: http://rigorousanalytics.blogspot.com, http://rig.oro.us.com
