@@ -56,7 +56,7 @@ options(width=85)
 \title{{\tt oro.nifti}: Rigorous - NIfTI Input / Output}
 \author{Brandon Whitcher \\ \email{bjw34032@users.sourceforge.net} \\ %
   Volker J. Schmid \\ \email{volkerschmid@users.sourceforge.net} \\ %
-  Andrew Thornton \\ \email{zeripath@users.sourceforge.net}} \\ %
+  Andrew Thornton \\ \email{zeripath@users.sourceforge.net}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -164,14 +164,14 @@ in NIfTI format (\texttt{avg152T1\_LR\_nifti.nii.gz}) was obtained
 from the NIfTI website (\url{nifti.nimh.nih.gov/nifti-1/}).  
 Successful execution of the command:
 
-<<avg152T1_LR_nifti>>=
-mni.LR <- readNIfTI(system.file("nifti/mfniLR.nii.gz", package="oro.nifti"))
+<<mniLR_nifti>>=
+mni.LR <- readNIfTI(system.file("nifti/mniLR.nii.gz", package="oro.nifti"))
 mni.LR
 audit.trail(mni.LR)
 descrip(mni.LR)
 @ 
 <<figure1-png,echo=FALSE,results=hide>>=
-png(filename="avg152T1_LR_nifti.png", width=400, height=400, bg="black")
+png(filename="mniLR.png", width=400, height=400, bg="black")
 @ 
 <<figure1-code>>=
 image(mni.LR)
@@ -192,9 +192,9 @@ extension and the latter is the name of a valid NIfTI header field
 
 \begin{figure}[!htbp]
   \centering
-  \includegraphics{avg152T1_LR_nifti.png}
-  \caption{Axial slices of MNI volume \texttt{avg152T1\_LR\_nifti}
-  stored in radiological convention.}
+  \includegraphics{mniLR.png}
+  \caption{Axial slices of MNI volume \texttt{mniLR\_nifti} stored in
+    radiological convention.}
   \label{fig:avg152T1_LR_nifti}
 \end{figure}
 
@@ -203,12 +203,12 @@ in NIfTI format (\texttt{avg152T1\_RL\_nifti.nii}) was also obtained
 from the NIfTI website (\url{nifti.nimh.nih.gov/nifti-1/}).
 Successful execution of the command
 
-<<avg152T1_RL_nifti>>=
+<<mniRL_nifti>>=
 mni.RL <- readNIfTI(system.file("nifti/mniRL.nii.gz", package="oro.nifti"))
 mni.RL
 @ 
 <<figure2-png,echo=FALSE,results=hide>>=
-png(filename="avg152T1_RL_nifti.png", width=400, height=400, bg="black")
+png(filename="mniRL.png", width=400, height=400, bg="black")
 @ 
 <<figure2-code>>=
 image(mni.RL)
@@ -221,7 +221,7 @@ $10{\times}10$ grid of images (Figure~\ref{fig:avg152T1_RL_nifti}).
 
 \begin{figure}[!htbp]
   \centering
-  \includegraphics{avg152T1_RL_nifti.png}
+  \includegraphics{mniRL.png}
   \caption{Axial slices of MNI volume \texttt{avg152T1\_RL\_nifti}
   stored in neurological convention.}
   \label{fig:avg152T1_RL_nifti}
@@ -331,8 +331,8 @@ statistical image to an underlying structural image.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\bibliography{oro.nifti}
-\bibliographystyle{chicago}
+% \bibliography{oro.nifti}
+% \bibliographystyle{chicago}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
