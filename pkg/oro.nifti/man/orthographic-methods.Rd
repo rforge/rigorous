@@ -20,7 +20,7 @@
                        col.crosshairs = "red", w = 1, zlim = NULL,
                        col = gray(0:64/64), xlab = "", ylab = "",
                        axes = FALSE, oma=rep(0,4), mar=rep(0,4),
-                       bg="black", ...)
+                       bg="black", text=NULL, text.color="white", ...)
 }
 \arguments{
   \item{x}{is an object of class \code{"nifti"} or similar.}
@@ -38,6 +38,9 @@
   \item{oma}{is the size of the outer margins in the \code{par} function.}
   \item{mar}{is the number of lines of margin in the \code{par} function.}
   \item{bg}{is the background color in the \code{par} function.}
+  \item{text}{allows the user to specify text to appear in the fourth
+    (unused) pane.}
+  \item{text.color}{is the color of the user-specified text.}
   \item{\dots}{other arguments to the \code{image} function may be
     provided here.}
 }

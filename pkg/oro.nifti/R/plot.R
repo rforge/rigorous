@@ -72,14 +72,14 @@ image.nifti <- function(x, z=1, w=1, col=gray(0:64/64),
   par(mfrow=ceiling(rep(sqrt(lz),2)), oma=oma, mar=mar, bg=bg)
   if (is.na(W)) { # three-dimensional array
     for (z in index) {
-      graphics::image(1:X, 1:Y, x[,,z], col=col, breaks=breaks, #zlim=zlim,
+      graphics::image(1:X, 1:Y, x[,,z], col=col, breaks=breaks,
                       axes=axes, xlab=xlab, ylab=ylab, ...)
     }
   } else { # four-dimensional array
     if (w < 1 || w > W)
       stop("volume \"w\" out of range")
     for (z in index) {
-      graphics::image(1:X, 1:Y, x[,,z,w], col=col, breaks=breaks, #zlim=zlim,
+      graphics::image(1:X, 1:Y, x[,,z,w], col=col, breaks=breaks,
                       axes=axes, xlab=xlab, ylab=ylab, ...)
     }
   }
@@ -172,7 +172,8 @@ orthographic.nifti <- function(x, xyz=NULL, crosshairs=TRUE,
                                col.crosshairs="red", w=1, zlim=NULL,
                                col=gray(0:64/64), xlab="", ylab="",
                                axes=FALSE, oma=rep(0,4), mar=rep(0,4),
-                               bg="black", ...) {
+                               bg="black", text=NULL, text.color="white",
+                               ...) {
   X <- nrow(x)
   Y <- ncol(x)
   Z <- nsli(x)
@@ -194,36 +195,27 @@ orthographic.nifti <- function(x, xyz=NULL, crosshairs=TRUE,
   breaks <- c(min(x,zlim),
               seq(min(zlim), max(zlim), length=length(col)-1),
               max(x,zlim))
-##  oldpar <- par(no.readonly=TRUE)
-##  if (is.na(W)) { # three-dimensional array
-#    y <- array(x@.Data, c(X,Y,Z))
-#  } else {
-#    if (w < 1 || w > W)
-#      stop("volume \"w\" out of range")
-#    y <- x@.Data[,,,w]
-#  }
-  ## Force all elements of "x > max(zlim)" to be white, not black!
-  ## y[y > max(zlim)] <- max(zlim)
-  ##
   oldpar <- par(no.readonly=TRUE)
   par(mfrow=c(2,2), oma=oma, mar=mar, bg=bg)
-  if (is.na(W)) { # three-dimensional array
-    graphics::image(1:X, 1:Z, x[,xyz[2],], col=col, breaks=breaks, #zlim=zlim,
+  if (is.na(W)) {
+    ## Three-dimensional array
+    graphics::image(1:X, 1:Z, x[,xyz[2],], col=col, breaks=breaks,
                     asp=x@pixdim[4]/x@pixdim[2],
                     xlab=ylab, ylab=xlab, axes=axes, ...)
     if (crosshairs)
       abline(h=xyz[3], v=xyz[1], col=col.crosshairs)
-    graphics::image(1:Y, 1:Z, x[xyz[1],,], col=col, breaks=breaks, #, zlim=zlim,
+    graphics::image(1:Y, 1:Z, x[xyz[1],,], col=col, breaks=breaks,
                     asp=x@pixdim[4]/x@pixdim[3],
                     xlab=xlab, ylab=ylab, axes=axes, ...)
     if (crosshairs)
       abline(h=xyz[3], v=xyz[2], col=col.crosshairs)
-    graphics::image(1:X, 1:Y, x[,,xyz[3]], col=col, breaks=breaks, #, zlim=zlim,
+    graphics::image(1:X, 1:Y, x[,,xyz[3]], col=col, breaks=breaks,
                     asp=x@pixdim[3]/x@pixdim[2],
                     xlab=xlab, ylab=ylab, axes=axes, ...)
     if (crosshairs)
       abline(h=xyz[2], v=xyz[1], col=col.crosshairs)
-  } else { # four-dimensional array
+  } else {
+    ## Four-dimensional array    
     if (w < 1 || w > W)
       stop("volume \"w\" out of range")
     graphics::image(1:X, 1:Z, x[,xyz[2],,w], col=col, breaks=breaks,
@@ -241,6 +233,11 @@ orthographic.nifti <- function(x, xyz=NULL, crosshairs=TRUE,
                     xlab=xlab, ylab=ylab, axes=axes, ...)
     if (crosshairs)
       abline(h=xyz[2], v=xyz[1], col=col.crosshairs)
+  }
+  if (! is.null(text)) {
+    ## Add user-supplied text to the "fourth" plot
+    graphics::image(1:64, 1:64, matrix(NA, 64, 64))
+    text(32, 32, text, col=text.color, cex=2)
   }
   par(oldpar)
   invisible()
