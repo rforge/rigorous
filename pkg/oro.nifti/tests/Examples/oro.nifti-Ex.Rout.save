@@ -783,19 +783,35 @@ Loading required package: splines
 > writeNIfTI(img.nifti, "test-nifti-image-uint8", verbose=TRUE)
   niftiExtension detected!
   niftiAuditTrail detected!
+<<<<<<< .mine
+  vox_offset = 1296
+=======
   vox_offset = 1312
+>>>>>>> .r42
   writing niftiExtension(s) at byte = 352
+<<<<<<< .mine
+  writing data at byte = 1296
+=======
   writing data at byte = 1312
+>>>>>>> .r42
 > ## These files should be viewable in, for example, FSLview
 > ## Make sure you adjust the min/max values for proper visualization
 > data <- readNIfTI("test-nifti-image-uint8", verbose=TRUE)
   fname = test-nifti-image-uint8
   files = test-nifti-image-uint8.nii.gz
   nii   = test-nifti-image-uint8.nii.gz
+<<<<<<< .mine
+  vox_offset = 1296
+=======
   vox_offset = 1312
+>>>>>>> .r42
   niftiExtension detected!
   seek(fid) = 352
+<<<<<<< .mine
+  seek(fid) = 1296
+=======
   seek(fid) = 1312
+>>>>>>> .r42
 > image(img.nifti, oma=rep(2,4), bg="white")
 > image(data, oma=rep(2,4), bg="white")
 > abs.err <- abs(data - img.nifti)
@@ -822,7 +838,11 @@ Loading required package: splines
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
+<<<<<<< .mine
+Time elapsed:  19.67 0.56 20.342 0 0 
+=======
 Time elapsed:  38.281 1.564 41.481 0 0 
+>>>>>>> .r42
 > grDevices::dev.off()
 null device 
           1 

@@ -49,11 +49,15 @@ image.nifti <- function(x, z=1, w=1, col=gray(0:64/64),
   ## check dimensions
   if (X == 0 || Y == 0 || Z == 0)
     stop("size of NIfTI volume is zero, nothing to plot")
+  if (z < 1 || z > Z) {
+    stop("slice \"z\" out of range")
+  }
   ## check for z-limits; use internal by default
   if (is.null(zlim)) {
     zlim <- c(x@"cal_min", x@"cal_max")
-    if (max(zlim) == 0)
+    if (max(zlim) == 0) {
       zlim <- c(x@"glmin", x@"glmax")
+    }
   }
   breaks <- c(min(x,zlim),
               seq(min(zlim), max(zlim), length=length(col)-1),
@@ -66,8 +70,6 @@ image.nifti <- function(x, z=1, w=1, col=gray(0:64/64),
   }
   lz <- length(index)
   ## plotting
-  if (z < 1 || z > Z)
-    stop("slice \"z\" out of range")
   oldpar <- par(no.readonly=TRUE)
   par(mfrow=ceiling(rep(sqrt(lz),2)), oma=oma, mar=mar, bg=bg)
   if (is.na(W)) { # three-dimensional array
