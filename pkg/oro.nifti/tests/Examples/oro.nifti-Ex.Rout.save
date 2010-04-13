@@ -1,6 +1,6 @@
 
-R version 2.11.0 alpha (2010-04-05 r51607)
-Copyright (C) 2010 The R Foundation for Statistical Computing
+R version 2.10.1 (2009-12-14)
+Copyright (C) 2009 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -41,7 +41,7 @@ oro.nifti: Rigorous - NIfTI Input / Output (version = 0.1.4)
 > ### ** Examples
 > 
 > showClass("anlz")
-Class "anlz" [package "oro.nifti"]
+Class “anlz” [package "oro.nifti"]
 
 Slots:
                                                                             
@@ -319,7 +319,7 @@ ANALYZE 7.5 format
 [1] "FSL3.2beta"
 > descrip(mniLR) <- paste(descrip(mniLR), version$version.string, sep="; ")
 > descrip(mniLR)
-[1] "FSL3.2beta; R version 2.11.0 alpha (2010-04-05 r51607)"
+[1] "FSL3.2beta; R version 2.10.1 (2009-12-14)"
 > 
 > 
 > 
@@ -345,9 +345,6 @@ Loading required package: splines
 > 
 > 
 > cleanEx()
-
-detaching ‘package:splines’
-
 > nameEx("nifti-class")
 > ### * nifti-class
 > 
@@ -361,7 +358,7 @@ detaching ‘package:splines’
 > ### ** Examples
 > 
 > showClass("nifti")
-Class "nifti" [package "oro.nifti"]
+Class “nifti” [package "oro.nifti"]
 
 Slots:
                                                                   
@@ -459,9 +456,6 @@ NIfTI-1 format
 > 
 > 
 > cleanEx()
-
-detaching ‘package:bitops’
-
 > nameEx("niftiAuditTrail-class")
 > ### * niftiAuditTrail-class
 > 
@@ -475,7 +469,7 @@ detaching ‘package:bitops’
 > ### ** Examples
 > 
 > showClass("niftiAuditTrail")
-Class "niftiAuditTrail" [package "oro.nifti"]
+Class “niftiAuditTrail” [package "oro.nifti"]
 
 Slots:
                                                                       
@@ -540,7 +534,7 @@ Class "vector", by class "niftiExtension", distance 7, with explicit test and co
 > ### ** Examples
 > 
 > showClass("niftiExtension")
-Class "niftiExtension" [package "oro.nifti"]
+Class “niftiExtension” [package "oro.nifti"]
 
 Slots:
                                                                   
@@ -606,7 +600,7 @@ Known Subclasses: "niftiAuditTrail"
 > ### ** Examples
 > 
 > showClass("niftiExtensionSection")
-Class "niftiExtensionSection" [package "oro.nifti"]
+Class “niftiExtensionSection” [package "oro.nifti"]
 
 Slots:
                                     
@@ -715,9 +709,6 @@ Loading required package: splines
 > 
 > 
 > cleanEx()
-
-detaching ‘package:splines’
-
 > nameEx("write_anlz")
 > ### * write_anlz
 > 
@@ -792,19 +783,19 @@ detaching ‘package:splines’
 > writeNIfTI(img.nifti, "test-nifti-image-uint8", verbose=TRUE)
   niftiExtension detected!
   niftiAuditTrail detected!
-  vox_offset = 1328
+  vox_offset = 1312
   writing niftiExtension(s) at byte = 352
-  writing data at byte = 1328
+  writing data at byte = 1312
 > ## These files should be viewable in, for example, FSLview
 > ## Make sure you adjust the min/max values for proper visualization
 > data <- readNIfTI("test-nifti-image-uint8", verbose=TRUE)
   fname = test-nifti-image-uint8
   files = test-nifti-image-uint8.nii.gz
   nii   = test-nifti-image-uint8.nii.gz
-  vox_offset = 1328
+  vox_offset = 1312
   niftiExtension detected!
   seek(fid) = 352
-  seek(fid) = 1328
+  seek(fid) = 1312
 > image(img.nifti, oma=rep(2,4), bg="white")
 > image(data, oma=rep(2,4), bg="white")
 > abs.err <- abs(data - img.nifti)
@@ -831,7 +822,7 @@ detaching ‘package:splines’
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  19.47 0.65 20.295 0 0 
+Time elapsed:  39.929 1.708 43.325 0 0 
 > grDevices::dev.off()
 null device 
           1 
