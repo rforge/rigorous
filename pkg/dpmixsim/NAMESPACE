@@ -1,0 +1,2 @@
+useDynLib(dpmixsim)
+export(dpmixsim,readsliceimg,premask,prescale,postdpmixciz,postdataseg,postimgclgrp,postimgcomps,postkcluster)
