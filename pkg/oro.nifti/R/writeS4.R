@@ -144,9 +144,9 @@ writeNIfTI <- function(nim, filename, gzipped=TRUE, verbose=FALSE, warn=-1) {
          "2" = writeBin(as.integer(data), fid, size=nim@"bitpix"/8),
          "4" = writeBin(as.integer(data), fid, size=nim@"bitpix"/8),
          "8" = writeBin(as.integer(data), fid, size=nim@"bitpix"/8),
-         "16" = writeBin(as.numeric(data), fid, size=nim@"bitpix"/8),
+         "16" = writeBin(as.double(data), fid, size=nim@"bitpix"/8),
          "64" = writeBin(as.double(data), fid, size=nim@"bitpix"/8),
-         "512" = writeBin(as.numeric(data), fid, size=nim@"bitpix"/8)
+         "512" = writeBin(as.integer(data), fid, size=nim@"bitpix"/8)
          )
   close(fid)
   ## Warnings?

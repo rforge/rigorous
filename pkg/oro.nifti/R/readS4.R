@@ -216,9 +216,9 @@ read.nifti.content <- function(fname, onefile=TRUE, gzipped=TRUE,
              endian=endian),
            "4" = readBin(fid, integer(), n, nim@"bitpix"/8, endian=endian),
            "8" = readBin(fid, integer(), n, nim@"bitpix"/8, endian=endian),
-           "16" = readBin(fid, numeric(), n, nim@"bitpix"/8, endian=endian),
+           "16" = readBin(fid, double(), n, nim@"bitpix"/8, endian=endian),
            "64" = readBin(fid, double(), n, nim@"bitpix"/8, endian=endian),
-           "512" = readBin(fid, numeric(), n, nim@"bitpix"/8, endian=endian),
+           "512" = readBin(fid, integer(), n, nim@"bitpix"/8, endian=endian),
            stop(paste("Data type ", nim@"datatype", " unsupported in ",
                       fname, ".img", sep=""))
            )

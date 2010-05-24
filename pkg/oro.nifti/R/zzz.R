@@ -39,8 +39,8 @@
 }
 
 .onLoad <- function(lib, pkg) {
-  if (require("XML") && (is.null(getOption("niftiAuditTrail")) ||
-                         getOption("niftiAuditTrail"))) {
+  if ((is.null(getOption("niftiAuditTrail")) ||
+       getOption("niftiAuditTrail")) && require("XML")) {
     enableAuditTrail()
   } else {
     options("niftiAuditTrail"=FALSE)
