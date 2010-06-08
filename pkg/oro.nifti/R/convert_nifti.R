@@ -227,7 +227,7 @@ as.nifti <- function(from, value=NULL, verbose=FALSE) {
     slots <- c("dim_", "datatype", "bitpix", "pixdim", "descrip",
                "aux_file", ".Data")
     sapply(slots, function(x) { slot(value, x) <<- slot(from, x); NULL })
-    #value@"data_type" <- convert.datatype(value@datatype)
+    ## value@"data_type" <- convert.datatype(value@datatype)
     calset <- !(from@"cal_max" == 0 && from@"cal_min" == 0)
     value@"cal_max" <- ifelse(calset, from@"cal_min", from@"glmax")
     value@"cal_min" <- ifelse(calset, from@"cal_max", from@"glmin")
@@ -277,8 +277,9 @@ as.nifti <- function(from, value=NULL, verbose=FALSE) {
     floattype(from)
   }
 
-  floattype <- function(from)
+  floattype <- function(from) {
     return("FLOAT32")
+  }
 
   if (is.null(value)) {
     nim <- nifti()
@@ -302,12 +303,13 @@ as.nifti <- function(from, value=NULL, verbose=FALSE) {
     nim@"cal_min" <- min(from, na.rm=TRUE)
     nim@"cal_max" <- max(from, na.rm=TRUE)
     nim@"dim_" <- c(length(dim(from)), dim(from))
-    if (length(nim@"dim_") < 8)
+    if (length(nim@"dim_") < 8) {
       nim@"dim_" <- c(nim@"dim_", rep(1, 8 - length(nim@"dim_")))
+    }
     nim@.Data <- from
-    if (getOption("niftiAuditTrail") && is(nim, "niftiAuditTrail"))
-      audit.trail(nim) <- niftiAuditTrailCreated(history=nim,
-                                                 call=match.call())
+    if (getOption("niftiAuditTrail") && is(nim, "niftiAuditTrail")) {
+      audit.trail(nim) <- niftiAuditTrailCreated(history=nim, call=match.call())
+    }
   } else {
     if (is.list(from)) {
       nim <- lapply(from, function(x) as.nifti(x, value))
@@ -316,15 +318,15 @@ as.nifti <- function(from, value=NULL, verbose=FALSE) {
                if (is.nifti(nim[[x]])) {
                  nim[[x]]@"intent_code" <<- convert.intent()[["Estimate"]]
                  nim[[x]]@"intent_name" <<- substr(x, 1, 15)
-		 audit.trail(nim[[x]]) <<-
+                 audit.trail(nim[[x]]) <<-
                    niftiAuditTrailEvent(nim[[x]], type="Intent Changed",
                                         comment=paste("Parameter Estimate:", x))
                }
              })
     } else {
-      if (verbose) 
-        cat("Warning cannot convert class =", class(from),
-            "to nifti object", fill=TRUE)
+      if (verbose) {
+        warning("Cannot convert class =", class(from), "to nifti object")
+      }
       nim <- from
     }
   }

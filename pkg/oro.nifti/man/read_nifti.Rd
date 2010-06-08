@@ -69,9 +69,10 @@ urlfile <- file.path(system.file("nifti", package="oro.nifti"),
                      "ffd.nii.gz")
 download.file(url, urlfile, quiet=TRUE)
 }
-urlfile <- file.path(system.file("nifti", package="oro.nifti"),
-                     "ffd.nii.gz")
-ffd <- readNIfTI(urlfile)
+## The NIfTI file provided here contains the first 18 volumes (10\%)
+## of the original data set
+urlfile <- file.path(system.file("nifti", package="oro.nifti"), "ffd.nii.gz")
+(ffd <- readNIfTI(urlfile))
 image(ffd, oma=rep(2,4))
 orthographic(ffd, oma=rep(2,4))
 }
