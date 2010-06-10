@@ -1,6 +1,6 @@
 Package: dpmixsim
-Version: 0.0-3
-Date: 2010-04-29
+Version: 0.0-4
+Date: 2010-06-10
 Title: Dirichlet Process Mixture model simulation for clustering and
         image segmentation
 Author: Adelino Ferreira da Silva <afs@fct.unl.pt>

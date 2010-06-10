@@ -87,15 +87,14 @@ Adelino Ferreira da Silva, Bayesian mixture models of variable
 }
 
 \examples{
+## Example 1: simple test using 'galaxy' data
+   data("galaxy")
+   x0 <- galaxy$speed
+   x <- prescale(x0) 
+   res <- dpmixsim(x, M=1, a=1, b=0.001, upalpha=1, maxiter=4000, rec=3000)
+## post-simulation
+   z <- postdpmixciz(x, res=res, rec=3000, ngrid=100, plot=TRUE)
 \dontrun{
-## Example 1: simple test using `galaxy' data
-  data("galaxy")
-  x0 <- galaxy$speed
-  x  <- prescale(x0) 
-  res <- dpmixsim(x, M=1, a=1, b=0.001, upalpha=1, maxiter=4000, rec=3000)
-  ## post-simulation
-  z <-  postdpmixciz(x, res=res, rec=rec, ngrid=100, plot=T)
-##-----------------
 ## Example 2: MRI segmentation
 ## Testing note: this example should reproduce the equivalent segmented images
 ## used in the author's references 
@@ -130,4 +129,4 @@ Adelino Ferreira da Silva, Bayesian mixture models of variable
 }
 }
 
-\keyword{ models }
+\keyword{models}

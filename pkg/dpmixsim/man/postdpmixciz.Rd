@@ -52,9 +52,9 @@ Adelino Ferreira da Silva, Bayesian mixture models of variable
   if (substr(answ, 1, 1) == "y") { run <- TRUE }
   rec <- 2000
   ngrid <- 100
-  if(run) {
+  if (run) {
     res <- dpmixsim(x, M=1, a=1, b=2, upalpha=1, maxiter=4000, rec=rec,
-      fsave=fsave)
+                    fsave=fsave)
   } else {
     load(file=fsave)
     cat("loaded",fsave,"\n")
