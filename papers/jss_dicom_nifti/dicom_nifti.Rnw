@@ -54,6 +54,13 @@
 
 %% end of declarations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+<<preliminaries,echo=FALSE,results=hide>>=
+library("bitops")
+library("XML")
+library("oro.nifti")
+## options(niftiAuditTrail=FALSE)
+options(width=85)
+@
 
 \begin{document}
 
@@ -133,11 +140,9 @@ extension is converted into plain text and saved appropriately (ecode
 = 6).  The user may control the tracking of data manipulation via the
 audit trail using a global option.  For example please use the command
 
-\begin{Schunk}
-\begin{Sinput}
-> options(niftiAuditTrail = FALSE)
-\end{Sinput}
-\end{Schunk}
+<<niftiAuditTrail,eval=FALSE>>=
+options(niftiAuditTrail=FALSE)
+@
 
 to turn off the ``audit trail'' option in \pkg{oro.nifti}.
 
@@ -158,54 +163,20 @@ in NIfTI format (\texttt{avg152T1\_LR\_nifti.nii.gz}) was obtained
 from the NIfTI website (\url{nifti.nimh.nih.gov/nifti-1/}).  
 Successful execution of the command:
 
-\begin{Schunk}
-\begin{Sinput}
-> (mni.LR <- readNIfTI(system.file("nifti/mniLR.nii.gz", package = "oro.nifti")))
-\end{Sinput}
-\begin{Soutput}
-NIfTI-1 format
-  Type            : niftiAuditTrail
-  Data Type       : 2 (UINT8)
-  Bits per Pixel  : 8
-  Slice Code      : 0 (Unknown)
-  Intent Code     : 0 (None)
-  Qform Code      : 0 (Unknown)
-  Sform Code      : 4 (MNI_152)
-  Dimension       : 91 x 109 x 91
-  Pixel Dimension : 2 x 2 x 2
-  Voxel Units     : mm
-  Time Units      : sec
-\end{Soutput}
-\begin{Sinput}
-> audit.trail(mni.LR)
-\end{Sinput}
-\begin{Soutput}
-<audit-trail xmlns="http://www.dcemri.org/namespaces/audit-trail/1.0">
-  <created>
-    <workingDirectory>/home/brandon/Software/rigorous/papers/jss_dicom_nifti</workingDirectory>
-    <filename>/home/brandon/R/x86_64-unknown-linux-gnu-library/2.11/oro.nifti/nifti/mniLR.nii.gz</filename>
-    <call>readNIfTI(fname = system.file("nifti/mniLR.nii.gz", package = "oro.nifti"))</call>
-    <system>
-      <r-version.version.string>R version 2.11.1 (2010-05-31)</r-version.version.string>
-      <date>Fri Jun 11 09:53:56 PM 2010 BST</date>
-      <user.LOGNAME>brandon</user.LOGNAME>
-      <package-version.Version>0.1.4</package-version.Version>
-    </system>
-  </created>
-</audit-trail> 
-\end{Soutput}
-\begin{Sinput}
-> descrip(mni.LR)
-\end{Sinput}
-\begin{Soutput}
-[1] "FSL3.2beta"
-\end{Soutput}
-\end{Schunk}
-\begin{Schunk}
-\begin{Sinput}
-> image(mni.LR)
-\end{Sinput}
-\end{Schunk}
+<<mniLR_nifti>>=
+(mni.LR <- readNIfTI(system.file("nifti/mniLR.nii.gz", package="oro.nifti")))
+audit.trail(mni.LR)
+descrip(mni.LR)
+@ 
+<<figure1-png,echo=FALSE,results=hide>>=
+png(filename="mniLR.png", width=400, height=400, bg="black")
+@ 
+<<figure1-code>>=
+image(mni.LR)
+@ 
+<<figure1-dev.off,echo=FALSE,results=hide>>=
+dev.off()
+@ 
 
 produces a 4D array of the image data, with the default NIfTI axes,
 and is displayed on a $10{\times}10$ grid of images
@@ -230,30 +201,17 @@ in NIfTI format (\texttt{avg152T1\_RL\_nifti.nii}) was also obtained
 from the NIfTI website (\url{nifti.nimh.nih.gov/nifti-1/}).
 Successful execution of the command
 
-\begin{Schunk}
-\begin{Sinput}
-> (mni.RL <- readNIfTI(system.file("nifti/mniRL.nii.gz", package = "oro.nifti")))
-\end{Sinput}
-\begin{Soutput}
-NIfTI-1 format
-  Type            : niftiAuditTrail
-  Data Type       : 2 (UINT8)
-  Bits per Pixel  : 8
-  Slice Code      : 0 (Unknown)
-  Intent Code     : 0 (None)
-  Qform Code      : 0 (Unknown)
-  Sform Code      : 4 (MNI_152)
-  Dimension       : 91 x 109 x 91
-  Pixel Dimension : 2 x 2 x 2
-  Voxel Units     : mm
-  Time Units      : sec
-\end{Soutput}
-\end{Schunk}
-\begin{Schunk}
-\begin{Sinput}
-> image(mni.RL)
-\end{Sinput}
-\end{Schunk}
+<<mniRL_nifti>>=
+(mni.RL <- readNIfTI(system.file("nifti/mniRL.nii.gz", package="oro.nifti")))
+@ 
+<<figure2-png,echo=FALSE,results=hide>>=
+png(filename="mniRL.png", width=400, height=400, bg="black")
+@ 
+<<figure2-code>>=
+image(mni.RL)
+<<figure2-dev.off,echo=FALSE,results=hide>>=
+dev.off()
+@ 
 
 produces a 4D array of the image data that may be displayed in a
 $10{\times}10$ grid of images (Figure~\ref{fig:avg152T1_RL_nifti}).
@@ -278,30 +236,18 @@ medical imaging data set in NIfTI format
 (\url{nifti.nimh.nih.gov/nifti-1/}).  Successful execution of the
 command
 
-\begin{Schunk}
-\begin{Sinput}
-> (ffd <- readNIfTI(system.file("nifti/ffd.nii.gz", package = "oro.nifti")))
-\end{Sinput}
-\begin{Soutput}
-NIfTI-1 format
-  Type            : niftiAuditTrail
-  Data Type       : 4 (INT16)
-  Bits per Pixel  : 16
-  Slice Code      : 0 (Unknown)
-  Intent Code     : 0 (None)
-  Qform Code      : 1 (Scanner_Anat)
-  Sform Code      : 0 (Unknown)
-  Dimension       : 64 x 64 x 21 x 180
-  Pixel Dimension : 4 x 4 x 6 x 3
-  Voxel Units     : mm
-  Time Units      : sec
-\end{Soutput}
-\end{Schunk}
-\begin{Schunk}
-\begin{Sinput}
-> image(ffd)
-\end{Sinput}
-\end{Schunk}
+<<filtered_func_data>>=
+(ffd <- readNIfTI(system.file("nifti/ffd.nii.gz", package="oro.nifti")))
+@ 
+<<figure3-png,echo=FALSE,results=hide>>=
+png(filename="ffd.png", width=400, height=400, bg="black")
+@ 
+<<figure3-code>>=
+image(ffd)
+@ 
+<<figure3-dev.off,echo=FALSE,results=hide>>=
+dev.off()
+@ 
 
 produces a four-dimensional (4D) array of imaging data that may be
 displayed in a $5{\times}5$ grid of images (Figure~\ref{fig:ffd}).
@@ -319,11 +265,15 @@ element) and the fourth dimension is time.
 An additional graphical display function has been added for
 \code{nifti} and \code{anlz} objects that allows orthographic displays.
 
-\begin{Schunk}
-\begin{Sinput}
-> orthographic(ffd)
-\end{Sinput}
-\end{Schunk}
+<<figure3b-png,echo=FALSE,results=hide>>=
+png(filename="ffd_orthographic.png", width=400, height=400, bg="black")
+@ 
+<<figure3b-code>>=
+orthographic(ffd)
+@ 
+<<figure3b-dev.off,echo=FALSE,results=hide>>=
+dev.off()
+@ 
 
 \begin{figure}[!htbp]
   \centering
@@ -343,30 +293,17 @@ from the functional MRI experiment.  The original NIfTI files
 obtained from the NIfTI website (\url{nifti.nimh.nih.gov/nifti-1/}).
 Successful execution of the command
 
-\begin{Schunk}
-\begin{Sinput}
-> (zstat1 <- readNIfTI(system.file("nifti/zstat1.nii.gz", package = "oro.nifti")))
-\end{Sinput}
-\begin{Soutput}
-NIfTI-1 format
-  Type            : niftiAuditTrail
-  Data Type       : 16 (FLOAT32)
-  Bits per Pixel  : 32
-  Slice Code      : 0 (Unknown)
-  Intent Code     : 5 (Zscore)
-  Qform Code      : 1 (Scanner_Anat)
-  Sform Code      : 0 (Unknown)
-  Dimension       : 64 x 64 x 21
-  Pixel Dimension : 4 x 4 x 6
-  Voxel Units     : mm
-  Time Units      : sec
-\end{Soutput}
-\end{Schunk}
-\begin{Schunk}
-\begin{Sinput}
-> overlay(ffd, ifelse(abs(zstat1) > 5, zstat1, NA), zlim.y = range(zstat1))
-\end{Sinput}
-\end{Schunk}
+<<zstat1>>=
+(zstat1 <- readNIfTI(system.file("nifti/zstat1.nii.gz", package="oro.nifti")))
+@ 
+<<figure4-png,echo=FALSE,results=hide>>=
+png("ffd_zstat1.png", width=400, height=400, bg="black")
+@ 
+<<figure4-code>>=
+overlay(ffd, ifelse(abs(zstat1) > 5, zstat1, NA), zlim.y=range(zstat1))
+<<figure4-dev.off,echo=FALSE,results=hide>>=
+dev.off()
+@ 
 produces a 4D array of parameter estimates (essentially coefficients
 from a linear regression performed at each voxel) that may be
 overlayed on the original data for anatomical reference
