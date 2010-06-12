@@ -25,7 +25,7 @@ dpmixsim <- function(x, M=1, a=1, b=2, upalpha=1, a0=2, b0=2,
             wrec   = as.double (rep(0,rec*kmax)), # weights
             phirec = as.double (rep(0,rec*kmax)),
             varrec = as.double (rep(0,rec)))
-  cat("\ntime of gibbdpm: ", (proc.time() - ptm)[1]/60, " min\n")
+  cat("\ntime of gibbdpm: ", round((proc.time() - ptm)[1]/60, 2), "min\n")
   res <- list(krec=res$krec, wrec=res$wrec, phirec=res$phirec,
               varrec=res$varrec)
   if (!is.null(fsave)) {
