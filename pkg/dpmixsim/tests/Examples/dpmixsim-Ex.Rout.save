@@ -44,54 +44,70 @@ oro.nifti: Rigorous - NIfTI Input / Output (version = 0.1.4)
 > 
 > ## Example 1: simple test using 'galaxy' data
 >    data("galaxy")
->    x0 <- galaxy$speed
->    x <- prescale(x0) 
+>    x <- prescale(galaxy$speed) 
 >    res <- dpmixsim(x, M=1, a=1, b=0.001, upalpha=1, maxiter=4000, rec=3000)
 simulation length: 82 
 Processing 4000 iterations:	 '.' = 100 iterations
 ........................................
-time of gibbdpm:  0.003666667 
+time of gibbdpm:  0.0035  min
 > ## post-simulation
 >    z <- postdpmixciz(x, res=res, rec=3000, ngrid=100, plot=TRUE)
 most frequent k (kfreq): 6 
 n.iterations with kfreq: 814 
-> ## Not run: 
-> ##D ## Example 2: MRI segmentation
-> ##D ## Testing note: this example should reproduce the equivalent segmented images
-> ##D ## used in the author's references 
-> ##D   slicedata <- readsliceimg(fbase="t1_pn3_rf0", swap=FALSE)
-> ##D   image(slicedata$niislice, col=gray((0:255)/256), main="original image")
-> ##D   x0 <- premask(slicedata, subsamp=TRUE)
-> ##D   x  <- prescale(x0) 
-> ##D   fsave <- "/tmp/segtest2.sav"
-> ##D   answ <- readline("Run MCMC simulation first ? ")
-> ##D   run <- FALSE
-> ##D   if (substr(answ, 1, 1) == "y") { run <- TRUE }
-> ##D   rec <- 2000
-> ##D   ngrid <- 100
-> ##D   if(run) {
-> ##D     res <- dpmixsim(x, M=1, a=1, b=2, upalpha=1, maxiter=4000, rec=rec,
-> ##D       fsave=fsave)
-> ##D   } else {
-> ##D     load(file=fsave)
-> ##D     cat("loaded",fsave,"\n")
-> ##D   }
-> ##D   ## post-simulation
-> ##D   z <- postdpmixciz(x, res=res, rec=rec, ngrid=ngrid, plot=TRUE)
-> ##D   x0 <- premask(slicedata, subsamp=FALSE) # use full-sized image after estimation 
-> ##D   x  <- prescale(x0) 
-> ##D   cx   <- postdataseg(x, z, ngrid=ngrid)
-> ##D   cat("*** view grouped segmentations:\n")
-> ##D   postimgclgrp(slicedata$mask, cx, palcolor=FALSE)
-> ##D   cat("*** display all clusters:\n")
-> ##D   postimgcomps(slicedata$mask, cx)
-> ##D   cat("*** re-cluster with 4 clusters:\n")
-> ##D   postkcluster(slicedata$mask, cx, clk=4)
-> ## End(Not run)
+> ## Example 2: MRI segmentation
+> ## Testing note: this example should reproduce the equivalent segmented images
+> ## used in the author's references 
+>    slicedata <- readsliceimg(fbase="t1_pn3_rf0", swap=FALSE)
+>    image(slicedata$niislice, col=gray((0:255)/256), main="original image")
+>    x <- prescale(premask(slicedata, subsamp=TRUE))
+>    fsave <- file.path(tempdir(), "segtest2.sav")
+>    # answ <- readline("Run MCMC simulation first ? ")
+>    # run <- FALSE
+>    # if (substr(answ, 1, 1) == "y") { run <- TRUE }
+>    rec <- 2000
+>    ngrid <- 100
+>    # if(run) {
+>    res <- dpmixsim(x, rec=rec, fsave=fsave)
+simulation length: 4762 
+Processing 4000 iterations:	 '.' = 100 iterations
+........................................
+time of gibbdpm:  0.3085  min
+saving simulation  /tmp/Rtmp9Mhidh/segtest2.sav ...
+>    # } else {
+>    #  load(file=fsave)
+>    #  cat("loaded",fsave,"\n")
+>    # }
+> ## post-simulation
+>    z <- postdpmixciz(x, res=res, rec=rec, ngrid=ngrid)
+most frequent k (kfreq): 5 
+n.iterations with kfreq: 1151 
+>    x <- prescale(premask(slicedata, subsamp=FALSE)) # use full-sized image after estimation 
+>    cx <- postdataseg(x, z, ngrid=ngrid)
+>    cat("*** view grouped segmentations:\n")
+*** view grouped segmentations:
+>    postimgclgrp(slicedata$mask, cx, palcolor=FALSE)
+>    cat("*** display all clusters:\n")
+*** display all clusters:
+>    postimgcomps(slicedata$mask, cx)
+Display individual clusters: 
+palette= 0 51 102 153 204 256 
+>    cat("*** re-cluster with 4 clusters:\n")
+*** re-cluster with 4 clusters:
+>    postkcluster(slicedata$mask, cx, clk=4)
+Loading required package: cluster
+colorcluster with 4 components:
+cx
+    0   102   204   256 
+20298  3134  6069  9776 
+Display individual clusters: 
+palette= 0 102 204 256 
 > 
 > 
 > 
 > cleanEx()
+
+detaching ‘package:cluster’
+
 > nameEx("galaxy")
 > ### * galaxy
 > 
@@ -282,7 +298,7 @@ n.iterations with kfreq: 814
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  1.09 0 1.101 0 0 
+Time elapsed:  22 0.04 22.085 0 0 
 > grDevices::dev.off()
 null device 
           1 

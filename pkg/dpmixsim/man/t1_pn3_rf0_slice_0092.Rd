@@ -1,4 +1,4 @@
-\name{t1_pn3_rf0_slice_0092.Rd}
+\name{t1_pn3_rf0_slice_0092}
 \alias{t1_pn3_rf0_slice_0092.Rd}
 \docType{data}
 \title{Example of a pre-processed MRI slice from the BrainWeb database}

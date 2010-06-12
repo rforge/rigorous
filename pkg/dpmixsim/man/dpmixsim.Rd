@@ -7,17 +7,16 @@
 
 \title{ Dirichlet Process mixture model for clustering and image segmentation }
 \description{
-  \code{dpmixsim} implements a Dirichlet Process mixture (DPM) model.
-  The DPM model is a Bayesian nonparametric methodology that relies on MCMC simulations
-  for exploring mixture models with an unknown number of components.
-  The function implements conjugate models with normal structure (conjugate normal-normal
-  DP mixture model).
-
+  \code{dpmixsim} implements a Dirichlet Process mixture (DPM)
+  model. The DPM model is a Bayesian nonparametric methodology that
+  relies on MCMC simulations for exploring mixture models with an
+  unknown number of components. The function implements conjugate models
+  with normal structure (conjugate normal-normal DP mixture model).
 }
 
 \usage{
 dpmixsim(x, M=1, a=1, b=2, upalpha=1, a0=2, b0=2, maxiter=4000, rec=1000,
-  fsave=NA, kmax=30)
+  fsave=NULL, kmax=30)
 }
 \arguments{
   \item{x}{ scaled input data as vector in range \{0,1\} }
@@ -60,7 +59,6 @@ dpmixsim(x, M=1, a=1, b=2, upalpha=1, a0=2, b0=2, maxiter=4000, rec=1000,
   \item{varrec}{ sigma cluster parameters }
 }
 
-
 \references{ 
 Adelino Ferreira da Silva, A Dirichlet process mixture model for
  brain MRI tissue classification,
@@ -89,44 +87,38 @@ Adelino Ferreira da Silva, Bayesian mixture models of variable
 \examples{
 ## Example 1: simple test using 'galaxy' data
    data("galaxy")
-   x0 <- galaxy$speed
-   x <- prescale(x0) 
+   x <- prescale(galaxy$speed) 
    res <- dpmixsim(x, M=1, a=1, b=0.001, upalpha=1, maxiter=4000, rec=3000)
 ## post-simulation
    z <- postdpmixciz(x, res=res, rec=3000, ngrid=100, plot=TRUE)
-\dontrun{
 ## Example 2: MRI segmentation
 ## Testing note: this example should reproduce the equivalent segmented images
 ## used in the author's references 
-  slicedata <- readsliceimg(fbase="t1_pn3_rf0", swap=FALSE)
-  image(slicedata$niislice, col=gray((0:255)/256), main="original image")
-  x0 <- premask(slicedata, subsamp=TRUE)
-  x  <- prescale(x0) 
-  fsave <- "/tmp/segtest2.sav"
-  answ <- readline("Run MCMC simulation first ? ")
-  run <- FALSE
-  if (substr(answ, 1, 1) == "y") { run <- TRUE }
-  rec <- 2000
-  ngrid <- 100
-  if(run) {
-    res <- dpmixsim(x, M=1, a=1, b=2, upalpha=1, maxiter=4000, rec=rec,
-      fsave=fsave)
-  } else {
-    load(file=fsave)
-    cat("loaded",fsave,"\n")
-  }
-  ## post-simulation
-  z <- postdpmixciz(x, res=res, rec=rec, ngrid=ngrid, plot=TRUE)
-  x0 <- premask(slicedata, subsamp=FALSE) # use full-sized image after estimation 
-  x  <- prescale(x0) 
-  cx   <- postdataseg(x, z, ngrid=ngrid)
-  cat("*** view grouped segmentations:\n")
-  postimgclgrp(slicedata$mask, cx, palcolor=FALSE)
-  cat("*** display all clusters:\n")
-  postimgcomps(slicedata$mask, cx)
-  cat("*** re-cluster with 4 clusters:\n")
-  postkcluster(slicedata$mask, cx, clk=4)
-}
+   slicedata <- readsliceimg(fbase="t1_pn3_rf0", swap=FALSE)
+   image(slicedata$niislice, col=gray((0:255)/256), main="original image")
+   x <- prescale(premask(slicedata, subsamp=TRUE))
+   fsave <- file.path(tempdir(), "segtest2.sav")
+   # answ <- readline("Run MCMC simulation first ? ")
+   # run <- FALSE
+   # if (substr(answ, 1, 1) == "y") { run <- TRUE }
+   rec <- 2000
+   ngrid <- 100
+   # if(run) {
+   res <- dpmixsim(x, rec=rec, fsave=fsave)
+   # } else {
+   #  load(file=fsave)
+   #  cat("loaded",fsave,"\n")
+   # }
+## post-simulation
+   z <- postdpmixciz(x, res=res, rec=rec, ngrid=ngrid)
+   x <- prescale(premask(slicedata, subsamp=FALSE)) # use full-sized image after estimation 
+   cx <- postdataseg(x, z, ngrid=ngrid)
+   cat("*** view grouped segmentations:\n")
+   postimgclgrp(slicedata$mask, cx, palcolor=FALSE)
+   cat("*** display all clusters:\n")
+   postimgcomps(slicedata$mask, cx)
+   cat("*** re-cluster with 4 clusters:\n")
+   postkcluster(slicedata$mask, cx, clk=4)
 }
 
 \keyword{models}

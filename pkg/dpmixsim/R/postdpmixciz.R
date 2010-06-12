@@ -22,11 +22,12 @@ postdpmixciz <- function(x, res, kmax=30, rec=300, ngrid=200, plot=TRUE) {
     khist[krec[i]] <- khist[krec[i]] + 1  
   }
   kfreq <- which(khist == max(khist))[1] # take the first if more than one
-  cat("most frequent k (kfreq):",kfreq,"\n") 
+  cat("most frequent k (kfreq):", kfreq, "\n") 
   khist <- khist/length(krec)
   ##------------------------------------------
   ## par(ask=TRUE)
   if (plot) {
+    old.par <- par(no.readonly=TRUE)
     ## x11()
     ## par(ask=TRUE)
     ## plot(khist, ty="h", xlim=c(0,kmax), ylim=c(0,1))
@@ -55,7 +56,7 @@ postdpmixciz <- function(x, res, kmax=30, rec=300, ngrid=200, plot=TRUE) {
     ## !!! beware label switching
     ## !!! guarantee of equal number of components (with sort) is not enough 
     ## !!! many mu simulated values are centered on different ranges
-    if (identical(nk, kfreq)) {
+    if (nk == kfreq) {
       km <- km + 1
       imu <- sort(mu, ind=TRUE)
       loc <- imu$ix
@@ -133,6 +134,7 @@ postdpmixciz <- function(x, res, kmax=30, rec=300, ngrid=200, plot=TRUE) {
     ##   points(t[jj], c(-0.18, -0.18), pch=22)
     ## }
     ## dev.set(dev) # restore dev
+    par(old.par)
   }
   ##--------------------------------------------
   ## par(ask=FALSE)

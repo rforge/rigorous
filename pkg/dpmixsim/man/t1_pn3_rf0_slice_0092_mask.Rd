@@ -1,4 +1,4 @@
-\name{t1_pn3_rf0_slice_0092_mask.Rd}
+\name{t1_pn3_rf0_slice_0092_mask}
 \alias{t1_pn3_rf0_slice_0092_mask.Rd}
 \docType{data}
 \title{Mask file for MRI slice}
