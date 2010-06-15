@@ -42,18 +42,22 @@ read.analyze.content(fname, gzipped = TRUE, verbose = FALSE, warn = -1)
   \code{\link{readNIfTI}}
 }
 \examples{
+## avg152T1
+anlz.path <- system.file("anlz", package="oro.nifti")
+mni152 <- readANALYZE(file.path(anlz.path, "avg152T1"))
+image(mni152, oma=rep(2,4))
+orthographic(mni152, oma=rep(2,4))
+
 \dontrun{
 ## 27 scans of Colin Holmes (MNI) brain co-registered and averaged
 URL <- "http://imaging.mrc-cbu.cam.ac.uk/downloads/Colin/colin_1mm.tgz"
-urlpath <- system.file("anlz", package="oro.nifti")
-urlfile <- file.path(urlpath, "colin_1mm.tgz")
+urlfile <- file.path(tempdir(), "colin_1mm.tgz")
 download.file(URL, dest=urlfile, quiet=TRUE)
-untar(urlfile, exdir=urlpath)
-}
-urlpath <- system.file("anlz", package="oro.nifti")
-colin <- readANALYZE(file.path(urlpath, "colin_1mm"))
+untar(urlfile, exdir=tempdir())
+colin <- readANALYZE(file.path(tempdir(), "colin_1mm"))
 image(colin, oma=rep(2,4))
 orthographic(colin, oma=rep(2,4))
+}
 }
 \author{Brandon Whitcher <\email{bjw34032@users.sourceforge.net}>,
   Volker Schmid <\email{volkerschmid@users.sourceforge.net}>}

@@ -48,11 +48,11 @@ writeNIfTI <- function(nim, filename, gzipped=TRUE, verbose=FALSE, warn=-1) {
 
   extensions <- NULL
   if (is(nim, "niftiExtension")) {
-    if (verbose) cat("  niftiExtension detected!", fill=TRUE)
+    if (verbose) { cat("  niftiExtension detected!", fill=TRUE) }
     extensions <- nim@extensions
   }
   if (getOption("niftiAuditTrail") && is(nim, "niftiAuditTrail")) {
-    if (verbose) cat("  niftiAuditTrail detected!", fill=TRUE)
+    if (verbose) { cat("  niftiAuditTrail detected!", fill=TRUE) }
     sec <- niftiAuditTrailToExtension(nim, getwd(), filename, match.call())
     extensions <- append(extensions, sec)
   }
@@ -61,7 +61,7 @@ writeNIfTI <- function(nim, filename, gzipped=TRUE, verbose=FALSE, warn=-1) {
     totalesizes <- sum(unlist(lapply(extensions, function(x) x@"esize")))
     nim@"extender"[1] <- 1
     nim@"vox_offset" <- 352 + totalesizes
-    if (verbose) cat("  vox_offset =", nim@"vox_offset", fill=TRUE)
+    if (verbose) { cat("  vox_offset =", nim@"vox_offset", fill=TRUE) }
   }
 
   writeBin(as.integer(nim@"sizeof_hdr"), fid, size=4)
@@ -112,8 +112,9 @@ writeNIfTI <- function(nim, filename, gzipped=TRUE, verbose=FALSE, warn=-1) {
   ## Extensions?
   if (nim@"extender"[1] > 0 || nim@"vox_offset" > 352) {
     if (!is.null(extensions)) {
-      if (verbose)
+      if (verbose) {
         cat("  writing niftiExtension(s) at byte =", seek(fid), fill=TRUE)
+      }
       lapply(extensions,
              function(x) {
                writeBin(as.integer(x@"esize"), fid, size=4)
@@ -128,7 +129,7 @@ writeNIfTI <- function(nim, filename, gzipped=TRUE, verbose=FALSE, warn=-1) {
                invisible()
              })
     } else {
-      stop("@extender set but ", nim, " has no extensions")
+      stop("@extender set but", nim, "has no extensions")
     }
   }
   ## reorient?

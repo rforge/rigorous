@@ -157,16 +157,29 @@ setClass("niftiExtensionSection",
 setMethod("show", "nifti", function(object) {
   cat("NIfTI-1 format", fill=TRUE)
   cat("  Type            :", class(object), fill=TRUE)
-  cat("  Data Type       : ", object@"datatype", " (", convert.datatype(object@datatype), ")", sep="", fill=TRUE)
+  cat("  Data Type       : ", object@"datatype",
+      " (", convert.datatype(object@datatype), ")", sep="", fill=TRUE)
   cat("  Bits per Pixel  :", object@bitpix, fill=TRUE)
-  cat("  Slice Code      : ", object@"slice_code", " (", convert.slice(object@"slice_code"), ")", sep="", fill=TRUE)
-  cat("  Intent Code     : ", object@"intent_code", " (", convert.intent(object@"intent_code"), ")", sep="", fill=TRUE)
-  cat("  Qform Code      : ", object@"qform_code", " (", convert.form(object@"qform_code"), ")", sep="", fill=TRUE)
-  cat("  Sform Code      : ", object@"sform_code", " (", convert.form(object@"sform_code"), ")", sep="", fill=TRUE)
-  cat("  Dimension       :", paste(object@"dim_"[2:(1+object@"dim_"[1])], collapse=" x "), fill=TRUE)
-  cat("  Pixel Dimension :", paste(round(object@pixdim[2:(1+object@"dim_"[1])], 2), collapse=" x "), fill=TRUE)
-  cat("  Voxel Units     :", convert.units(xyzt2space(object@"xyzt_units")), fill=TRUE)
-  cat("  Time Units      :", convert.units(xyzt2time(object@"xyzt_units")), fill=TRUE)
+  cat("  Slice Code      : ", object@"slice_code",
+      " (", convert.slice(object@"slice_code"), ")", sep="", fill=TRUE)
+  cat("  Intent Code     : ", object@"intent_code",
+      " (", convert.intent(object@"intent_code"), ")", sep="", fill=TRUE)
+  cat("  Qform Code      : ", object@"qform_code",
+      " (", convert.form(object@"qform_code"), ")", sep="", fill=TRUE)
+  cat("  Sform Code      : ", object@"sform_code",
+      " (", convert.form(object@"sform_code"), ")", sep="", fill=TRUE)
+  cat("  Dimension       :",
+      paste(object@"dim_"[2:(1+object@"dim_"[1])], collapse=" x "),
+      fill=TRUE)
+  cat("  Pixel Dimension :",
+      paste(round(object@pixdim[2:(1+object@"dim_"[1])],2), collapse=" x "),
+      fill=TRUE)
+  cat("  Voxel Units     :",
+      convert.units(xyzt2space(object@"xyzt_units")),
+      fill=TRUE)
+  cat("  Time Units      :",
+      convert.units(xyzt2time(object@"xyzt_units")),
+      fill=TRUE)
 })
 
 #############################################################################
@@ -177,42 +190,55 @@ setValidity("nifti", function(object) {
   retval <- NULL
   indices <- 2:(1+object@"dim_"[1])
   ## sizeof_hdr must be 348
-  if (object@"sizeof_hdr" != 348)
+  if (object@"sizeof_hdr" != 348) {
     retval <- c(retval, "sizeof_hdr != 348")
+  }
   ## datatype needed to specify type of image data
-  if (!object@datatype %in% convert.datatype())
+  if (! object@datatype %in% convert.datatype()) {
     retval <- c(retval, "datatype not recognized")
+  }
   ## bitpix should correspond correctly to datatype
-  if (!object@bitpix == convert.bitpix()[[convert.datatype(object@datatype)]]) 
+  if (! identical(object@bitpix, convert.bitpix()[[convert.datatype(object@datatype)]])) {
     retval <- c(retval, "bitpix does not match the datatype")
+  }
   ## dim should be non-zero for dim[1] dimensions
-  if (!all(as.logical(object@"dim_"[indices])))
+  if (! all(object@"dim_"[indices] > 0)) {
     retval <- c(retval, "dim[1]/dim mismatch")
+  }
   ## number of data dimensions should match dim[1]
-  if (length(indices) != length(dim(object@.Data)))
+  if (length(indices) != length(dim(object@.Data))) {
     retval <- c(retval, "dim[1]/img mismatch")
+  }
   ## 
   if (object@"cal_min" != min(object@.Data, na.rm=TRUE) ||
-      object@"cal_max" != max(object@.Data, na.rm=TRUE))
+      object@"cal_max" != max(object@.Data, na.rm=TRUE)) {
     retval <- c(retval, "range(img) != c(cal_min,cal_max)")
+  }
   ## pixdim[0] is required when qform_code != 0
-  if (object@"qform_code" != 0 && object@pixdim[1] == 0)
-    retval <- c(retval, "pixdim[1] is required")              
+  if (object@"qform_code" != 0 && identical(object@pixdim[1], 0)) {
+    retval <- c(retval, "pixdim[1] is required")
+  }
   ## pixdim[n] required when dim[n] is required
-  if (!all(as.logical(object@"dim_"[indices]) &&
-           as.logical(object@"pixdim"[indices])))
+  if (! all(object@"dim_"[indices] > 0 & object@"pixdim"[indices] > 0)) {
     retval <- c(retval, "dim/pixdim mismatch")
+  }
   ## data dimensions should match dim 
-  if (!all(object@"dim_"[indices] == dim(object@.Data)))
+  if (! isTRUE(all.equal(object@"dim_"[indices], dim(object@.Data)))) {
     retval <- c(retval, "dim/img mismatch")
+  }
   ## vox_offset required for an "n+1" header
-  if (match(object@"magic", "n+1") == 1 && object@"vox_offset" == 0)
+  if (identical(object@"magic", "n+1") && identical(object@"vox_offset", 0)) {
     retval <- c(retval, "vox_offset required when magic=\"n+1\"")
+  }
   ## magic must be "ni1\0" or "n+1\0"
-  if (!(match(object@"magic", "n+1") == 1 || match(object@"magic", "ni1") == 1))
+  if (!(identical(object@"magic", "n+1") || identical(object@"magic", "ni1"))) {
     retval <- c(retval, "magic != \"n+1\" and magic != \"ni1\"")
-  if (is.null(retval)) return(TRUE)
-  else return(retval)
+  }
+  if (is.null(retval)) {
+    return(TRUE)
+  } else {
+    return(retval)
+  }
 })
 
 #############################################################################
@@ -220,8 +246,9 @@ setValidity("nifti", function(object) {
 #############################################################################
 
 setValidity("niftiExtension", function(object) {
-  ## Allegedly setValidity will always check for superclasses
-  ## So we need only check that the list is empty or only contains niftiExtensionSections and check the validity of each of those
+  ## Allegedly setValidity will always check for superclasses.
+  ## So we need only check that the list is empty or only contains
+  ## niftiExtensionSections and check the validity of each of those
   retval <- NULL
   validSection <- getValidity(getClassDef("niftiExtensionSection"))
   lapply(object@"extensions",
@@ -229,15 +256,16 @@ setValidity("niftiExtension", function(object) {
            if (!is(x, "niftiExtensionSection")) {
              retval <<- c(retval, paste("@extensions list contains non-niftiExtensionSection element:", class(x)))
            } else {
-             if (!(validSection(x) == TRUE)) {
+             if (! validSection(x)) {
                retval <<- c(retval, validSection(x))
              }
            }
          })
-  if (is.null(retval))
+  if (is.null(retval)) {
     return(TRUE)
-  else
+  } else {
     return(retval)
+  }
 })
 
 #############################################################################
@@ -250,10 +278,11 @@ setValidity("niftiExtensionSection", function(object) {
     retval <- c(retval, "esize is not a multiple of 16")
   if ((object@esize - 8) < nchar(object@edata, type="bytes"))
     retval <- c(retval, "esize is too small for the data contained within the section")
-  if (is.null(retval))
+  if (is.null(retval)) {
     return(TRUE)
-  else
+  } else {
     return(retval)
+  }
 })
 
 ## setGeneric("img", function(object) { standardGeneric("img") })
@@ -336,10 +365,11 @@ nifti <- function(img=array(0, dim=rep(1,4)), dim, datatype=2, cal.min=NULL,
 #############################################################################
 
 is.nifti <- function(x) {
-  if (!is(x, "nifti"))
+  if (!is(x, "nifti")) {
     return(FALSE)
-  else
+  } else {
     return (TRUE)
+  }
 }
 
 #############################################################################
@@ -355,7 +385,7 @@ setReplaceMethod("descrip", "nifti",
 		   audit.trail(x) <-
                      niftiAuditTrailEvent(x, "modification", match.call(),
                                           paste("descrip <-", value))
-		   x 
+		   return(x)
 		 })
 
 #############################################################################
@@ -369,7 +399,7 @@ setReplaceMethod("aux.file", "nifti",
                  function(x, value) {
 		   x@"aux_file" <- value
 		   audit.trail(x) <- niftiAuditTrailEvent(x, "modification", match.call(), paste("aux.file <-", value))
-		   x 
+		   return(x)
 		 })
 
 #############################################################################
@@ -380,6 +410,7 @@ setReplaceMethod("aux.file", "nifti",
 #############################################################################
 
 setGeneric("audit.trail", function(object) { standardGeneric("audit.trail") })
+
 setMethod("audit.trail", "nifti",
           function(object) { 
             if (getOption("niftiAuditTrail") &&
@@ -392,6 +423,7 @@ setMethod("audit.trail", "nifti",
 
 setGeneric("audit.trail<-",
            function(x, value) { standardGeneric("audit.trail<-") })
+
 setReplaceMethod("audit.trail", "nifti",
                  function(x, value) {
                    if (getOption("niftiAuditTrail")) {
@@ -400,87 +432,75 @@ setReplaceMethod("audit.trail", "nifti",
                      }
                      x@"trail" <- value
                    } 
-                   x
+                   return(x)
                  })
 
-setReplaceMethod("[", signature(x="nifti", i="missing", j="missing",
-                                value="array"),
+setReplaceMethod("[",
+                 signature(x="nifti", i="missing", j="missing", value="array"),
                  function(x, value) {
                    x <- as.nifti(value, x)
                    validObject(x)
-                   x
+                   return(x)
                  })
 
 setReplaceMethod("[", signature(x="nifti", i="ANY", j="missing", value="ANY"), 
                  function(x, i, value) {
-                   # For some reason this line is slow; I don't understand it
+                   ## For some reason this line is slow; I don't understand it
                    x@.Data[i] <- value
-                   #if (any(is.na(value))) {
-                   if (any(value < x@"cal_min", na.rm=TRUE))
+                   if (any(value < x@"cal_min", na.rm=TRUE)) {
                      x@"cal_min" <- min(value, na.rm=TRUE)
-                   if (any(value > x@"cal_max", na.rm=TRUE))
+                   }
+                   if (any(value > x@"cal_max", na.rm=TRUE)) {
                      x@"cal_max" <- max(value, na.rm=TRUE)
-                   #} else {
-                   #  xr <- range(x, na.rm=TRUE)
-                   #  x@"cal_min" <- xr[1]
-                   #  x@"cal_max" <- xr[2]
-                   #}
+                   }
                    audit.trail(x) <-
-                     niftiAuditTrailEvent(x, "modification", 
-                                          call=sys.call(-3),
+                     niftiAuditTrailEvent(x, "modification", call=sys.call(-3),
                                           comment=paste("Non-numeric replace ["))
-                   x
+                   return(x)
                  })
-setReplaceMethod("[", signature(x="nifti", i="numeric", j="missing", value="ANY"), 
+
+setReplaceMethod("[",
+                 signature(x="nifti", i="numeric", j="missing", value="ANY"), 
                  function(x, i, value) {
-                   # For some reason this line is slow; I don't understand it
+                   ## For some reason this line is slow; I don't understand it
                    x@.Data[i] <- value
-                   #if (any(is.na(value))) {
-                   if (any(value < x@"cal_min", na.rm=TRUE))
+                   if (any(value < x@"cal_min", na.rm=TRUE)) {
                      x@"cal_min" <- min(value, na.rm=TRUE)
-                   if (any(value > x@"cal_max", na.rm=TRUE))
+                   }
+                   if (any(value > x@"cal_max", na.rm=TRUE)) {
                      x@"cal_max" <- max(value, na.rm=TRUE)
-                   #} else {
-                   #  xr <- range(x, na.rm=TRUE)
-                   #  x@"cal_min" <- xr[1]
-                   #  x@"cal_max" <- xr[2]
-                   #}
-                   audit.trail(x) <-
-                     niftiAuditTrailEvent(x, "modification", 
-                                          call=sys.call(-3))
-                   x
+                   }
+                   audit.trail(x) <- niftiAuditTrailEvent(x, "modification", 
+                                                          call=sys.call(-3))
+                   return(x)
                  })
 
 setReplaceMethod("[", signature(x="nifti", i="ANY", j="ANY", value="ANY"),
                  function(x, i, j, ..., value) {
-                   # For some reason this line is slow; I don't understand it
+                   ## For some reason this line is slow; I don't understand it
                    x@.Data[i,j,...] <- value
                    audit.trail(x) <-
                      niftiAuditTrailEvent(x, "modification", call=sys.call(-3),
                                           comment=paste("Non-numeric replace ["))
-					  
-                   x
+                   return(x)
                  })
-setReplaceMethod("[", signature(x="nifti", i="numeric", j="numeric", value="ANY"),
+
+setReplaceMethod("[",
+                 signature(x="nifti", i="numeric", j="numeric", value="ANY"),
                  function(x, i, j, ..., value) {
-                   # For some reason this line is slow; I don't understand it
+                   ## For some reason this line is slow; I don't understand it
                    x@.Data[i,j,...] <- value
-                   #if (all(is.na(value))) {
-                   #  xr <- range(x, na.rm=TRUE)
-                   #  x@"cal_min" <- xr[1]
-                   #  x@"cal_max" <- xr[2]
-                   #} else {
-                   if (any(value < x@"cal_min", na.rm=TRUE))
+                   if (any(value < x@"cal_min", na.rm=TRUE)) {
                      x@"cal_min" <- min(value, na.rm=TRUE)
-                   if (any(value > x@"cal_max", na.rm=TRUE))
+                   }
+                   if (any(value > x@"cal_max", na.rm=TRUE)) {
                      x@"cal_max" <- max(value, na.rm=TRUE)
-                   #}
+                   }
                    audit.trail(x) <-
                      niftiAuditTrailEvent(x, "modification", 
                                           comment=paste("[", paste(i, j, ..., sep=", "), "] <- ", value, sep=""))
-                   x
+                   return(x)
                  })
-
 
 
 #############################################################################

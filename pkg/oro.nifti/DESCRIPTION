@@ -1,6 +1,6 @@
 Package: oro.nifti
-Version: 0.1.5
-Date: 2010-05-23
+Version: 0.2.0
+Date: 2010-06-15
 Title: Rigorous - NIfTI Input / Output
 Author: Brandon Whitcher, Volker Schmid and Andrew Thornton
 Maintainer: Brandon Whitcher <bjw34032@users.sourceforge.net>

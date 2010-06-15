@@ -23,7 +23,7 @@ Type 'q()' to quit R.
 > library('oro.nifti')
 Loading required package: XML
 
-oro.nifti: Rigorous - NIfTI Input / Output (version = 0.1.5)
+oro.nifti: Rigorous - NIfTI Input / Output (version = 0.2.0)
 
 > 
 > assign(".oldSearch", search(), pos = 'CheckExEnv')
@@ -651,18 +651,22 @@ Class:   numeric   numeric character
 > 
 > ### ** Examples
 > 
+> ## avg152T1
+> anlz.path <- system.file("anlz", package="oro.nifti")
+> mni152 <- readANALYZE(file.path(anlz.path, "avg152T1"))
+> image(mni152, oma=rep(2,4))
+> orthographic(mni152, oma=rep(2,4))
+> 
 > ## Not run: 
 > ##D ## 27 scans of Colin Holmes (MNI) brain co-registered and averaged
 > ##D URL <- "http://imaging.mrc-cbu.cam.ac.uk/downloads/Colin/colin_1mm.tgz"
-> ##D urlpath <- system.file("anlz", package="oro.nifti")
-> ##D urlfile <- file.path(urlpath, "colin_1mm.tgz")
+> ##D urlfile <- file.path(tempdir(), "colin_1mm.tgz")
 > ##D download.file(URL, dest=urlfile, quiet=TRUE)
-> ##D untar(urlfile, exdir=urlpath)
+> ##D untar(urlfile, exdir=tempdir())
+> ##D colin <- readANALYZE(file.path(tempdir(), "colin_1mm"))
+> ##D image(colin, oma=rep(2,4))
+> ##D orthographic(colin, oma=rep(2,4))
 > ## End(Not run)
-> urlpath <- system.file("anlz", package="oro.nifti")
-> colin <- readANALYZE(file.path(urlpath, "colin_1mm"))
-> image(colin, oma=rep(2,4))
-> orthographic(colin, oma=rep(2,4))
 > 
 > 
 > 
@@ -848,7 +852,7 @@ detaching ‘package:splines’
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  18 0.54 18.596 0 0 
+Time elapsed:  5.11 0.12 5.234 0 0 
 > grDevices::dev.off()
 null device 
           1 
