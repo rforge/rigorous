@@ -319,8 +319,9 @@ nifti <- function(img=array(0, dim=rep(1,4)), dim, datatype=2, cal.min=NULL,
       dim <- c(1, length(img))
   }
   ld <- length(dim)
-  if (ld < 3)
-    stop(sprintf("length(dim) must be at least 3 and is %d.", ld))
+  ## if (ld < 3) {
+  ##   stop(sprintf("length(dim) must be at least 3 and is %d.", ld))
+  ## }
 
   ## Create "dim" and "pixdim" slots
   x <- rep(1, 8)
@@ -459,7 +460,9 @@ setReplaceMethod("[", signature(x="nifti", i="ANY", j="missing", value="ANY"),
                    return(x)
                  })
 
+
 setReplaceMethod("[",
+setReplaceMethod("[", signature(x="nifti", i="numeric", j="missing", value="ANY"), 
                  signature(x="nifti", i="numeric", j="missing", value="ANY"), 
                  function(x, i, value) {
                    ## For some reason this line is slow; I don't understand it
@@ -487,6 +490,8 @@ setReplaceMethod("[", signature(x="nifti", i="ANY", j="ANY", value="ANY"),
 
 setReplaceMethod("[",
                  signature(x="nifti", i="numeric", j="numeric", value="ANY"),
+
+setReplaceMethod("[", signature(x="nifti", i="numeric", j="numeric", value="ANY"),
                  function(x, i, j, ..., value) {
                    ## For some reason this line is slow; I don't understand it
                    x@.Data[i,j,...] <- value

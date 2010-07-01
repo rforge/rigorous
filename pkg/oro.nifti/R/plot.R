@@ -47,10 +47,15 @@ image.nifti <- function(x, z=1, w=1, col=gray(0:64/64),
   Z <- nsli(x)
   W <- ntim(x)
   ## check dimensions
-  if (X == 0 || Y == 0 || Z == 0)
-    stop("size of NIfTI volume is zero, nothing to plot")
-  if (z < 1 || z > Z) {
-    stop("slice \"z\" out of range")
+  if (is.na(X) || is.na(Y)) {
+    stop("Missing rows/columns in NIfTI volume.")
+  }
+  if (! is.na(Z)) {
+    if (z < 1 || z > Z) {
+      stop("slice \"z\" out of range")
+    }
+  } else {
+    plot.type <- "single"
   }
   ## check for z-limits; use internal by default
   if (is.null(zlim)) {
@@ -62,8 +67,11 @@ image.nifti <- function(x, z=1, w=1, col=gray(0:64/64),
   breaks <- c(min(x, zlim, na.rm=TRUE),
               seq(min(zlim, na.rm=TRUE), max(zlim, na.rm=TRUE), length=length(col)-1),
               max(x, zlim, na.rm=TRUE))
+  breaks <- c(min(x,zlim,na.rm=TRUE),
+              seq(min(zlim,na.rm=TRUE), max(zlim,na.rm=TRUE), length=length(col)-1),
+              max(x,zlim,na.rm=TRUE))
   ## single or multiple images?
-  if (plot.type[1] == "multiple") {
+  if (identical(plot.type[1], "multiple")) {
     index <- 1:Z
   } else {
     index <- z
@@ -72,17 +80,22 @@ image.nifti <- function(x, z=1, w=1, col=gray(0:64/64),
   ## plotting
   oldpar <- par(no.readonly=TRUE)
   par(mfrow=ceiling(rep(sqrt(lz),2)), oma=oma, mar=mar, bg=bg)
-  if (is.na(W)) { # three-dimensional array
-    for (z in index) {
-      graphics::image(1:X, 1:Y, x[,,z], col=col, breaks=breaks,
-                      axes=axes, xlab=xlab, ylab=ylab, ...)
-    }
-  } else { # four-dimensional array
-    if (w < 1 || w > W)
-      stop("volume \"w\" out of range")
-    for (z in index) {
-      graphics::image(1:X, 1:Y, x[,,z,w], col=col, breaks=breaks,
-                      axes=axes, xlab=xlab, ylab=ylab, ...)
+  if (is.na(Z)) { # two-dimensional matrix
+    graphics::image(1:X, 1:Y, x, col=col, breaks=breaks, axes=axes,
+                    xlab=xlab, ylab=ylab, ...)
+  } else {
+    if (is.na(W)) { # three-dimensional array
+      for (z in index) {
+        graphics::image(1:X, 1:Y, x[,,z], col=col, breaks=breaks,
+                        axes=axes, xlab=xlab, ylab=ylab, ...)
+      }
+    } else { # four-dimensional array
+      if (w < 1 || w > W)
+        stop("volume \"w\" out of range")
+      for (z in index) {
+        graphics::image(1:X, 1:Y, x[,,z,w], col=col, breaks=breaks,
+                        axes=axes, xlab=xlab, ylab=ylab, ...)
+      }
     }
   }
   par(oldpar)
