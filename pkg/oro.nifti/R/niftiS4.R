@@ -332,10 +332,12 @@ nifti <- function(img=array(0, dim=rep(1,4)), dim, datatype=2, cal.min=NULL,
     y[i] <- ifelse(is.na(dim(img)[i-1]) || is.null(pixdim), 1.0, pixdim[i])
   }
   ## min/max values for visualization
-  if (is.null(cal.max))
+  if (is.null(cal.max)) {
     cal.max <- as.numeric(max(img, na.rm=TRUE))
-  if (is.null(cal.min))
+  }
+  if (is.null(cal.min)) {
     cal.min <- as.numeric(min(img, na.rm=TRUE))
+  }
   ## Set datatype
   switch(as.character(datatype),
          "2" = bitpix <- 8,
@@ -460,9 +462,7 @@ setReplaceMethod("[", signature(x="nifti", i="ANY", j="missing", value="ANY"),
                    return(x)
                  })
 
-
 setReplaceMethod("[",
-setReplaceMethod("[", signature(x="nifti", i="numeric", j="missing", value="ANY"), 
                  signature(x="nifti", i="numeric", j="missing", value="ANY"), 
                  function(x, i, value) {
                    ## For some reason this line is slow; I don't understand it
@@ -490,8 +490,6 @@ setReplaceMethod("[", signature(x="nifti", i="ANY", j="ANY", value="ANY"),
 
 setReplaceMethod("[",
                  signature(x="nifti", i="numeric", j="numeric", value="ANY"),
-
-setReplaceMethod("[", signature(x="nifti", i="numeric", j="numeric", value="ANY"),
                  function(x, i, j, ..., value) {
                    ## For some reason this line is slow; I don't understand it
                    x@.Data[i,j,...] <- value

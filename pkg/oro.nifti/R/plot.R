@@ -65,11 +65,9 @@ image.nifti <- function(x, z=1, w=1, col=gray(0:64/64),
     }
   }
   breaks <- c(min(x, zlim, na.rm=TRUE),
-              seq(min(zlim, na.rm=TRUE), max(zlim, na.rm=TRUE), length=length(col)-1),
+              seq(min(zlim, na.rm=TRUE), max(zlim, na.rm=TRUE),
+                  length=length(col)-1),
               max(x, zlim, na.rm=TRUE))
-  breaks <- c(min(x,zlim,na.rm=TRUE),
-              seq(min(zlim,na.rm=TRUE), max(zlim,na.rm=TRUE), length=length(col)-1),
-              max(x,zlim,na.rm=TRUE))
   ## single or multiple images?
   if (identical(plot.type[1], "multiple")) {
     index <- 1:Z
@@ -115,21 +113,24 @@ overlay.nifti <- function(x, y, z=1, w=1, col.x=gray(0:64/64),
                           xlab="", ylab="", axes=FALSE, oma=rep(0,4),
                           mar=rep(0,4), bg="black", ...) {
   ## both volumes must have the same dimension
-  if (! all(dim(x)[1:3] == dim(y)[1:3]))
+  if (! all(dim(x)[1:3] == dim(y)[1:3])) {
     stop("dimensions of \"x\" and \"y\" must be equal")
+  }
   ## set dimensions
   X <- nrow(x)
   Y <- ncol(x)
   Z <- nsli(x)
   W <- ntim(x)
   ## check dimensions
-  if (X == 0 || Y == 0 || Z == 0)
+  if (X == 0 || Y == 0 || Z == 0) {
     stop("size of NIfTI volume is zero, nothing to plot")
+  }
   ## check for z-limits in x; use internal by default
   if (is.null(zlim.x)) {
     zlim.x <- c(x@"cal_min", x@"cal_max")
-    if (max(zlim.x) == 0)
+    if (max(zlim.x) == 0) {
       zlim.x <- c(x@"glmin", x@"glmax")
+    }
   }
   breaks.x <- c(min(x, zlim.x, na.rm=TRUE),
                 seq(min(zlim.x, na.rm=TRUE), max(zlim.x, na.rm=TRUE),
@@ -138,8 +139,9 @@ overlay.nifti <- function(x, y, z=1, w=1, col.x=gray(0:64/64),
   ## check for z-limits in y; use internal by default
   if (is.null(zlim.y)) {
     zlim.y <- c(y@"cal_min", y@"cal_max")
-    if (max(zlim.y) == 0)
+    if (max(zlim.y) == 0) {
       zlim.y <- c(x@"glmin", x@"glmax")
+    }
   }
   if (plot.type[1] == "multiple") {
     index <- 1:Z
