@@ -111,7 +111,7 @@ writeNIfTI <- function(nim, filename, gzipped=TRUE, verbose=FALSE, warn=-1) {
   ## writeChar(as.character(nim@"extender"), fid, nchar=4, eos=NULL)
   ## Extensions?
   if (nim@"extender"[1] > 0 || nim@"vox_offset" > 352) {
-    if (!is.null(extensions)) {
+    if (! is.null(extensions)) {
       if (verbose) {
         cat("  writing niftiExtension(s) at byte =", seek(fid), fill=TRUE)
       }

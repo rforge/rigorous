@@ -59,9 +59,9 @@ image.nifti <- function(x, z=1, w=1, col=gray(0:64/64),
       zlim <- c(x@"glmin", x@"glmax")
     }
   }
-  breaks <- c(min(x,zlim),
-              seq(min(zlim), max(zlim), length=length(col)-1),
-              max(x,zlim))
+  breaks <- c(min(x, zlim, na.rm=TRUE),
+              seq(min(zlim, na.rm=TRUE), max(zlim, na.rm=TRUE), length=length(col)-1),
+              max(x, zlim, na.rm=TRUE))
   ## single or multiple images?
   if (plot.type[1] == "multiple") {
     index <- 1:Z
@@ -118,10 +118,10 @@ overlay.nifti <- function(x, y, z=1, w=1, col.x=gray(0:64/64),
     if (max(zlim.x) == 0)
       zlim.x <- c(x@"glmin", x@"glmax")
   }
-  breaks.x <- c(min(x,zlim.x,na.rm=TRUE),
-                seq(min(zlim.x,na.rm=TRUE), max(zlim.x,na.rm=TRUE),
+  breaks.x <- c(min(x, zlim.x, na.rm=TRUE),
+                seq(min(zlim.x, na.rm=TRUE), max(zlim.x, na.rm=TRUE),
                     length=length(col.x)-1),
-                max(x,zlim.x,na.rm=TRUE))
+                max(x, zlim.x, na.rm=TRUE))
   ## check for z-limits in y; use internal by default
   if (is.null(zlim.y)) {
     zlim.y <- c(y@"cal_min", y@"cal_max")
@@ -196,9 +196,10 @@ orthographic.nifti <- function(x, xyz=NULL, crosshairs=TRUE,
     if (diff(zlim) == 0)
       zlim <- range(x, na.rm=TRUE)
   }
-  breaks <- c(min(x,zlim),
-              seq(min(zlim), max(zlim), length=length(col)-1),
-              max(x,zlim))
+  breaks <- c(min(x, zlim, na.rm=TRUE),
+              seq(min(zlim, na.rm=TRUE), max(zlim, na.rm=TRUE),
+                  length=length(col)-1),
+              max(x, zlim, na.rm=TRUE))
   oldpar <- par(no.readonly=TRUE)
   par(mfrow=c(2,2), oma=oma, mar=mar, bg=bg)
   if (is.na(W)) {
