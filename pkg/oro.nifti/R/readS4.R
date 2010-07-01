@@ -95,7 +95,9 @@ read.nifti.content <- function(fname, onefile=TRUE, gzipped=TRUE,
     fname <- paste(fname, suffix, sep=".")
     fid <- file(fname, "rb")
   }
-  if (verbose) cat("  nii   =", fname, fill=TRUE)
+  if (verbose) {
+    cat("  nii   =", fname, fill=TRUE)
+  }
   ## Warnings?
   oldwarn <- options()$warn
   options(warn=warn)
@@ -104,13 +106,16 @@ read.nifti.content <- function(fname, onefile=TRUE, gzipped=TRUE,
   sizeof.hdr <- readBin(fid, integer(), size=4, endian=endian)
   if (sizeof.hdr != 348) {
     close(fid)
-      endian <- "swap"
-    if (gzipped)
+    endian <- "swap"
+    if (gzipped) {
       fid <- gzfile(fname, "rb")
-    else
+    } else {
       fid <- file(fname, "rb")
+    }
     sizeof.hdr <- readBin(fid, integer(), size=4, endian=endian)
-    if (verbose) cat("  ENDIAN = swap", fill=TRUE)
+    if (verbose) {
+      cat("  ENDIAN = swap", fill=TRUE)
+    }
   }
   ## Construct S4 object
   nim <- nifti()
@@ -132,7 +137,9 @@ read.nifti.content <- function(fname, onefile=TRUE, gzipped=TRUE,
   nim@"slice_start" <- readBin(fid, integer(), size=2, endian=endian)
   nim@"pixdim" <- readBin(fid, numeric(), 8, size=4, endian=endian)
   nim@"vox_offset" <- readBin(fid, numeric(), size=4, endian=endian)
-  if (verbose) cat("  vox_offset =", nim@"vox_offset", fill=TRUE)
+  if (verbose) {
+    cat("  vox_offset =", nim@"vox_offset", fill=TRUE)
+  }
   nim@"scl_slope" <- readBin(fid, numeric(), size=4, endian=endian)
   nim@"scl_inter" <- readBin(fid, numeric(), size=4, endian=endian)
   nim@"slice_end" <- readBin(fid, integer(), size=2, endian=endian)
@@ -169,8 +176,9 @@ read.nifti.content <- function(fname, onefile=TRUE, gzipped=TRUE,
   ## start of the file, but trying to avoid clobbering widely-used
   ## ANALYZE 7.5 fields led to putting this marker last.  However,
   ## recall that "the last shall be first" (Matthew 20:16).
-  if (!(nim@"magic" %in% c("n+1","ni1")))
+  if (!(nim@"magic" %in% c("n+1","ni1"))) {
     stop(" -- Unrecognized \"magic\" field! --")
+  }
   nim@"extender" <- readBin(fid, integer(), 4, size=1, signed=FALSE,
                             endian=endian)
   ## If extension[0] is nonzero, it indicates that extended header
@@ -183,19 +191,25 @@ read.nifti.content <- function(fname, onefile=TRUE, gzipped=TRUE,
   ## FIXME This doesn't account for two-file
   ##
   if (nim@"extender"[1] > 0 || nim@"vox_offset" > 352) {
-    if (verbose) cat("  niftiExtension detected!", fill=TRUE)
-    if (!is(nim, "niftiExtension"))
+    if (verbose) {
+      cat("  niftiExtension detected!", fill=TRUE)
+    }
+    if (!is(nim, "niftiExtension")) {
       nim <- as(nim, "niftiExtension")
+    }
     while (seek(fid) < nim@"vox_offset") {
-      if (verbose) cat("  seek(fid) =", seek(fid), fill=TRUE) 
+      if (verbose) {
+        cat("  seek(fid) =", seek(fid), fill=TRUE)
+      }
       nimextsec <- new("niftiExtensionSection")
       nimextsec@esize <- readBin(fid, integer(), size=4, endian=endian)
       nimextsec@ecode <- readBin(fid, integer(), size=4, endian=endian)
       nimextsec@edata <- readCharWithEmbeddedNuls(fid, n=nimextsec@esize-8)
       nim@extensions <- append(nim@extensions, nimextsec)
     }
-    if (seek(fid) > nim@"vox_offset")
+    if (seek(fid) > nim@"vox_offset") {
       stop("-- extension size (esize) has overshot voxel offset --")
+    }
   }
 
   if (verbose) cat("  seek(fid) =", seek(fid), fill=TRUE) 
