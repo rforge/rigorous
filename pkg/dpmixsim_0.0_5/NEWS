@@ -1,0 +1,23 @@
+Changes in dpmixsim version 0.0-5
+
+	o	Initialisation of the simulation may be performed with any number 
+		of clusters between 1 and n (vector data dimension).
+
+	o	Simulation now estimates one variance per cluster.
+
+	o	Simulation runtime have been reduced by more than 40%, based on code
+    optimizations. 
+
+  o Argument "minvar" has been added to dpmixsim() to control
+    the minimum admissible cluster variance estimate.
+
+	o	Reversed the order of the steps in "src/gibbsclustersamplealpha.cc".
+		Re-sampling steps are now performed before cluster management.
+
+	o	Introduced "testMarronWand" demo to test dpmixsim discriminating power.
+
+  o postdpmixciz() has been modified to go with the changes.
+
+	o	Bug fixed: sampling theta in birth of "newcluster".
+
+First version released on CRAN: 0.0-3
