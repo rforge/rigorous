@@ -1,4 +1,4 @@
-\documentclass[article]{jss}
+\documentclass[article,shortnames]{jss}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% declarations for jss.cls %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -55,11 +55,11 @@
 %% end of declarations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 <<preliminaries,echo=FALSE,results=hide>>=
+library("oro.dicom")
 library("bitops")
 library("XML")
 library("oro.nifti")
-## options(niftiAuditTrail=FALSE)
-options(width=85)
+options(width=80)
 @
 
 \begin{document}
@@ -73,24 +73,65 @@ options(width=85)
 
 \section[oro.dicom: DICOM Data Input/Output in R]{\pkg{oro.dicom}: DICOM Data Input/Output in \proglang{R}}
 
+The industry standard format, for data acquired using a clinical
+imaging device, is DICOM (Digital Imaging and Communications in
+Medicine; \url{medical.nema.org}).  The DICOM ``standard'' is very
+broad and complex.  Roughly speaking each DICOM-compliant file is a
+collection of fields organized into two four-byte sequences
+(group,element) that are represented as hexadecimal numbers and form a
+tag.  The (group,element) combination establishes what type of
+information is forthcoming in the file.  There is no fixed number of
+bytes for a DICOM header.  The final (group,element) tag should be the
+``data'' tag (7FE0,0010), such that all subsequent information is
+related to the image(s).
 
+\subsection[]{The DICOM Header}
+
+
+
+\subsection[]{The DICOM Image}
+
+
+
+\subsection[]{Examples}
+
+<<DICOM01>>=
+x <- dicomInfo(system.file("dcm/Abdo.dcm", package="oro.dicom"))
+@ 
+<<figure1-png,echo=FALSE,results=hide>>=
+png(filename="dicom_abdo.png", width=400, height=400, bg="black")
+@ 
+<<figure1-code>>=
+image(t(x$img), col=grey(0:64/64), axes=FALSE, xlab="", ylab="")
+@ 
+<<figure1-dev.off,echo=FALSE,results=hide>>=
+dev.off()
+@ 
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics{dicom_abdo.png}
+  \caption{Coronal slice.}
+  \label{fig:dicom_abdo}
+\end{figure}
 
 \section[oro.nifti: NIfTI-1 Data Input/Output in R]{\pkg{oro.nifti}: NIfTI-1 Data Input/Output in \proglang{R}}
 
-The \pkg{oro.nifti} package requires incoming data to be in the
-ANALYZE~7.5 or NIfTI formats.  Data acquisition and conversion from
-DICOM must be performed by the user before the package \pkg{oro.nifti}
-may be used to manipulate the data.  Several software packages allow
-DICOM-to-NIfTI (or ANALYZE) conversion; e.g.,
-\begin{itemize}
-\item \pkg{oro.dicom} (\url{rigorous.r-forge.r-project.org})
-\item \pkg{tractor.base} (\url{code.google.com/p/tractor})
-\item FreeSurfer (\url{surfer.nmr.mgh.harvard.edu})
-\item Xmedcon (\url{xmedcon.sourceforge.net})
-\item MRIConvert (\url{lnci.oregon.edu/\~jolinda/MRIConvert})
-\end{itemize}
-This is by no means an exhaustive list of software available for DICOM
-conversion.
+Although the industry standard for medical imaging data is DICOM,
+another format has come to be heavily used in the image analysis
+community.  The ANALYZE format was originally developed in conjunction
+with an image processing system (of the same name) at the Mayo
+Foundation.  An Anlayze (7.5) format image is comprised of two files,
+the ``hdr'' and ``img'' files, that contain information about the
+acquisition and the acquisition itself, respectively.  A more recent
+adaption of this format is known as NIfTI-1 and is a product of the
+Data Format Working Group (DFWG) from the Neuroimaging Informatics
+Technology Initiative (NIfTI; \url{nifti.nimh.nih.gov}).  The NIfTI-1
+data format is almost identical to the ANALYZE format, but offers a
+few improvements: merging of the header and image information into one
+file (.nii), re-organization of the 348-byte fixed header into more
+relevant categories and the possibility of extending the header
+information.
 
 \subsection[]{A Note on Axes and Orientation}
 
@@ -321,6 +362,30 @@ statistical image to an underlying structural image.
   \label{fig:zstat1}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section[]{Converting DICOM to NIfTI}
+
+The \pkg{oro.nifti} package requires incoming data to be in the
+ANALYZE~7.5 or NIfTI formats.  Data acquisition and conversion from
+DICOM must be performed by the user before the package \pkg{oro.nifti}
+may be used to manipulate the imaging data.  Several standalone
+software packages allow DICOM-to-NIfTI (or ANALYZE) conversion; e.g.,
+\begin{itemize}
+\item FreeSurfer (\url{surfer.nmr.mgh.harvard.edu})
+\item Xmedcon (\url{xmedcon.sourceforge.net})
+\item MRIConvert (\url{lnci.oregon.edu/\~jolinda/MRIConvert})
+\end{itemize}
+This is by no means an exhaustive list of standalone software packages
+available for DICOM conversion.  In addition there are several
+\proglang{R} packages with the ability to process DICOM data
+\begin{itemize}
+\item \pkg{fmri}
+\item \pkg{tractor.base} (part of the tractor project
+  \url{code.google.com/p/tractor})
+\end{itemize}
+and facilitate their conversion to ANALYZE or NIfTI format.
+
+\section[]{Conclusion}
 
 \section*{Acknowledgments}
 
