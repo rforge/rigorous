@@ -198,7 +198,7 @@ setValidity("nifti", function(object) {
     retval <- c(retval, "datatype not recognized")
   }
   ## bitpix should correspond correctly to datatype
-  if (! identical(object@bitpix, convert.bitpix()[[convert.datatype(object@datatype)]])) {
+  if (object@bitpix != convert.bitpix()[[convert.datatype(object@datatype)]]) {
     retval <- c(retval, "bitpix does not match the datatype")
   }
   ## dim should be non-zero for dim[1] dimensions
@@ -215,7 +215,7 @@ setValidity("nifti", function(object) {
     retval <- c(retval, "range(img) != c(cal_min,cal_max)")
   }
   ## pixdim[0] is required when qform_code != 0
-  if (object@"qform_code" != 0 && identical(object@pixdim[1], 0)) {
+  if (object@"qform_code" != 0 && object@pixdim[1] == 0) {
     retval <- c(retval, "pixdim[1] is required")
   }
   ## pixdim[n] required when dim[n] is required
@@ -227,11 +227,11 @@ setValidity("nifti", function(object) {
     retval <- c(retval, "dim/img mismatch")
   }
   ## vox_offset required for an "n+1" header
-  if (identical(object@"magic", "n+1") && identical(object@"vox_offset", 0)) {
+  if (object@"magic" == "n+1" && object@"vox_offset" == 0) {
     retval <- c(retval, "vox_offset required when magic=\"n+1\"")
   }
   ## magic must be "ni1\0" or "n+1\0"
-  if (!(identical(object@"magic", "n+1") || identical(object@"magic", "ni1"))) {
+  if (! (object@"magic" == "n+1" || object@"magic" == "ni1")) {
     retval <- c(retval, "magic != \"n+1\" and magic != \"ni1\"")
   }
   if (is.null(retval)) {
