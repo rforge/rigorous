@@ -12,7 +12,7 @@
 
 %% for pretty printing and a nice hypersummary also set:
 \Plainauthor{Brandon Whitcher, Volker Schmid, Andrew Thornton} %% comma-separated
-\Plaintitle{Working with the {DICOM} and {NifTI} Data Standards in R} %% without formatting
+\Plaintitle{Working with the {DICOM} and {NIfTI} Data Standards in R} %% without formatting
 \Shorttitle{{DICOM} and {NIfTI} in R} %% a short title (if necessary)
 
 %% an abstract and keywords
@@ -60,6 +60,7 @@ library("bitops")
 library("XML")
 library("oro.nifti")
 options(width=80)
+options(prompt="R> ")
 @
 
 \begin{document}
@@ -87,33 +88,102 @@ related to the image(s).
 
 \subsection[]{The DICOM Header}
 
+Accessing the information stored in a single DICOM file is enabled
+using the \code{dicomInfo} function.  The basic structure of the
+resulting object is a list with two elements: the DICOM header
+(\code{hdr}) and the DICOM image (\code{img}).  The header information
+is organized in a data frame with six columns and an unknown number of
+rows depending on the input parameters.
 
+<<DICOM Abdo 01>>=
+abdo <- dicomInfo(system.file("dcm/Abdo.dcm", package="oro.dicom"))
+names(abdo)
+abdo$hdr[1:5,]
+abdo$hdr[nrow(abdo$hdr)-4:0,]
+@ 
+
+The ordering of the rows is identical to the ordering in the original
+DICOM file.  Hence, the first five tags in the DICOM header of
+\code{Abdo.dcm} are: ``GroupLength'', ``FileMetaInformationVersion'',
+``MediaStorageSOPClassUID'', ``MediaStorageSOPInstanceUID'' and
+``TransferSyntaxUID''.  The last five tags in the DICOM header are
+also shown, with the very last tag indicating the start of the image
+data for that file and the number of bytes (131072) involved.  When
+additional tags in the DICOM header information are queried
+
+<<DICOM Abdo 02>>=
+abdo$hdr$value[abdo$hdr$name %in% "BitsAllocated"]
+abdo$hdr$value[abdo$hdr$name %in% "Rows"]
+abdo$hdr$value[abdo$hdr$name %in% "Columns"]
+@ 
+
+it is clear that the data are consistent with the header information
+in terms of number of bytes ($256\times256\times2=131072$).
+
+The first five columns are taken directly from the DICOM header
+information (\code{group}, \code{element}, \code{code}, \code{length}
+and \code{value}) or inferred from that information (\code{name}).
+Note, the (\code{group},\code{element}) values are stored as character
+strings even though they are hexadecimal numbers.  All aspects of the
+data frame may be interrogated in \proglang{R} in order to extract
+relevant information from the DICOM header; e.g.,
+\code{"BitsAllocated"} as above.
+
+When multiple DICOM files are located in a single directory, or spread
+across multiple directories in a tree, the function
+\code{dicomSeparate} is used.  
+
+<<DICOM HK40 01>>=
+hk40 <- dicomSeparate(system.file("hk-40", package="oro.dicom"))
+c(length(hk40$hdr), length(hk40$img))
+@ 
+
+The object associated with \code{dicomSeparate} is now a nested set of
+lists, where the \code{hdr} is a list of data frames and the
+\code{img} is a list of matrices.  These two lists are associated in a
+pairwise sense; i.e., \code{hdr[[1]]} is the header information for
+the image \code{img[[1]]}.  Default parameters \code{recursive = TRUE}
+and \code{pixelData = TRUE} (which is actually an input parameter for
+\code{dicomInfo}) allow the user to search down all possible
+subdirectories and upload the image in addition to the header
+information, respectively.  Also, by default all files are treated as
+DICOM files unless the \code{exclude} parameter is set to the unwanted
+file extension; e.g., \code{exclude = "xml"}.
 
 \subsection[]{The DICOM Image}
 
+Most DICOM files involve a single slice from an acquisition -- the
+image.  Going back to the \code{Abdo.dcm} example, the image is
+accessed via
 
-
-\subsection[]{Examples}
-
-<<DICOM01>>=
-x <- dicomInfo(system.file("dcm/Abdo.dcm", package="oro.dicom"))
-@ 
 <<figure1-png,echo=FALSE,results=hide>>=
 png(filename="dicom_abdo.png", width=400, height=400, bg="black")
+par(mar=rep(0,4))
 @ 
 <<figure1-code>>=
-image(t(x$img), col=grey(0:64/64), axes=FALSE, xlab="", ylab="")
+image(t(abdo$img), col=grey(0:64/64), axes=FALSE, xlab="", ylab="")
 @ 
 <<figure1-dev.off,echo=FALSE,results=hide>>=
 dev.off()
+#par(mar=c(5,4,4,2)+0.1)
 @ 
+
+where the transpose function is necessary for proper visualization of
+the image.  Figure~\ref{fig:dicom_abdo} displays a coronal slice
+through the abdomen from an MRI acquisition.  All formatting
+information should accompany the image through the DICOM header, and
+this information is utiilized as much as possible by \pkg{oro.dicom}
+to simplify the manipulation of DICOM data.  
 
 \begin{figure}[!htbp]
   \centering
-  \includegraphics{dicom_abdo.png}
-  \caption{Coronal slice.}
+  \includegraphics*[width=0.5\textwidth]{dicom_abdo.png}
+  \caption{Coronal slice of the abdomen viewed in neurological
+    convention (left is right and right is left).}
   \label{fig:dicom_abdo}
 \end{figure}
+
+
 
 \section[oro.nifti: NIfTI-1 Data Input/Output in R]{\pkg{oro.nifti}: NIfTI-1 Data Input/Output in \proglang{R}}
 
