@@ -79,9 +79,9 @@ options(prompt="R> ")
 
 The industry standard format, for data acquired using a clinical
 imaging device, is DICOM (Digital Imaging and Communications in
-Medicine; \url{medical.nema.org}).  The DICOM ``standard'' is very
-broad and complex.  Roughly speaking each DICOM-compliant file is a
-collection of fields organized into two four-byte sequences
+Medicine; \url{http://medical.nema.org}).  The DICOM ``standard'' is
+very broad and complex.  Roughly speaking each DICOM-compliant file is
+a collection of fields organized into two four-byte sequences
 (group,element) that are represented as hexadecimal numbers and form a
 tag.  The (group,element) combination establishes what type of
 information is forthcoming in the file.  There is no fixed number of
@@ -209,10 +209,13 @@ explicitly.
 fname <- file.path("dcm", "MR-sonata-3D-as-Tile.dcm")
 dcm <- dicomInfo(system.file(fname, package="oro.dicom"))
 dim(dcm$img)
-image(t(dcm$img), col=grey(0:64/64), axes=FALSE, xlab="", ylab="")
-dcmImage <- create3D(dcm, mode="integer", mosaic=TRUE)
+dcmImage <- create3D(dcm, mosaic=TRUE)
 dim(dcmImage)
-(dcmNifti <- dicom2nifti(dcmImage, dcm$hdr, aux.file=fname))
+(dcmNifti <- dicom2nifti(dcm, mosaic=TRUE, aux.file=fname))
+@ 
+
+<<DICOM Siemens 02,eval=FALSE,echo=FALSE>>=
+image(t(dcm$img), col=grey(0:64/64), axes=FALSE, xlab="", ylab="")
 image(dcmNifti)
 @ 
 
@@ -246,33 +249,46 @@ offers a few improvements
 
 \subsection[]{The NIfTI Header}
 
+The NIfTI header inherits its structure (348 bytes in length) from the
+ANALYZE data format (\code{system.file("doc/ANALYZE75.pdf",
+  package="oro.dicom"}).  The last four bytes in teh NIfTI header
+correspond to the ``magic'' field and denote whether or not the header
+and image are contained in a single file (\code{magic = "n+1\\0"}) or
+two separate files (\code{magic = "ni1\\0"}), the latter being
+identical to the structure of the ANALYZE data format.  The NIfTI data
+format added an additional four bytes to allow for ``extensions'' to
+the header.  By default these four bytes are set to zero.  
+
 The first example of reading in, and displaying, medical imaging data
 in NIfTI format (\texttt{avg152T1\_LR\_nifti.nii.gz}) was obtained
 from the NIfTI website (\url{http://nifti.nimh.nih.gov/nifti-1/}).
-Successful execution of the command:
+Successful execution of the command
 
 <<mniLR_nifti>>=
-(mni.LR <- readNIfTI(system.file("nifti/mniLR.nii.gz", package="oro.nifti")))
-aux.file(mni.LR)
-descrip(mni.LR)
+(mniLR <- readNIfTI(system.file("nifti/mniLR.nii.gz", package="oro.nifti")))
+aux.file(mniLR)
+descrip(mniLR)
 @ 
 
-Note, the \code{image} function has
-been modified to accept \code{nifti} and \code{anlz} objects and
-display them with minimal user input.  Two accessor functions are also
-shown here: \code{aux.file} and \code{descrip}.  The former is used to
+produces an S4 \code{"nifti"} object (or \code{"niftiAuditTrail"} if
+the audit trail option is set).  Two accessor functions are also shown
+here: \code{aux.file} and \code{descrip}.  The former is used to
 access the oriignal file name of the file (if it exists) and the
 latter is the name of a valid NIfTI header field (up to 80~characters
-in length).  
-
+in length).
 
 \subsection[]{The NIfTI Image}
+
+Image information begins, in a single NIfTI file
+(\verb+magic = "n+1\\0"+), after the first 352 bytes.  If header
+extensions are used, then the image information is pushed further in
+the byte stream. \textbf{[MORE!]}
 
 <<figure1-png,echo=FALSE,results=hide>>=
 png(filename="mniLR.png", width=400, height=400, bg="black")
 @ 
 <<figure1-code>>=
-image(mni.LR)
+image(mniLR)
 @ 
 <<figure1-dev.off,echo=FALSE,results=hide>>=
 dev.off()
@@ -280,7 +296,9 @@ dev.off()
 
 produces a 4D array of the image data, with the default NIfTI axes,
 and is displayed on a $10{\times}10$ grid of images
-(Figure~\ref{fig:mniLR+mniRL}a).  
+(Figure~\ref{fig:mniLR+mniRL}a).  Note, the \code{image} function has
+been overloaded with the classes \code{nifti} and \code{anlz} in order
+to display them with minimal user input.
 
 \begin{figure}[!htbp]
   \begin{minipage}[b]{0.5\linewidth}
@@ -308,13 +326,13 @@ from the NIfTI website (\url{http://nifti.nimh.nih.gov/nifti-1/}).
 Successful execution of the command
 
 <<mniRL_nifti>>=
-(mni.RL <- readNIfTI(system.file("nifti/mniRL.nii.gz", package="oro.nifti")))
+(mniRL <- readNIfTI(system.file("nifti/mniRL.nii.gz", package="oro.nifti")))
 @ 
 <<figure2-png,echo=FALSE,results=hide>>=
 png(filename="mniRL.png", width=400, height=400, bg="black")
 @ 
 <<figure2-code>>=
-image(mni.RL)
+image(mniRL)
 <<figure2-dev.off,echo=FALSE,results=hide>>=
 dev.off()
 @ 
@@ -386,9 +404,9 @@ stored as a NIfTI header extension.
   \vspace{3mm}
   \centering
   \begin{tabular}{p{22cm}}
-    <<NIfTI audit.trail 01>>=
-    audit.trail(mniLR)
-    @
+<<NIfTI audit.trail 01>>=
+audit.trail(mniLR)
+@
   \end{tabular}
 \end{sidewaystable}
 
@@ -415,8 +433,8 @@ viewing software should display these images identically.
 This is an example of reading in, and displaying, a four-dimensional
 medical imaging data set in NIfTI format
 (\texttt{filtered\_func\_data.nii}) obtained from the NIfTI website
-(\url{nifti.nimh.nih.gov/nifti-1/}).  Successful execution of the
-command
+(\url{http://nifti.nimh.nih.gov/nifti-1/}).  Successful execution of
+the command
 
 <<filtered_func_data>>=
 (ffd <- readNIfTI(system.file("nifti/ffd.nii.gz", package="oro.nifti")))
@@ -536,9 +554,9 @@ DICOM must be performed by the user before the package \pkg{oro.nifti}
 may be used to manipulate the imaging data.  Several standalone
 software packages allow DICOM-to-NIfTI (or ANALYZE) conversion; e.g.,
 \begin{itemize}
-\item FreeSurfer (\url{surfer.nmr.mgh.harvard.edu})
-\item Xmedcon (\url{xmedcon.sourceforge.net})
-\item MRIConvert (\url{lnci.oregon.edu/\~jolinda/MRIConvert})
+\item FreeSurfer (\url{http://surfer.nmr.mgh.harvard.edu})
+\item Xmedcon (\url{http://xmedcon.sourceforge.net})
+\item MRIConvert (\url{http://lnci.oregon.edu/\~jolinda/MRIConvert})
 \end{itemize}
 This is by no means an exhaustive list of standalone software packages
 available for DICOM conversion.  In addition there are several
@@ -546,7 +564,7 @@ available for DICOM conversion.  In addition there are several
 \begin{itemize}
 \item \pkg{fmri}
 \item \pkg{tractor.base} (part of the tractor project
-  \url{code.google.com/p/tractor})
+  \url{http://code.google.com/p/tractor})
 \end{itemize}
 and facilitate their conversion to ANALYZE or NIfTI format.
 
