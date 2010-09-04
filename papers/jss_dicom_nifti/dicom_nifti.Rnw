@@ -253,11 +253,12 @@ The NIfTI header inherits its structure (348 bytes in length) from the
 ANALYZE data format (\code{system.file("doc/ANALYZE75.pdf",
   package="oro.dicom"}).  The last four bytes in teh NIfTI header
 correspond to the ``magic'' field and denote whether or not the header
-and image are contained in a single file (\code{magic = "n+1\\0"}) or
-two separate files (\code{magic = "ni1\\0"}), the latter being
-identical to the structure of the ANALYZE data format.  The NIfTI data
-format added an additional four bytes to allow for ``extensions'' to
-the header.  By default these four bytes are set to zero.  
+and image are contained in a single file (\code{magic =
+  "n+1\textbackslash{}0"}) or two separate files (\code{magic =
+  "ni1\textbackslash{}0"}), the latter being identical to the
+structure of the ANALYZE data format.  The NIfTI data format added an
+additional four bytes to allow for ``extensions'' to the header.  By
+default these four bytes are set to zero.
 
 The first example of reading in, and displaying, medical imaging data
 in NIfTI format (\texttt{avg152T1\_LR\_nifti.nii.gz}) was obtained
@@ -279,8 +280,8 @@ in length).
 
 \subsection[]{The NIfTI Image}
 
-Image information begins, in a single NIfTI file
-(\verb+magic = "n+1\\0"+), after the first 352 bytes.  If header
+Image information begins, in a single NIfTI file (\code{magic =
+  "n+1\textbackslash{}0"}), after the first 352 bytes.  If header
 extensions are used, then the image information is pushed further in
 the byte stream. \textbf{[MORE!]}
 
