@@ -23,7 +23,7 @@ Type 'q()' to quit R.
 > library('oro.nifti')
 Loading required package: XML
 
-oro.nifti: Rigorous - NIfTI Input / Output (version = 0.2.0)
+oro.nifti: Rigorous - NIfTI Input / Output (version = 0.2.1)
 
 > 
 > assign(".oldSearch", search(), pos = 'CheckExEnv')
@@ -852,7 +852,7 @@ detaching ‘package:splines’
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  5.11 0.12 5.234 0 0 
+Time elapsed:  5.25 0.1 5.588 0 0 
 > grDevices::dev.off()
 null device 
           1 

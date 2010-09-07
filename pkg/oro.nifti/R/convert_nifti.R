@@ -53,10 +53,11 @@ convert.bitpix <- function(bitpix=NULL) {
                        COMPLEX256 = 256,
                        RGB24 = 24,
                        RGBA32 = 32)
-  if (is.null(bitpix))
-    return(nifti.bitpix)
-  else
-    return(names(which(nifti.bitpix == bitpix)))
+  if (is.null(bitpix)) {
+    nifti.bitpix
+  } else {
+    names(which(nifti.bitpix == bitpix))
+  }
 }
 
 
@@ -77,10 +78,11 @@ convert.datatype <- function(datatype.code=NULL) {
                          COMPLEX128 = 1792,
                          COMPLEX256 = 2048,
                          RGBA32 = 2304)
-  if (is.null(datatype.code))
-    return(nifti.datatype)
-  else
-    return(names(which(nifti.datatype == as.numeric(datatype.code))))
+  if (is.null(datatype.code)) {
+    nifti.datatype
+  } else {
+    names(which(nifti.datatype == as.numeric(datatype.code)))
+  }
 }
 
 convert.intent <- function(intent.code=NULL) {
@@ -119,10 +121,11 @@ convert.intent <- function(intent.code=NULL) {
                        Triangle = 1009,  # triple of indexes
                        Quaternion = 1010, # a quaternion
                        Dimless = 1011)   # Dimensionless value - no params
-  if (is.null(intent.code))
-    return(nifti.intent)
-  else
-    return(names(which(nifti.intent == as.numeric(intent.code))))
+  if (is.null(intent.code)) {
+    nifti.intent
+  } else {
+    names(which(nifti.intent == as.numeric(intent.code)))
+  }
 }
 
 convert.form <- function(form.code) {
@@ -181,40 +184,58 @@ convert.slice <- function(slice.code) {
 
 xyzt2space <- function(xyzt) {
   ## define XYZT_TO_SPACE(xyzt) ( (xyzt) & 0x07 )
-  require("bitops")
-  bitAnd(xyzt, 7)
+  if (require("bitops")) {
+    bitAnd(xyzt, 7)
+  } else {
+    NA
+  }
 }
 
 xyzt2time <- function(xyzt) {
   ## define XYZT_TO_TIME(xyzt) ( (xyzt) & 0x38 )
-  require("bitops")
-  bitAnd(xyzt, 56)
+  if (require("bitops")) {
+    bitAnd(xyzt, 56)
+  } else {
+    NA
+  }
 }
 
 space.time2xyzt <- function(ss, tt) {
   ## define SPACE_TIME_TO_XYZT(ss,tt) (  (((char)(ss)) & 0x07)   \
   ##                                   | (((char)(tt)) & 0x38) )
-  require("bitops")
-  bitAnd(convert.units(ss, inverse=TRUE), 7) +
-    bitAnd(convert.units(tt, inverse=TRUE), 56)
+  if (require("bitops")) {
+    bitAnd(convert.units(ss, inverse=TRUE), 7) +
+      bitAnd(convert.units(tt, inverse=TRUE), 56)
+  } else {
+    NA
+  }
 }
 
 dim2freq <- function(di) {
   ## define DIM_INFO_TO_FREQ_DIM(di) ( ((di)     ) & 0x03 )
-  require("bitops")
-  bitAnd(di, 3)
+  if (require("bitops")) {
+    bitAnd(di, 3)
+  } else {
+    NA
+  }
 }
 
 dim2phase <- function(di) {
   ## define DIM_INFO_TO_PHASE_DIM(di) ( ((di) >> 2) & 0x03 )
-  require("bitops")
-  bitAnd(bitShiftR(di, 2), 3)
+  if (require("bitops")) {
+    bitAnd(bitShiftR(di, 2), 3)
+  } else {
+    NA
+  }
 }
 
 dim2slice <- function(di) {
   ## define DIM_INFO_TO_SLICE_DIM(di) ( ((di) >> 4) & 0x03 )
-  require("bitops")
-  bitAnd(bitShiftR(di, 4), 3)
+  if (require("bitops")) {
+    bitAnd(bitShiftR(di, 4), 3)
+  } else {
+    NA
+  }
 }
 
 ############################################################################
