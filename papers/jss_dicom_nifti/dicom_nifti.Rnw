@@ -19,7 +19,22 @@
 
 %% an abstract and keywords
 \Abstract{
-  The abstract of the article.
+
+Two packages are provided for the manipulation of medical imaging data
+that conform to the DICOM standard or Analyze/NIfTI formats.  DICOM
+data, from a single file or single directory or directory tree, may be
+uploaded into \proglang{R} using basic data structures: a data frame
+for the header information and a matrix for the image data.  A list
+structure is used to organize multiple DICOM files.  The S4 class
+framework is used to develop basic Analyze and NIfTI classes, where
+NIfTI extensions may be used to augment the NIfTI class.  One example
+of this is an XML-based ``audit trail'' that tracks the history of
+operations applied to a dataset.  The conversion from DICOM to
+Analyze/NIfTI is also possible.  The S4 classes have been developed to
+provide a user-friendly interface to the Analyze/NIfTI data formats;
+allowing easy data input, data output, image processing and
+visualization.
+
 }
 \Keywords{keywords, comma-separated, not capitalized, \proglang{R}}
 \Plainkeywords{keywords, comma-separated, not capitalized, R} %% without formatting
@@ -73,7 +88,37 @@ options(prompt="R> ")
 
 \section[]{Introduction}
 
+Medical imaging is well established in both the clinical and research
+arenas with numerous equipment manufacturers supplying a wide variety
+of modalities.  The DICOM standard was developed from earlier
+standards and released in 1993.  It is the data format for clinical
+imaging equipment, and other equipment that is beyond the scope of
+this work.  The DICOM standard provides interoperability across
+hardware, but was not designed to facilitate efficient data
+manipulation and image processing.
 
+The Analyze format was developed at the Mayo Clinic (in the 1990s) to
+store multidimensional biomedical images.  It is fundamentally
+different from the DICOM standard since it groups all images from a
+single acquisition (typically three- or four-dimensional) into a pair
+of binary files, one containing header information and one containing
+the image information.  The DICOM standard groups the header and image
+information, typically a single two-dimensional image, into a single
+file.  Hence, a single acquisition will contain multiple DICOM files
+but only a pair of Analyze files.
+
+The NIfTI format was developed in the early 2000s by the DFWG (Data
+Format Working Group) in an effort to improve upon the Analyze format.
+The resulting NIfTI-1 format adheres to the basic header/image
+combination from the Analyze format, but allows the pair of files to
+be combined into a single file and re-defines the header fields.
+
+The material presented here provides users with a method of
+interacting with DICOM, Analyze and NIfTI files in \proglang{R}.
+Real-world datasets, that are publically available, are used to
+illustrate the basic functionality of the two packages:
+\pkg{oro.dicom} and \pkg{oro.nifti}.  Major featuers include data
+input/output and conversion from DICOM to Analyze/NIfTI.
 
 \section[oro.dicom: DICOM Data Input/Output in R]{\pkg{oro.dicom}: DICOM Data Input/Output in \proglang{R}}
 
@@ -88,6 +133,88 @@ information is forthcoming in the file.  There is no fixed number of
 bytes for a DICOM header.  The final (group,element) tag should be the
 ``data'' tag (7FE0,0010), such that all subsequent information is
 related to the image(s).
+
+\begin{table}
+  \begin{center}
+    \begin{tabular}{llrr}
+      \hline
+      \textbf{Code} & \textbf{Name} & \textbf{Bytes} & \textbf{Fixed}\\
+      \hline\\
+      AE & ApplicationEntity & 16 & 0\\
+      AS & AgeString & 4 & 1\\
+      AT & AttributeTag & 4 & 1\\
+      CS & CodeString & 16 & 0\\
+      DA & Date & 8 & 1\\
+      DS & DecimalString & 16 & 0\\
+      DT & DateTime & 26 & 0\\
+      FL & FloatingPointSingle & 4 & 1\\
+      FD & FloatingPointDouble & 8 & 1\\
+      IS & IntegerString & 12 & 0\\
+      LO & LongStrong & 64 & 0\\
+      LT & LongText & 10240 & 0\\
+      OB & OtherByteString & 0 & 0\\
+      OW & OtherWordString & 0 & 0\\
+      PN & PersonName & 64 & 0\\
+      SH & ShortString & 16 & 0\\
+      SL & SignedLong & 4 & 1\\
+      SQ & SequenceOfItems & 0 & 0\\
+      SS & SignedShort & 2 & 1\\
+      ST & ShortText & 1024 & 0\\
+      TM & Time & 16 & 0\\
+      UI & UniqueIdentifierUID & 64 & 0\\
+      UL & UnsignedLong & 4 & 1\\
+      UN & Unknown & 0 & 0\\
+      US & UnsignedShort & 2 & 1\\
+      UT & UnlimitedText & 0 & 0\\
+      \hline
+    \end{tabular}
+  \end{center}
+  \label{tab:VR}
+  \caption{Value representations in the DICOM standard.}
+\end{table}
+
+All attributes in the DICOM standard require different data types for
+correct representation.  These are known as value representations
+(VRs) in DICOM.  There are 27 such VRs defined, and listed in
+Table~\ref{tab:VR}.  Detailed explanations of these data types are
+provided in the Section~6.2 (part~5) of the DICOM standard
+(\url{http://medical.nema.org}).  The first column provides the
+two-character string that is present in each entry of the header field
+and the second column provides a descriptive name for the abbreviated
+code.  The third column provides the maximum length of the data
+associated with the VR (in bytes).  The fourth column is not used in
+the current implementation of the package.
+
+\begin{figure}
+\begin{verbatim}
+Data element with explicit VR of OB, OF, OW, SQ, UT or UN:
+
++-----------------------------------------------------------+
+|  0 |  1 |  2 |  3 |  4 |  5 |  6 |  7 |  8 |  9 | 10 | 11 |
++----+----+----+----+----+----+----+----+----+----+----+----+
+|<Group-->|<Element>|<VR----->|<0x0000->|<Length----------->|<Value->
+
+Data element with explicit VR other than as shown above:
+
++---------------------------------------+
+|  0 |  1 |  2 |  3 |  4 |  5 |  6 |  7 |
++----+----+----+----+----+----+----+----+
+|<Group-->|<Element>|<VR----->|<Length->|<Value->
+
+Data element with implicit VR:
+
++---------------------------------------+
+|  0 |  1 |  2 |  3 |  4 |  5 |  6 |  7 |
++----+----+----+----+----+----+----+----+
+|<Group-->|<Element>|<Length----------->|<Value->
+\end{verbatim}
+\label{fig:group-element}
+\caption{Byte ordering for a single (group,element) tag in the DICOM
+  standard.  Explicit VRs store the VR as text characters in two
+  bytes.  More information is provided in Section~7, Part 3.5-2009.}
+\end{figure}
+
+
 
 \subsection[]{The DICOM Header}
 
@@ -115,9 +242,9 @@ data for that file and the number of bytes (131072) involved.  When
 additional tags in the DICOM header information are queried
 
 <<DICOM Abdo 02>>=
-abdo$hdr$value[abdo$hdr$name %in% "BitsAllocated"]
-abdo$hdr$value[abdo$hdr$name %in% "Rows"]
-abdo$hdr$value[abdo$hdr$name %in% "Columns"]
+abdo$hdr$value[abdo$hdr$name == "BitsAllocated"]
+abdo$hdr$value[abdo$hdr$name == "Rows"]
+abdo$hdr$value[abdo$hdr$name == "Columns"]
 @ 
 
 it is clear that the data are consistent with the header information
