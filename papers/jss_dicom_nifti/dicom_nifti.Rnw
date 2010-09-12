@@ -342,7 +342,7 @@ dim(dcmImage)
 (dcmNifti <- dicom2nifti(dcm, mosaic=TRUE, aux.file=fname))
 @ 
 
-<<DICOM Siemens 02,echo=FALSE,results=hide>>=
+<<DICOM Siemens 02,results=hide,eval=FALSE>>=
 png(filename="dcmImage.png", width=480, height=480, bg="black")
 image(t(dcm$img), col=grey(0:64/64), axes=FALSE, xlab="", ylab="")
 dev.off()
@@ -363,9 +363,8 @@ dev.off()
     \includegraphics*[scale=1]{dcmNifti.png}\\
     \textbf{(b)}
   \end{minipage}
-  \label{fig:mosaic}
   \caption{\textbf{(a)} Single MOSAIC image.  \textbf{(b)} Lightbox
-    display of three-dimensional array of images.}
+    display of three-dimensional array of images.  \label{fig:mosaic}}
 \end{figure}
 
 Figure~\ref{fig:mosaic}a is taken from the raw DICOM file, in mosaic
@@ -380,7 +379,7 @@ Although the industry standard for medical imaging data is DICOM,
 another format has come to be heavily used in the image analysis
 community.  The ANALYZE format was originally developed in conjunction
 with an image processing system (of the same name) at the Mayo
-Foundation.  An Anlayze (7.5) format image is comprised of two files,
+Foundation.  An Analyze (7.5) format image is comprised of two files,
 the ``hdr'' and ``img'' files, that contain information about the
 acquisition and the acquisition itself, respectively.  A more recent
 adaption of this format is known as NIfTI-1 and is a product of the
@@ -401,7 +400,7 @@ offers a few improvements
 
 The NIfTI header inherits its structure (348 bytes in length) from the
 ANALYZE data format (\code{system.file("doc/ANALYZE75.pdf",
-  package="oro.dicom")}).  The last four bytes in teh NIfTI header
+  package="oro.dicom")}).  The last four bytes in the NIfTI header
 correspond to the ``magic'' field and denote whether or not the header
 and image are contained in a single file (\code{magic =
   "n+1\textbackslash{}0"}) or two separate files (\code{magic =
@@ -424,7 +423,7 @@ descrip(mniLR)
 produces an S4 \code{"nifti"} object (or \code{"niftiAuditTrail"} if
 the audit trail option is set).  Two accessor functions are also shown
 here: \code{aux.file} and \code{descrip}.  The former is used to
-access the oriignal file name of the file (if it exists) and the
+access the original file name of the file (if it exists) and the
 latter is the name of a valid NIfTI header field (up to 80~characters
 in length).
 
@@ -467,8 +466,7 @@ to display them with minimal user input.
   \caption{\textbf{(a)} Axial slices of MNI volume \code{mniLR\_nifti}
     stored in \emph{radiological} convention, but displayed in
     \emph{neurological} convention.  \textbf{(b)} Axial slices of MNI
-    volume \code{avg152T1\_RL\_nifti} stored in \emph{neurological}
-    convention, but displayed in \emph{neurological} convention.}
+    volume \code{avg152T1\_RL\_nifti} stored and displayed in \emph{neurological} convention.}
 \end{figure}
 
 The second example of reading in, and displaying, medical imaging data
@@ -774,6 +772,8 @@ end user.
 \section*{Acknowledgments}
 
 The authors would like to thank...
+ VS is supported by the LMUinnovative project BioMed-S: 
+Analysis and Modelling of Complex Systems.
 
 \bibliography{dicom_nifti}
 
