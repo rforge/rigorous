@@ -1,6 +1,6 @@
 \documentclass[article,shortnames]{jss}
 
-\usepackage{rotating}
+\usepackage{amsmath,rotating}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% declarations for jss.cls %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -21,20 +21,21 @@
 \Abstract{
 
 Two packages (\pkg{oro.dicom} and \pkg{oro.nifti}) are provided for
-the manipulation of medical imaging data that conform to the DICOM
-standard or ANALYZE/NIfTI formats.  DICOM data, from a single file or
-single directory or directory tree, may be uploaded into \proglang{R}
-using basic data structures: a data frame for the header information
-and a matrix for the image data.  A list structure is used to organize
-multiple DICOM files.  The S4 class framework is used to develop basic
-ANALYZE and NIfTI classes, where NIfTI extensions may be used to
-extend the fixed-byte NIfTI header.  One example of this, that has
-been implemented, is an XML-based ``audit trail'' that tracks the
-history of operations applied to a dataset.  The conversion from DICOM
-to ANALYZE/NIfTI is straightforward using the capabilities of both
-packages.  The S4 classes have been developed to provide a
-user-friendly interface to the ANALYZE/NIfTI data formats; allowing
-easy data input, data output, image processing and visualization.
+the interaction with and manipulation of medical imaging data that
+conform to the DICOM standard or ANALYZE/NIfTI formats.  DICOM data,
+from a single file or single directory or directory tree, may be
+uploaded into \proglang{R} using basic data structures: a data frame
+for the header information and a matrix for the image data.  A list
+structure is used to organize multiple DICOM files.  The S4 class
+framework is used to develop basic ANALYZE and NIfTI classes, where
+NIfTI extensions may be used to extend the fixed-byte NIfTI header.
+One example of this, that has been implemented, is an XML-based
+``audit trail'' that tracks the history of operations applied to a
+dataset.  The conversion from DICOM to ANALYZE/NIfTI is
+straightforward using the capabilities of both packages.  The S4
+classes have been developed to provide a user-friendly interface to
+the ANALYZE/NIfTI data formats; allowing easy data input, data output,
+image processing and visualization.
 
 }
 \Keywords{keywords, comma-separated, not capitalized, \proglang{R}}
@@ -103,10 +104,15 @@ Medical imaging is well established in both the clinical and research
 arenas with numerous equipment manufacturers supplying a wide variety
 of modalities.  The DICOM standard was developed from earlier
 standards and released in 1993.  It is the data format for clinical
-imaging equipment, and other equipment that is beyond the scope of
-this work.  The DICOM standard provides interoperability across
-hardware, but was not designed to facilitate efficient data
-manipulation and image processing.
+imaging equipment and a variety of other devices whose complete
+specification is beyond the scope of this paper.  All major
+manufacturers of medical imaging equipment (e.g., GE, Siemens,
+Philips) have so-called DICOM conformance statements that explicitly
+states how their hardware implements DICOM.  The DICOM standard
+provides interoperability across hardware, but was not designed to
+facilitate efficient data manipulation and image processing.  Hence,
+additional data formats have been developed over the years to
+accommodate data analysis and image processing.
 
 The ANALYZE format was developed at the Mayo Clinic (in the 1990s) to
 store multidimensional biomedical images.  It is fundamentally
@@ -231,6 +237,7 @@ Data element with implicit VR:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{The DICOM Header}
+\label{sec:dicom-header}
 
 Accessing the information stored in a single DICOM file is provided
 using the \code{dicomInfo} function.  The basic structure of the
@@ -240,7 +247,8 @@ is organized in a data frame with six columns and an unknown number of
 rows depending on the input parameters.
 
 <<DICOM Abdo 01>>=
-abdo <- dicomInfo(system.file("dcm/Abdo.dcm", package="oro.dicom"))
+abdo <- dicomInfo(system.file(file.path("dcm", "Abdo.dcm"), 
+                              package="oro.dicom"))
 names(abdo)
 abdo$hdr[1:5,]
 abdo$hdr[nrow(abdo$hdr)-4:0,]
@@ -304,24 +312,17 @@ image.  A noteable exception is the Siemens MOSAIC format (addressed
 in Section~\ref{sec:mosaic}).  Going back to the \code{Abdo.dcm}
 example, the image is accessed via
 
-<<figure1-png,echo=FALSE,results=hide>>=
+<<abdo-png,echo=FALSE,results=hide>>=
 png(filename="dicom_abdo.png", width=2*480, height=2*480, bg="black")
 par(mar=rep(0,4))
 @ 
-<<figure1-code>>=
+<<abdo-image>>=
 image(t(abdo$img), col=grey(0:64/64), axes=FALSE, xlab="", ylab="")
 @ 
-<<figure1-dev.off,echo=FALSE,results=hide>>=
+<<abdo-dev.off,echo=FALSE,results=hide>>=
 dev.off()
 #par(mar=c(5,4,4,2)+0.1)
 @ 
-
-where the transpose function is necessary for proper visualization of
-the image.  Figure~\ref{fig:dicom_abdo} displays a coronal slice
-through the abdomen from an MRI acquisition.  All formatting
-information should accompany the image through the DICOM header, and
-this information is utiilized as much as possible by \pkg{oro.dicom}
-to simplify the manipulation of DICOM data.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[!htbp]
@@ -334,8 +335,23 @@ to simplify the manipulation of DICOM data.
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+where the transpose operation is necessary for proper visualization of
+the image.  Figure~\ref{fig:dicom_abdo} displays a coronal slice
+through the abdomen from an MRI acquisition.  All information from the
+original data acquisition should accompany the image through the DICOM
+header, and this information is utilized as much as possible by
+\pkg{oro.dicom} to simplify the manipulation of DICOM data.  As
+previously shown, this information is easily available to the user by
+matching DICOM header fields with valid strings
+
+<<DICOM Abdo 03>>=
+abdo$hdr$value[abdo$hdr$name == "Modality"]
+abdo$hdr$value[abdo$hdr$name == "RepetitionTime"]
+abdo$hdr$value[abdo$hdr$name == "EchoTime"]
+@ 
+
 The basic DICOM file structure does not encourage the analysis of
-multi-dimensional imaging data (e.g., 3D or 4D) commonly acquired on
+multi-dimensional imaging data (e.g., 3D or~4D) commonly acquired on
 clinical scanners.  Hence, the \pkg{oro.dicom} package has been
 developed to access DICOM files and facilitate their conversion to the
 NIfTI or ANALYZE formats.  The conversion process requires the
@@ -355,8 +371,8 @@ field.  If this doesn't work, one may enter the $(M,N)$ doublet
 explicitly.
 
 <<DICOM Siemens 01>>=
-fname <- file.path("dcm", "MR-sonata-3D-as-Tile.dcm")
-dcm <- dicomInfo(system.file(fname, package="oro.dicom"))
+dcm <- dicomInfo(system.file(file.path("dcm", "MR-sonata-3D-as-Tile.dcm"), 
+                             package="oro.dicom"))
 dim(dcm$img)
 dcmImage <- create3D(dcm, mosaic=TRUE)
 dim(dcmImage)
@@ -414,8 +430,8 @@ offers a few improvements
   \item possibility of extending the header information.
 \end{itemize}
 
-
 \subsection{The NIfTI Header}
+\label{sec:nifti-header}
 
 The NIfTI header inherits its structure (348 bytes in length) from the
 ANALYZE data format.  A copy of the file ANALYZE75.pdf has been
@@ -436,8 +452,8 @@ the NIfTI website (\url{http://nifti.nimh.nih.gov/nifti-1/}).
 Successful execution of the commands
 
 <<mniLR_nifti>>=
-fname <- file.path("nifti", "mniLR.nii.gz")
-(mniLR <- readNIfTI(system.file(fname, package="oro.nifti")))
+(mniLR <- readNIfTI(system.file(file.path("nifti", "mniLR.nii.gz"),
+                                package="oro.nifti")))
 aux.file(mniLR)
 descrip(mniLR)
 @ 
@@ -456,13 +472,13 @@ Image information begins, in a single NIfTI file (\code{magic =
 extensions are used, then the image information is pushed further in
 the byte stream. \textbf{[MORE!]}
 
-<<figure1-png,echo=FALSE,results=hide>>=
+<<mniLR-png,echo=FALSE,results=hide>>=
 png(filename="mniLR.png", width=2*480, height=2*480, bg="black")
 @ 
-<<figure1-code>>=
+<<mniLR-image>>=
 image(mniLR)
 @ 
-<<figure1-dev.off,echo=FALSE,results=hide>>=
+<<mniLR-dev.off,echo=FALSE,results=hide>>=
 dev.off()
 @ 
 
@@ -495,16 +511,16 @@ in NIfTI format \texttt{avg152T1\_RL\_nifti.nii.gz} was also obtained
 from the NIfTI website (\url{http://nifti.nimh.nih.gov/nifti-1/}).
 Successful execution of the commands
 
-<<mniRL_nifti>>=
-fname <- file.path("nifti", "mniRL.nii.gz")
-(mniRL <- readNIfTI(system.file(fname, package="oro.nifti")))
+<<mniRL-read>>=
+(mniRL <- readNIfTI(system.file(file.path("nifti", "mniRL.nii.gz"),
+                                package="oro.nifti")))
 @ 
-<<figure2-png,echo=FALSE,results=hide>>=
+<<mniRL-png,echo=FALSE,results=hide>>=
 png(filename="mniRL.png", width=2*480, height=2*480, bg="black")
 @ 
-<<figure2-code>>=
+<<mniRL-image>>=
 image(mniRL)
-<<figure2-dev.off,echo=FALSE,results=hide>>=
+<<mniRL-dev.off,echo=FALSE,results=hide>>=
 dev.off()
 @ 
 
@@ -541,12 +557,39 @@ A major improvement in the \pkg{oro.nifti} package is the fact that
 standard medical imaging formats are stored in unique classes under
 the S4 system \citep{chambers:2008}.  Essentially, NIfTI and ANALYZE
 data are stored as multi-dimensional arrays with extra slots created
-that capture the format-specific header information.  The NIfTI class
-also has the ability to read and write extensions that conform to the
-NIfTI data format.  Customized printing and validity-checking
-functions are available to the user and every attempt has been made to
-ensure that the information from the multi-dimensional array is in
-agreement with the header values.
+that capture the format-specific header information; e.g., for a
+\code{nifti} object
+
+<<NIfTI-slots>>=
+slotNames(mniRL)
+c(mniRL@"cal_min", mniRL@"cal_max")
+range(mniRL)
+mniRL@"datatype"
+convert.datatype(mniRL@"datatype")
+@ 
+
+Note, an ANALYZE object has a slightly different set of slots.  Slots
+4--47 are taken verbatim from the definition of the NIfTI format and
+are read directly from a file.  The slot \code{.Data} is the
+multidimensional array (since class \code{nifti} inherits from class
+\code{array}) and the slots \code{trail}, \code{extensions} and
+\code{reoriented} are used for internal bookkeeping.  In the code
+above we have accessed the min/max values of the imaging data using
+the \code{"cal_min"} and \code{"cal_max"} slots and matches a direct
+interrogation of the \code{.Data} slot using the \code{range}
+function.  Looking at the \code{datatype} slot provides a numeric code
+that may be converted into a value that indicates the type of byte
+structure used (in this case an 8-bit or 1-byte unsigned integer).
+
+As introduced in Section~\ref{sec:nifti-header} there are currently
+only two accessor functions to slots in the NIfTI header
+(\code{aux.file} and \code{descrip}) -- all other slots are either
+ignored or used inside of functions that operate on ANALYZE/NIfTI
+objects.  The NIfTI class also has the ability to read and write
+extensions that conform to the NIfTI data format.  Customized printing
+and validity-checking functions are available to the user and every
+attempt has been made to ensure that the information from the
+multi-dimensional array is in agreement with the header values.
 
 \subsection{Audit Trail}
 
@@ -598,8 +641,8 @@ point in time.  Popular viewers, especially for brain imaging, are
 \item FSLView (\url{http://www.fmrib.ox.ac.uk/fsl/fslview/}),
 \item MRIcron (\url{http://cabiatl.com/mricron/}).
 \end{itemize}
-The \pkg{mritc} package provides interactive visualization of
-ANALYZE/NIfTI data using a Tcl/Tk interface \citep{mritc}.
+The \pkg{mritc} package provides basic interactive visualization of
+ANALYZE/NIfTI data using a \proglang{Tcl/Tk} interface \citep{mritc}.
 
 \subsection{Examples from the NIfTI-1 DFWG}
 
@@ -611,17 +654,17 @@ medical imaging data set in NIfTI format
 (\url{http://nifti.nimh.nih.gov/nifti-1/}).  Successful execution of
 the commands
 
-<<filtered_func_data>>=
-fname <- file.path("nifti", "ffd.nii.gz")
-(ffd <- readNIfTI(system.file(fname, package="oro.nifti")))
+<<ffd>>=
+(ffd <- readNIfTI(system.file(file.path("nifti", "ffd.nii.gz"), 
+                              package="oro.nifti")))
 @ 
-<<figure3-png,echo=FALSE,results=hide>>=
+<<ffd-png,echo=FALSE,results=hide>>=
 png(filename="ffd.png", width=2*480, height=2*480, bg="black")
 @ 
-<<figure3-code>>=
+<<ffd-image>>=
 image(ffd)
 @ 
-<<figure3-dev.off,echo=FALSE,results=hide>>=
+<<ffd-dev.off,echo=FALSE,results=hide>>=
 dev.off()
 @ 
 
@@ -659,19 +702,30 @@ produces a four-dimensional (4D) array of imaging data that may be
 displayed in a $5{\times}5$ grid of images
 (Figure~\ref{fig:ffd+zstat1}a).  The first three dimensions are
 spatial locations of the voxel (volume element) and the fourth
-dimension is time.  An additional graphical display function has been
-added for \code{nifti} and \code{anlz} objects that allows
-orthographic displays.
+dimension is time for this functional MRI (fMRI) acquisition.  As seen
+from the summary of object, there are 21~axial slices of fairly coarse
+resolution ($4{\times}4{\times}6\;\text{mm}$) and reasonable temporal
+resolution ($3\;\text{s}$).
 
-<<figure3b-png,echo=FALSE,results=hide>>=
+An additional graphical display function has been added for
+\code{nifti} and \code{anlz} objects that allows a so-called
+orthographic visualization of the data.
+
+<<ffd-ortho-png,echo=FALSE,results=hide>>=
 png(filename="ffd_orthographic.png", width=2*480, height=2*480, bg="black")
 @ 
-<<figure3b-code>>=
+<<ffd-orthographic>>=
 orthographic(ffd)
 @ 
-<<figure3b-dev.off,echo=FALSE,results=hide>>=
+<<ffd-ortho-dev.off,echo=FALSE,results=hide>>=
 dev.off()
 @ 
+
+As seen in Figure~\ref{ffd-orthographic} the mid-axial, mid-saggital
+and mid-coronal planes are displayed by default.  The slices used may
+be set using \code{xyz = c(I,J,K)}, where $(I,J,K)$ are appropriate
+indices, and the crosshairs will provide a spaital reference in each
+plane relative to the other two.
 
 \subsubsection{Statistical Image}
 
@@ -684,15 +738,15 @@ obtained from the NIfTI website
 the command
 
 <<zstat1>>=
-fname <- file.path("nifti", "zstat1.nii.gz")
-(zstat1 <- readNIfTI(system.file(fname, package="oro.nifti")))
+(zstat1 <- readNIfTI(system.file(file.path("nifti", "zstat1.nii.gz"), 
+                                 package="oro.nifti")))
 @ 
-<<figure4-png,echo=FALSE,results=hide>>=
+<<zstat1-png,echo=FALSE,results=hide>>=
 png("ffd_zstat1.png", width=2*480, height=2*480, bg="black")
 @ 
-<<figure4-code>>=
+<<zstst1-overlay>>=
 overlay(ffd, ifelse(abs(zstat1) > 5, zstat1, NA), zlim.y=range(zstat1))
-<<figure4-dev.off,echo=FALSE,results=hide>>=
+<<zstat1-dev.off,echo=FALSE,results=hide>>=
 dev.off()
 @ 
 
@@ -712,27 +766,33 @@ DICOM must be performed by the user before the package \pkg{oro.nifti}
 may be used to manipulate the imaging data.  Several standalone
 software packages allow DICOM-to-NIfTI (or ANALYZE) conversion; e.g.,
 \begin{itemize}
+\item Xmedcon \citep{xmedcon},
 \item FreeSurfer (\url{http://surfer.nmr.mgh.harvard.edu}),
-\item Xmedcon (\url{http://xmedcon.sourceforge.net}),
 \item MRIConvert (\url{http://lnci.oregon.edu/\~jolinda/MRIConvert}).
 \end{itemize}
-This is by no means an exhaustive list of standalone software packages
-available for DICOM conversion.  In addition there are several
-\proglang{R} packages with the ability to process DICOM data
+This is by no means an exhaustive list of software packages available
+for DICOM conversion.  In addition there are several \proglang{R}
+packages with the ability to process DICOM data
 \begin{itemize}
-\item \pkg{fmri} \citep{pol-tab:fmri}
+\item \pkg{fmri} \citep{pol-tab:fmri},
 \item \pkg{tractor.base} \citep{tractor.base} (part of the tractor
-  project \url{http://code.google.com/p/tractor})
+  project \url{http://code.google.com/p/tractor}),
 \end{itemize}
 and facilitate their conversion to ANALYZE or NIfTI format.  However,
-the \pkg{oro.dicom} and \pkg{oro.nifti} packages have been designed to
-use as much information as possible from the metadata-rich DICOM
-format and use that information in the construction of the NIfTI data
-volume.
+the \pkg{oro.dicom} and \pkg{oro.nifti} packages have been
+specifically designed to use as much information as possible from the
+metadata-rich DICOM format and use that information in the
+construction of the NIfTI data volume.
 
 \subsection{Example}
 
+Using the 40~images from the \code{hk40} object (previously defined in
+Section~\ref{sec:dicom-header}) it is strightforward to perform
+DICOM-to-NIfTI conversion using only default settings and plot the
+results in either lightbox or orthographic displays.
+
 <<DICOM2NIFTI HK40 01>>=
+dput(formals(dicom2nifti))
 (hk40n <- dicom2nifti(hk40))
 @ 
 <<DICOM2NIFTI HK40 02,echo=FALSE,results=hide>>=
@@ -765,6 +825,7 @@ orthographic(hk40n)
   \label{fig:hk40n}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \section{Conclusion}
 
