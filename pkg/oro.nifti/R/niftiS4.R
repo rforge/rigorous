@@ -301,7 +301,8 @@ setValidity("niftiExtensionSection", function(object) {
 ## setReplaceMethod("hdr", signature(x="nifti", name="character", value="ANY"),
 ##           function(x, name, value) {
 ##             x@name <- value
-##             validObject(x)
+##             validNIfTI <- getValidity(getClassDef("nifti"))
+##             validNIfTI(x)
 ##             x
 ##           })
 
@@ -359,7 +360,8 @@ nifti <- function(img=array(0, dim=rep(1,4)), dim, datatype=2, cal.min=NULL,
   if (getOption("niftiAuditTrail")) {
     audit.trail(obj) <- niftiAuditTrailCreated(call=match.call())
   }
-  validObject(obj)
+  validNIfTI <- getValidity(getClassDef("nifti"))
+  validNIfTI(obj)
   return(obj)
 }
 
@@ -442,7 +444,8 @@ setReplaceMethod("[",
                  signature(x="nifti", i="missing", j="missing", value="array"),
                  function(x, value) {
                    x <- as.nifti(value, x)
-                   validObject(x)
+                   validNIfTI <- getValidity(getClassDef("nifti"))
+                   validNIfTI(x)
                    return(x)
                  })
 

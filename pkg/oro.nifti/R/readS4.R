@@ -263,11 +263,11 @@ read.nifti.content <- function(fname, onefile=TRUE, gzipped=TRUE,
   } else {
     nim@.Data <- array(data, nim@"dim_"[dims])
   }
-
   ## Warnings?
   options(warn=oldwarn)
   ## Check validity
-  ## validObject(nim)
+  validNIfTI <- getValidity(getClassDef("nifti"))
+  validNIfTI(nim)
   if (getOption("niftiAuditTrail")) {
     if (is.null(call)) {
       call <- match.call()
@@ -426,6 +426,7 @@ read.analyze.content <- function(fname, gzipped=TRUE, verbose=FALSE,
   ## Warnings?
   options(warn=oldwarn)
   ## Check validity
-  validObject(aim)
+  validANALYZE <- getValidity(getClassDef("anlz"))
+  validANALYZE(aim)
   return(aim)
 }

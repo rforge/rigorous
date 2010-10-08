@@ -153,28 +153,37 @@ setValidity("anlz", function(object) {
   retval <- NULL
   indices <- 2:(1+object@"dim_"[1])
   ## sizeof_hdr must be 348
-  if (object@"sizeof_hdr" != 348)
+  if (object@"sizeof_hdr" != 348) {
     retval <- c(retval, "sizeof_hdr != 348")
+  }
   ## datatype needed to specify type of image data
-  if (!object@"datatype" %in% c(0,2^(0:7), 255))
+  if (!object@"datatype" %in% c(0,2^(0:7), 255)) {
     retval <- c(retval, "datatype not recognized")
+  }
   ## bitpix should correspond correctly to datatype
-  
+  ## 
   ## dim should be non-zero for dim[1] dimensions
-  if (!all(as.logical(object@"dim_"[indices])))
+  if (!all(as.logical(object@"dim_"[indices]))) {
     retval <- c(retval, "dim[1]/dim mismatch")
+  }
   ## number of data dimensions should match dim[1]
-  if (length(indices) != length(dim(object@.Data)))
+  if (length(indices) != length(dim(object@.Data))) {
     retval <- c(retval, "dim[1]/img mismatch")
+  }
   ## pixdim[n] required when dim[n] is required
   if (!all(as.logical(object@"dim_"[indices]) &&
-           as.logical(object@"pixdim"[indices])))
+           as.logical(object@"pixdim"[indices]))) {
     retval <- c(retval, "dim/pixdim mismatch")
+  }
   ## data dimensions should match dim 
-  if (!all(object@"dim_"[indices] == dim(object@.Data)))
+  if (!all(object@"dim_"[indices] == dim(object@.Data))) {
     retval <- c(retval, "dim/img mismatch")
-  if (is.null(retval)) return(TRUE)
-  else return(retval)
+  }
+  if (is.null(retval)) {
+    return(TRUE)
+  } else {
+    return(retval)
+  }
 })
 
 #############################################################################
@@ -183,15 +192,16 @@ setValidity("anlz", function(object) {
 
 anlz <- function(img=array(0, dim=rep(1,4)), dim, ...) {
   if (missing(dim)) {
-    if (is.array(img))
+    if (is.array(img)) {
       dim <- base::dim(img)
-    else
+    } else {
       dim <- c(1, length(img))
+    }
   }
   ld <- length(dim)
-  if (ld < 3)
+  if (ld < 3) {
     stop(sprintf("length(dim) must be at least 3 and is %d.", ld))
-  
+  }
   x <- c(length(dim), dim[1], dim[2], dim[3],
          ifelse(is.na(dim[4]), 1, dim[4]), rep(1,3))
   y <- c(0.0, rep(1.0,length(dim)), rep(0.0,3))
@@ -199,7 +209,8 @@ anlz <- function(img=array(0, dim=rep(1,4)), dim, ...) {
   cal.min <- min(img, na.rm=TRUE) # quantile(img, probs=0.05, na.rm=TRUE)
   obj <- new("anlz", .Data=array(img, dim=dim), "dim_"=x, "pixdim"=y,
              "cal_max"=cal.max, "cal_min"=cal.min, ...)
-  validObject(obj)
+  validANALYZE <- getValidity(getClassDef("anlz"))
+  validANALYZE(obj)
   return(obj)
 }
 
@@ -208,10 +219,11 @@ anlz <- function(img=array(0, dim=rep(1,4)), dim, ...) {
 #############################################################################
 
 is.anlz <- function(x) {
-  if (!is(x, "anlz"))
+  if (!is(x, "anlz")) {
     return(FALSE)
-  else
+  } else {
     return (TRUE)
+  }
 }
 
 #############################################################################
@@ -219,10 +231,11 @@ is.anlz <- function(x) {
 #############################################################################
 
 if (!isGeneric("descrip")) {
-  if (is.function("descrip"))
+  if (is.function("descrip")) {
     setGeneric("descrip", descrip)
-  else
+  } else {
     setGeneric("descrip", function(object) { standardGeneric("descrip") })
+  }
 }
 setMethod("descrip", "anlz", function(object) { object@descrip })
 setGeneric("descrip<-", function(x, value) { standardGeneric("descrip<-") })
@@ -234,10 +247,11 @@ setReplaceMethod("descrip", "anlz",
 #############################################################################
 
 if (!isGeneric("aux.file")) {
-  if (is.function("aux.file"))
+  if (is.function("aux.file")) {
     setGeneric("aux.file", aux_file)
-  else
+  } else {
     setGeneric("aux.file", function(object) { standardGeneric("aux.file") })
+  }
 }
 setMethod("aux.file", "anlz", function(object) { object@aux_file })
 setGeneric("aux.file<-", function(x, value) { standardGeneric("aux.file<-") })

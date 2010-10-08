@@ -37,8 +37,10 @@ writeNIfTI <- function(nim, filename, gzipped=TRUE, verbose=FALSE, warn=-1) {
   oldwarn <- options()$warn
   options(warn=warn)
   ## Basic error checking
-  if (!validObject(nim))
+  validNIfTI <- getValidity(getClassDef("nifti"))
+  if (! validNIfTI(nim)) {
     stop("-- aborting writeNIfTI --")
+  }
   ## Write header file...
   if (gzipped) {
     fid <- gzfile(paste(filename, "nii.gz", sep="."), "wb")
@@ -145,8 +147,9 @@ writeNIfTI <- function(nim, filename, gzipped=TRUE, verbose=FALSE, warn=-1) {
     data <- as.vector(nim@.Data)
   }
   ## Write image file...
-  if (verbose)
+  if (verbose) {
     cat("  writing data at byte =", seek(fid), fill=TRUE)
+  }
   switch(as.character(nim@"datatype"),
          "2" = writeBin(as.integer(data), fid, size=nim@"bitpix"/8),
          "4" = writeBin(as.integer(data), fid, size=nim@"bitpix"/8),
@@ -171,7 +174,8 @@ writeANALYZE <- function(aim, filename, gzipped=TRUE, verbose=FALSE,
   oldwarn <- options()$warn
   options(warn=warn)
   ## Basic error checking
-  if (!validObject(aim)) {
+  validANALYZE <- getValidity(getClassDef("anlz"))
+  if (! validANALYZE(aim)) {
     stop("Ouch!")
   }
   ## Write header file...
