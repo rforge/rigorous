@@ -132,9 +132,9 @@ be combined into a single file and re-defines the header fields.
 
 The material presented here provides users with a method of
 interacting with DICOM, ANALYZE and NIfTI files in \proglang{R}
-\citep{R}.  Real-world datasets, that are publically available, are
+\citep{R}.  Real-world datasets, that are publicly available, are
 used to illustrate the basic functionality of the two packages:
-\pkg{oro.dicom} and \pkg{oro.nifti}.  Major featuers include data
+\pkg{oro.dicom} and \pkg{oro.nifti}.  Major features include data
 input/output, visualization and conversion from DICOM to
 ANALYZE/NIfTI.
 
@@ -247,8 +247,8 @@ is organized in a data frame with six columns and an unknown number of
 rows depending on the input parameters.
 
 <<DICOM Abdo 01>>=
-abdo <- dicomInfo(system.file(file.path("dcm", "Abdo.dcm"), 
-                              package="oro.dicom"))
+fname <- system.file(file.path("dcm", "Abdo.dcm"), package="oro.dicom")
+abdo <- dicomInfo(fname)
 names(abdo)
 abdo$hdr[1:5,]
 abdo$hdr[nrow(abdo$hdr)-4:0,]
@@ -289,7 +289,8 @@ across multiple directories, one may use the function
 \code{dicomSeparate} (applied here to the directory \code{hk-40}).
 
 <<DICOM HK40 01>>=
-hk40 <- dicomSeparate(system.file("hk-40", package="oro.dicom"))
+fname <- system.file("hk-40", package="oro.dicom")
+hk40 <- dicomSeparate(fname)
 c(length(hk40$hdr), length(hk40$img))
 @ 
 
@@ -300,7 +301,7 @@ associated in a pairwise sense; i.e., \code{hdr[[1]]} is the header
 information for the image \code{img[[1]]}.  Default parameters
 \code{recursive = TRUE} and \code{pixelData = TRUE} (which is actually
 an input parameter for \code{dicomInfo}) allow the user to search down
-all possible subdirectories and upload the image in addition to the
+all possible sub-directories and upload the image in addition to the
 header information, respectively.  Also, by default all files are
 treated as DICOM files unless the \code{exclude} parameter is set to
 the unwanted file extension; e.g., \code{exclude = "xml"}.
@@ -308,7 +309,7 @@ the unwanted file extension; e.g., \code{exclude = "xml"}.
 \subsection{The DICOM Image}
 
 Most DICOM files involve a single slice from an acquisition -- the
-image.  A noteable exception is the Siemens MOSAIC format (addressed
+image.  A notable exception is the Siemens MOSAIC format (addressed
 in Section~\ref{sec:mosaic}).  Going back to the \code{Abdo.dcm}
 example, the image is accessed via
 
@@ -362,8 +363,8 @@ Section~\ref{sec:dicom2nifti}.
 \label{sec:mosaic}
 
 Siemens multi-slice EPI (echo planar imaging) data may be collected as
-a ``mosiac'' image; i.e., all slices acquired in a single TR
-(repitition time) of a dynamic run are stored in a single DICOM file.
+a ``mosaic'' image; i.e., all slices acquired in a single TR
+(repetition time) of a dynamic run are stored in a single DICOM file.
 The images are stored in an $M{\times}N$ array of images.  The
 function \code{create3D} will try to guess the number of images
 embedded within the single DICOM file using the AcquisitionMatrix
@@ -371,8 +372,9 @@ field.  If this doesn't work, one may enter the $(M,N)$ doublet
 explicitly.
 
 <<DICOM Siemens 01>>=
-dcm <- dicomInfo(system.file(file.path("dcm", "MR-sonata-3D-as-Tile.dcm"), 
-                             package="oro.dicom"))
+fname <- system.file(file.path("dcm", "MR-sonata-3D-as-Tile.dcm"),
+                     package="oro.dicom")
+dcm <- dicomInfo(fname)
 dim(dcm$img)
 dcmImage <- create3D(dcm, mosaic=TRUE)
 dim(dcmImage)
@@ -452,8 +454,8 @@ the NIfTI website (\url{http://nifti.nimh.nih.gov/nifti-1/}).
 Successful execution of the commands
 
 <<mniLR_nifti>>=
-(mniLR <- readNIfTI(system.file(file.path("nifti", "mniLR.nii.gz"),
-                                package="oro.nifti")))
+fname <- system.file(file.path("nifti", "mniLR.nii.gz"), package="oro.nifti")
+(mniLR <- readNIfTI(fname))
 aux.file(mniLR)
 descrip(mniLR)
 @ 
@@ -512,8 +514,8 @@ from the NIfTI website (\url{http://nifti.nimh.nih.gov/nifti-1/}).
 Successful execution of the commands
 
 <<mniRL-read>>=
-(mniRL <- readNIfTI(system.file(file.path("nifti", "mniRL.nii.gz"),
-                                package="oro.nifti")))
+fname <- system.file(file.path("nifti", "mniRL.nii.gz"), package="oro.nifti")
+(mniRL <- readNIfTI(fname))
 @ 
 <<mniRL-png,echo=FALSE,results=hide>>=
 png(filename="mniRL.png", width=2*480, height=2*480, bg="black")
@@ -614,7 +616,7 @@ options(niftiAuditTrail=FALSE)
 @
 
 to turn off the ``audit trail'' option in \pkg{oro.nifti}.
-Table~\ref{tab:mniLR} displays output from the accesor function
+Table~\ref{tab:mniLR} displays output from the accessor function
 \code{audit.trail(mniLR)}, the XML-based audit trail that is stored as
 a NIfTI header extension.
 
@@ -655,8 +657,8 @@ medical imaging data set in NIfTI format
 the commands
 
 <<ffd>>=
-(ffd <- readNIfTI(system.file(file.path("nifti", "ffd.nii.gz"), 
-                              package="oro.nifti")))
+fname <- system.file(file.path("nifti", "ffd.nii.gz"), package="oro.nifti")
+(ffd <- readNIfTI(fname))
 @ 
 <<ffd-png,echo=FALSE,results=hide>>=
 png(filename="ffd.png", width=2*480, height=2*480, bg="black")
@@ -693,7 +695,7 @@ dev.off()
     \end{center}
   \caption{Orthographic display of the first volume from the
     functional MRI dataset \texttt{filtered\_func\_data}.  By default
-    the mid-axial, mid-saggittal and mid-coronal planes are chosen.}
+    the mid-axial, mid-sagittal and mid-coronal planes are chosen.}
   \label{fig:ffd-orthographic}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -721,11 +723,11 @@ orthographic(ffd)
 dev.off()
 @ 
 
-As seen in Figure~\ref{ffd-orthographic} the mid-axial, mid-saggital
-and mid-coronal planes are displayed by default.  The slices used may
-be set using \code{xyz = c(I,J,K)}, where $(I,J,K)$ are appropriate
-indices, and the crosshairs will provide a spaital reference in each
-plane relative to the other two.
+As seen in Figure~\ref{fig:ffd-orthographic} the mid-axial,
+mid-sagittal and mid-coronal planes are displayed by default.  The
+slices used may be set using \code{xyz = c(I,J,K)}, where $(I,J,K)$
+are appropriate indices, and the crosshairs will provide a spatial
+reference in each plane relative to the other two.
 
 \subsubsection{Statistical Image}
 
@@ -738,8 +740,8 @@ obtained from the NIfTI website
 the command
 
 <<zstat1>>=
-(zstat1 <- readNIfTI(system.file(file.path("nifti", "zstat1.nii.gz"), 
-                                 package="oro.nifti")))
+fname <- system.file(file.path("nifti", "zstat1.nii.gz"), package="oro.nifti")
+(zstat1 <- readNIfTI(fname))
 @ 
 <<zstat1-png,echo=FALSE,results=hide>>=
 png("ffd_zstat1.png", width=2*480, height=2*480, bg="black")
@@ -787,7 +789,7 @@ construction of the NIfTI data volume.
 \subsection{Example}
 
 Using the 40~images from the \code{hk40} object (previously defined in
-Section~\ref{sec:dicom-header}) it is strightforward to perform
+Section~\ref{sec:dicom-header}) it is straightforward to perform
 DICOM-to-NIfTI conversion using only default settings and plot the
 results in either lightbox or orthographic displays.
 
@@ -848,7 +850,7 @@ end user.
 \section*{Acknowledgments}
 
 The authors would like to thank...
- VS is supported by the LMUinnovative project BioMed-S: 
+ VS is supported by the LMU innovative project BioMed-S: 
 Analysis and Modelling of Complex Systems.
 
 \bibliography{dicom_nifti}
