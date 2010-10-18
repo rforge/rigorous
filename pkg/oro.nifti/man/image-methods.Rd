@@ -10,7 +10,7 @@
 \alias{image,ANY-method}
 \alias{image,anlz-method}
 \alias{image,nifti-method}
-\title{Methods for Function `image' in Package `dcemri'}
+\title{Methods for Function `image'}
 \description{
   Produce images for \code{nifti} objects.
 }
