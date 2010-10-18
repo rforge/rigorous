@@ -89,7 +89,7 @@ library("bitops")
 library("XML")
 library("splines")
 library("oro.nifti")
-options(width=76)
+options(width=75)
 options(prompt="R> ")
 @
 
@@ -155,7 +155,7 @@ bytes for a DICOM header.  The final (group,element) tag should be the
 related to the image(s).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{table}[!htpb]
+\begin{table}[tpb]
   \begin{center}
     \begin{tabular}{llrr}
       \hline
@@ -208,7 +208,7 @@ associated with the VR (in bytes).  The fourth column is not used in
 the current implementation of the package.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}
+\begin{figure}[tbp]
 \begin{verbatim}
 Data element with explicit VR of OB, OF, OW, SQ, UT or UN:
 
@@ -259,12 +259,13 @@ abdo$hdr[nrow(abdo$hdr)-4:0,]
 
 The ordering of the rows is identical to the ordering in the original
 DICOM file.  Hence, the first five tags in the DICOM header of
-\code{Abdo.dcm} are: GroupLength, FileMetaInformationVersion,
-MediaStorageSOPClassUID, MediaStorageSOPInstanceUID and
-TransferSyntaxUID.  The last five tags in the DICOM header are also
-shown, with the very last tag indicating the start of the image data
-for that file and the number of bytes (131072) involved.  When
-additional tags in the DICOM header information are queried
+\code{Abdo.dcm} are: \code{GroupLength},
+\code{FileMetaInformationVersion}, \code{MediaStorageSOPClassUID},
+\code{MediaStorageSOPInstanceUID} and \code{TransferSyntaxUID}.  The
+last five tags in the DICOM header are also shown, with the very last
+tag indicating the start of the image data for that file and the
+number of bytes (131072) involved.  When additional tags in the DICOM
+header information are queried
 
 <<DICOM Abdo 02>>=
 abdo$hdr$value[abdo$hdr$name == "BitsAllocated"]
@@ -294,7 +295,7 @@ across multiple directories, one may use the function
 <<DICOM HK40 01>>=
 fname <- system.file("hk-40", package="oro.dicom")
 hk40 <- dicomSeparate(fname)
-c(length(hk40$hdr), length(hk40$img))
+unlist(lapply(hk40, length))
 @ 
 
 The object associated with \code{dicomSeparate} is now a nested set of
@@ -309,24 +310,37 @@ header information, respectively.  Also, by default all files are
 treated as DICOM files unless the \code{exclude} parameter is set to
 the unwanted file extension; e.g., \code{exclude = "xml"}.
 
-The list of header files can be converted into a data frame including all DICOM header files
-using \code{dicomTable}, and saved for further analysis.
+The list of DICOM header information across multiple files may be
+converted to a single data frame using \code{dicomTable}, and written
+to disc for further analysis; e.g., using \code{write.csv}.
+
 <<DICOM HK40 02>>=
 hk40.info <- dicomTable(hk40$hdr)
-writeHeader(hk40.info,file="hk40_header.txt")
-sliceloc.col <- which(hk40$hdr[[1]]$name=="SliceLocation") 
-print(as.numeric(hk40.info[,sliceloc.col])[1:5])
+write.csv(hk40.info, file="hk40_header.csv")
+sliceloc.col <- which(hk40$hdr[[1]]$name == "SliceLocation") 
+sliceLocation <- as.numeric(hk40.info[, sliceloc.col])
+sliceLocation[1:5]
+diff(sliceLocation[1:5])
+unique(extractHeader(hk40$hdr, "SliceThickness"))
 @ 
-Single fields can also be extracted from the list. From this, 
-images can be prepared for further procedures, e.g., by choosing 
-relevant acquisition series or by extracting timing information.
+
+The tag \code{SliceLocation} is extracted from the DICOM header
+information (at the first element in the list) and processed using the
+\code{diff} function, and should agree with the \code{SliceThickness}
+tag.  Single DICOM fields may also be extracted from the list of DICOM
+header information that contain attributes that are crucial for
+further image processing; e.g., extracting relevant MR sequences or
+acquisition timings.
+
 <<DICOM HK40 03>>=
-print(extractHeader(hk40$hdr,"SliceLocation")[1:5])
-modality=extractHeader(hk40$hdr,"Modality",numeric=FALSE)
-print(matchHeader(modality,"mr")[1:5])
-tm<-extractHeader(hk40$hdr,"SeriesTime",numeric=FALSE)
-print(str2time(tm[1:5]))
+extractHeader(hk40$hdr, "SliceLocation")[1:5]
+modality <- extractHeader(hk40$hdr, "Modality", numeric=FALSE)
+matchHeader(modality, "mr")[1:5]
+(seriesTime <- extractHeader(hk40$hdr, "SeriesTime", numeric=FALSE))
+str2time(seriesTime[1:5])
 @ 
+
+
 
 \subsection{The DICOM Image}
 
@@ -348,7 +362,7 @@ dev.off()
 @ 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[!htbp]
+\begin{figure}[tbp]
   \centering
   \includegraphics*[width=0.65\textwidth]{dicom_abdo.png}
   \caption{Coronal slice of the abdomen viewed in
@@ -368,7 +382,7 @@ previously shown, this information is easily available to the user by
 matching DICOM header fields with valid strings
 
 <<DICOM Abdo 03>>=
-abdo$hdr$value[abdo$hdr$name == "Modality"]
+abdo$hdr$value[abdo$hdr$name == "Manufacturer"]
 abdo$hdr$value[abdo$hdr$name == "RepetitionTime"]
 abdo$hdr$value[abdo$hdr$name == "EchoTime"]
 @ 
@@ -389,9 +403,9 @@ a ``mosaic'' image; i.e., all slices acquired in a single TR
 (repetition time) of a dynamic run are stored in a single DICOM file.
 The images are stored in an $M{\times}N$ array of images.  The
 function \code{create3D} will try to guess the number of images
-embedded within the single DICOM file using the \texttt{AcquisitionMatrix}
-field.  If this doesn't work, one may enter the $(M,N)$ doublet
-explicitly.
+embedded within the single DICOM file using the
+\code{AcquisitionMatrix} field.  If this doesn't work, one may enter
+the $(M,N)$ doublet explicitly.
 
 <<DICOM Siemens 01>>=
 fname <- system.file(file.path("dcm", "MR-sonata-3D-as-Tile.dcm"),
@@ -413,7 +427,7 @@ dev.off()
 @ 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[!htbp]
+\begin{figure}[tbp]
   \begin{center}
     \begin{tabular}{cc}
       \includegraphics*[width=0.45\textwidth]{dcmImage.png} & 
@@ -462,13 +476,14 @@ offers a few improvements
 \label{sec:nifti-header}
 
 The NIfTI header inherits its structure (348 bytes in length) from the
-ANALYZE data format. The last four bytes in the NIfTI header correspond to the ``magic''
-field and denote whether or not the header and image are contained in
-a single file (\code{magic = "n+1\textbackslash{}0"}) or two separate
-files (\code{magic = "ni1\textbackslash{}0"}), the latter being
-identical to the structure of the ANALYZE data format.  The NIfTI data
-format added an additional four bytes to allow for ``extensions'' to
-the header.  By default these four bytes are set to zero.
+ANALYZE data format.  The last four bytes in the NIfTI header
+correspond to the ``magic'' field and denote whether or not the header
+and image are contained in a single file (\code{magic =
+  "n+1\textbackslash{}0"}) or two separate files (\code{magic =
+  "ni1\textbackslash{}0"}), the latter being identical to the
+structure of the ANALYZE data format.  The NIfTI data format added an
+additional four bytes to allow for ``extensions'' to the header.  By
+default these four bytes are set to zero.
 
 The first example of reading in, and displaying, medical imaging data
 in NIfTI format \texttt{avg152T1\_LR\_nifti.nii.gz} was obtained from
@@ -513,7 +528,7 @@ been overloaded with the classes \code{nifti} and \code{anlz} in order
 to display them with minimal user input.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[!htbp]
+\begin{figure}[tbp]
   \begin{center}
     \begin{tabular}{cc}
       \includegraphics*[width=0.45\textwidth]{mniLR.png} &
@@ -559,7 +574,7 @@ at the subject.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[!htbp]
+\begin{figure}[tbp]
   \begin{center}
     \includegraphics*[width=0.65\textwidth]{mniRL_orthographic.png}
     \end{center}
@@ -650,21 +665,26 @@ multi-dimensional array is in agreement with the header values.
 The constructor function \code{nifti} produces valid NIfTI objects,
 including a consistent header, from an arbitrary array.
 <<NIfTI-constructor>>=
-(random.image <- nifti(array(runif(100*100),c(100,100,1)),datatype=convert.datatype()$FLOAT32))
-print(random.image@dim)
-print(dim(random.image))
-@ 
-Data types used for NIfTI formats can be achieved from the \code{convert.datatype} function.
-<<NIfTI-datatypes>>=
-convert.datatype(2^(1:5))
+(random.image <- nifti(array(runif(100*100),c(100,100,1)), 
+                       datatype=convert.datatype()$FLOAT32))
+random.image@"dim"
+dim(random.image)
 @ 
 
-\code{writeNIfTI} outputs valid NIfTI class files, which can be opened in 
-other medical imaging software. Files can either be stored as standard 
-\texttt{.nii} files or compressed with gnuzip.
-<<NIfTI-write,eval=TRUE,echo=TRUE>>=
-writeNIfTI(random.image,"random",gzipped=TRUE)
-system("ls random*")
+Data types used for NIfTI formats can be achieved from the
+\code{convert.datatype} function.
+
+<<NIfTI-datatypes>>=
+cbind(2^(1:5), convert.datatype(2^(1:5)))
+@ 
+
+The function \code{writeNIfTI} outputs valid NIfTI class files, which
+can be opened in other medical imaging software.  Files can either be
+stored as standard \code{.nii} files or compressed with gnuzip.
+
+<<NIfTI-write>>=
+writeNIfTI(random.image, "random", gzipped=TRUE)
+system("ls random*", intern=TRUE)
 @ 
 
 \subsection{Audit Trail}
@@ -710,19 +730,22 @@ audit.trail(mniLR)
 
 \subsection{Interactive visualization}
 
-Basic visualization of \code{nifti} and \code{anlz} class images can be achieved
-with any visualization for arrays in R. For example, the \pkg{EBImage} package 
-provides functions \code{display} and \code{animate} for visualization \citep{EBImage}.
-Please note that \pkg{EBImage} functions expect grey values in the 
-range $[0,1]$, hence a proper display of NIfTI images can be derived by
+Basic visualization of \code{nifti} and \code{anlz} class images can
+be achieved with any visualization for arrays in R. For example, the
+\pkg{EBImage} package provides functions \code{display} and
+\code{animate} for visualization \citep{EBImage}.  Please note that
+\pkg{EBImage} functions expect grey values in the range $[0,1]$, hence
+a proper display of NIfTI images can be derived by
+
 <<animate 01, eval=FALSE>>=
 mniLR.range <- range(mniLR)
 display((mniLR-mniLR.range[1])/diff(mniLR.range))
 @
 
 Interactive visualization of multidimensional arrays, stored in NIfTI
-or ANALYZE format, is however best performed outside of \proglang{R} at this
-point in time.  Popular viewers, especially for brain imaging, are
+or ANALYZE format, is however best performed outside of \proglang{R}
+at this point in time.  Popular viewers, especially for brain imaging,
+are
 \begin{itemize}
 \item FSLView (\url{http://www.fmrib.ox.ac.uk/fsl/fslview/}),
 \item MRIcron (\url{http://cabiatl.com/mricron/}).
@@ -806,19 +829,19 @@ orthographic(ffd,xyz=c(34,29,10))
 dev.off()
 @ 
 
-\subsubsection{Statistical Maps}
+\subsubsection{Statistical Images}
 
-Analysis of medical images typically leads to a voxel wise map of statistics,
-e.g., z-statistics for a voxel-wise hypothesis test on activation in fMRI 
-experiments \citep{Friston1994}. As convention, statistical maps are often 
-displayed as overlay on a raw signal image.
-This is an example of reading in and displaying a statistical map so
-that it may be overlayed on the EPI (echo planar imaging) data taken
-from the functional MRI experiment.  The original NIfTI files,
+The analysis of medical imaging data typically leads to a resulting
+statistical image, e.g., $Z$-statistics for a voxel-wise hypothesis
+test on activation in fMRI experiments \citep{Friston1994}.  For
+anatomical context, statistical images are displayed as an overlay on
+top of a reference image.  The original NIfTI files,
 \texttt{filtered\_func\_data.nii} and \texttt{zstat1.nii}, were
 obtained from the NIfTI website
 (\url{http://nifti.nimh.nih.gov/nifti-1/}).  Successful execution of
-the command
+the command allows one to display the statistical image (of voxel-wise
+activations) overlayed on the original EPI (echo planar imaging) data
+taken from the functional MRI experiment.
 
 <<zstat1>>=
 fname <- system.file(file.path("nifti", "zstat1.nii.gz"), package="oro.nifti")
@@ -833,15 +856,42 @@ overlay(ffd, ifelse(abs(zstat1) > 5, zstat1, NA), zlim.y=range(zstat1))
 dev.off()
 @ 
 
-produces a 4D array of parameter estimates (essentially coefficients
-from a linear regression performed at each voxel) that may be
-overlayed on the original data for anatomical reference
-(Figure~\ref{fig:ffd+zstat1}b).  The function \code{overlay} extends
-the capabilities of displaying ``images'' by allowing one to add a
-statistical map to an underlying structural image.
+The four-dimensional array of parameter estimates (essentially
+coefficients from a linear regression performed at each voxel) are
+overlayed on the original data for anatomical reference in
+Figure~\ref{fig:ffd+zstat1}b.  The function \code{overlay} extends the
+capabilities of displaying ``images'' by allowing one to add a
+statistical image to a structural image of the same dimension.
 
 \section{Converting DICOM to NIfTI}
 \label{sec:dicom2nifti}
+
+The \pkg{oro.dicom} and \pkg{oro.nifti} packages have been
+specifically designed to use as much information as possible from the
+metadata-rich DICOM format and use that information in the
+construction of the NIfTI data volume. The function \code{dicom2nifti}
+converts a list of DICOM images into an \code{nifti} object, and
+likewise \code{dicom2analyze} converts them into an \code{anlz}
+object.
+
+Historically, data conversion from DICOM to NIfTI (or ANALYZE) has
+been provided outside of \proglang{R} using one of several standalone
+software packages:
+\begin{itemize}
+\item Xmedcon \citep{xmedcon}, 
+\item FreeSurfer (\url{http://surfer.nmr.mgh.harvard.edu}),
+\item MRIConvert (\url{http://lnci.oregon.edu/\~jolinda/MRIConvert}).
+\end{itemize}
+This is by no means an exhaustive list of software packages available
+for DICOM conversion.  In addition there are several other 
+\proglang{R} packages with the ability to process DICOM data
+\begin{itemize}
+\item \pkg{fmri} \citep{pol-tab:fmri},
+\item \pkg{tractor.base} \citep{tractor.base} (part of the tractor
+  project \url{http://code.google.com/p/tractor}).
+\end{itemize}
+
+\subsection{Single-Series Example}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[!htbp]
@@ -861,14 +911,7 @@ statistical map to an underlying structural image.
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The \pkg{oro.dicom} and \pkg{oro.nifti} packages have been
-specifically designed to use as much information as possible from the
-metadata-rich DICOM format and use that information in the
-construction of the NIfTI data volume. \code{dicom2nifti}
-automatically converts a list of DICOM files into an \code{nifti}
-object, and \code{dicom2analyze} converts into an \code{anlz} object.
-
-Using the 40 images from the \code{hk40} object (previously defined in
+Using the 40~images from the \code{hk40} object (previously defined in
 Section~\ref{sec:dicom-header}) it is straightforward to perform
 DICOM-to-NIfTI conversion using only default settings and plot the
 results in either lightbox or orthographic displays.
@@ -890,41 +933,31 @@ image(hk40n)
 orthographic(hk40n)
 @ 
 
-At default \code{dicom2nifti} takes all image data from the DICOM
-list and creates a 3D image. 4D images (3D plus time) can be also
-be converted automatically with option \code{DIM=4}. Slice positions
-will be guessed from the \texttt{ImagePositionPatient} DICOM field. 
-For example, using 
-\code{DIM=4} on the code{hk40} DICOM data,
+At default \code{dicom2nifti} takes all image data from the DICOM list
+and creates a 3D image.  Four-dimensinoal image volumes (3D in space
+plus time) are also converted automatically by specifying
+\code{DIM=4}.  Slice positions are taken from the
+\texttt{ImagePositionPatient} DICOM header field.  For example, using
+\code{DIM=4} on the \code{hk40} DICOM data,
+
 <<DICOM2NIFTI HK40 04,eval=FALSE>>=
-(hk40n <- dicom2nifti(hk40,DIM=4))
+(hk40n <- dicom2nifti(hk40, DIM=4))
 @ 
-will also produce a 3D image, as the \texttt{ImagePositionPatient} 
-is unique for each single slice image.
 
-\code{dicom2nifti} and \code{dicom2analyze} will fail, if the
-dimensions of the single images in the DICOM list to not match. 
-They do however not check for different series numbers or patient 
-IDs. In cases where a DICOM file includes images from more than one
-series, the corresponding slices have to be chosen before conversion,
-using \code{dicomTable}, \code{extractHeader}, and \code{matchHeader}.
+will also produce a 3D image, as the \texttt{ImagePositionPatient}
+field is unique for each single slice of the volume.
 
-Data conversion from DICOM to NIfTI (or ANALYZE)
-may also be performed using one of several standalone
-software packages allow DICOM-to-NIfTI (or ANALYZE) conversion; e.g.,
-\begin{itemize}
-\item Xmedcon \citep{xmedcon}, 
-\item FreeSurfer (\url{http://surfer.nmr.mgh.harvard.edu}),
-\item MRIConvert (\url{http://lnci.oregon.edu/\~jolinda/MRIConvert}).
-\end{itemize}
-This is by no means an exhaustive list of software packages available
-for DICOM conversion.  In addition there are several other 
-\proglang{R} packages with the ability to process DICOM data
-\begin{itemize}
-\item \pkg{fmri} \citep{pol-tab:fmri},
-\item \pkg{tractor.base} \citep{tractor.base} (part of the tractor
-  project \url{http://code.google.com/p/tractor}).
-\end{itemize}
+The functions \code{dicom2nifti} and \code{dicom2analyze} will fail
+when the dimensions of the individual images in the DICOM list do not
+match.  However, they do not check for different series numbers or
+patient~IDs.  In cases where a DICOM file includes images from more
+than one series, the corresponding slices have to be chosen before
+conversion, using \code{dicomTable}, \code{extractHeader}, and
+\code{matchHeader}.
+
+\subsection{Multiple-Series Example}
+
+
 
 \section{Conclusion}
 
@@ -946,9 +979,10 @@ end user.
 
 \section*{Acknowledgments}
 
-The authors would like to thank... \textbf{WHO PROVIDED EXAMPLE DATASETS?}
- VS is supported by the LMUinnovative project BioMed-S: 
-Analysis and Modelling of Complex Systems.
+The authors would like to thank the anonymous institutions who have
+made their DICOM data available in the public domain.  VS is supported
+by the LMU innovative project BioMed-S: Analysis and Modelling of
+Complex Systems.
 
 \bibliography{dicom_nifti}
 
