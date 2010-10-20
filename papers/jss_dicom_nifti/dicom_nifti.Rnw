@@ -38,8 +38,8 @@ the ANALYZE/NIfTI data formats; allowing easy data input, data output,
 image processing and visualization.
 
 }
-\Keywords{Medical Imaging, Data import/export, visualization, \proglang{R}}
-\Plainkeywords{Medical Imaging, Data import/export, visualization, R} %% without formatting
+\Keywords{export, imaging, import, medical, visualization}
+\Plainkeywords{export, imaging, import, medical, visualization} %% without formatting
 %% at least one keyword must be supplied
 
 %% publication information
@@ -205,7 +205,12 @@ two-character string that is present in each entry of the header field
 and the second column provides a descriptive name for the abbreviated
 code.  The third column provides the maximum length of the data
 associated with the VR (in bytes).  The fourth column is not used in
-the current implementation of the package.
+the current implementation of the \pkg{oro.dicom} package.  Internal
+functions have been written to manipulate each of the value
+representations and are beyond the scope of this article.  The
+functions \code{str2date} and \code{str2time} are useful for
+converting from the DICOM \code{Datetime} and \code{Time} value
+representations to \proglang{R} date and time objects, respectively.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[tbp]
@@ -234,7 +239,7 @@ Data element with implicit VR:
 \caption{Byte ordering for a single (group,element) tag in the DICOM
   standard.  Explicit VRs store the VR as text characters in two
   bytes.  More information is provided in Section~7, Part 3.5-2009 of the
-  DICOM standard.}
+  DICOM standard (\url{http://medical.nema.org}).}
 \label{fig:group-element}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -243,11 +248,22 @@ Data element with implicit VR:
 \label{sec:dicom-header}
 
 Accessing the information stored in a single DICOM file is provided
-using the \code{dicomInfo} function.  The basic structure of the
-resulting object is a list with two elements: the DICOM header
-(\code{hdr}) and the DICOM image (\code{img}).  The header information
-is organized in a data frame with six columns and an unknown number of
-rows depending on the input parameters.
+using the \code{dicomInfo} function.  The basic structure of a DICOM
+file is summarized in Figure~\ref{fig:group-element}, for both
+explicit and implicit value representations.  The first two bytes
+represent the \code{group} tag and the second two bytes represent the
+\code{element} tag, regardless of the type of VR.  The third set of
+two bytes contains the characters of the VR on which a decision about
+being implicit or explicit is made.  Explicit VRs of type \code{\{OB,
+  OF, OW, SQ, UT, UN\}} skip bytes seven and eight (counting from one
+instead of zero), convert the next four bytes into an integer length
+and read \code{length} number of objects from the DICOM file.
+
+The basic structure of the resulting object is a list with two
+elements: the DICOM header (\code{hdr}) and the DICOM image
+(\code{img}).  The header information is organized in a data frame
+with six columns and an unknown number of rows depending on the input
+parameters.
 
 <<DICOM Abdo 01>>=
 fname <- system.file(file.path("dcm", "Abdo.dcm"), package="oro.dicom")
@@ -731,21 +747,21 @@ audit.trail(mniLR)
 \subsection{Interactive visualization}
 
 Basic visualization of \code{nifti} and \code{anlz} class images can
-be achieved with any visualization for arrays in R. For example, the
-\pkg{EBImage} package provides functions \code{display} and
-\code{animate} for visualization \citep{EBImage}.  Please note that
-\pkg{EBImage} functions expect grey values in the range $[0,1]$, hence
-a proper display of NIfTI images can be derived by
+be achieved with any visualization for arrays in \proglang{R}.  For
+example, the \pkg{EBImage} package provides functions \code{display}
+and \code{animate} for visualization \citep{EBImage}.  Please note
+that functions in \pkg{EBImage} expect greyscale values in the range
+$[0,1]$, hence the display of \code{nifti} data may be performed using
 
-<<animate 01, eval=FALSE>>=
+<<EBImage01,eval=FALSE>>=
 mniLR.range <- range(mniLR)
-display((mniLR-mniLR.range[1])/diff(mniLR.range))
+display((mniLR - min(mniLR)) / diff(mniLR.range))
 @
 
-Interactive visualization of multidimensional arrays, stored in NIfTI
+Interactive visualization of multi-dimensional arrays, stored in NIfTI
 or ANALYZE format, is however best performed outside of \proglang{R}
-at this point in time.  Popular viewers, especially for brain imaging,
-are
+at this point in time.  Popular viewers, especially for neuroimaging
+data, are
 \begin{itemize}
 \item FSLView (\url{http://www.fmrib.ox.ac.uk/fsl/fslview/}),
 \item MRIcron (\url{http://cabiatl.com/mricron/}).
@@ -920,17 +936,17 @@ results in either lightbox or orthographic displays.
 dput(formals(dicom2nifti))
 (hk40n <- dicom2nifti(hk40))
 @ 
-<<DICOM2NIFTI HK40 02,echo=TRUE,results=hide>>=
+<<DICOM2NIFTI HK40 02,eval=FALSE>>=
+image(hk40n)
+orthographic(hk40n)
+@ 
+<<DICOM2NIFTI HK40 03,echo=FALSE,results=hide>>=
 png("hk40n_image.png", width=2*480, height=2*480, bg="black")
 image(hk40n)
 dev.off()
 png("hk40n_orthographic.png", width=2*480, height=2*480, bg="black")
 orthographic(hk40n)
 dev.off()
-@ 
-<<DICOM2NIFTI HK40 03,eval=FALSE>>=
-image(hk40n)
-orthographic(hk40n)
 @ 
 
 At default \code{dicom2nifti} takes all image data from the DICOM list
@@ -940,7 +956,7 @@ plus time) are also converted automatically by specifying
 \texttt{ImagePositionPatient} DICOM header field.  For example, using
 \code{DIM=4} on the \code{hk40} DICOM data,
 
-<<DICOM2NIFTI HK40 04,eval=FALSE>>=
+<<DICOM2NIFTI HK40 04>>=
 (hk40n <- dicom2nifti(hk40, DIM=4))
 @ 
 
