@@ -713,7 +713,7 @@ Data types used for NIfTI formats can be achieved from the
 \code{convert.datatype} function.
 
 <<NIfTI-datatypes>>=
-cbind(2^(1:5), convert.datatype(2^(1:5)))
+cbind(convert.datatype())
 @ 
 
 The function \code{writeNIfTI} outputs valid NIfTI class files, which
