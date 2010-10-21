@@ -655,10 +655,12 @@ At this point in time the \pkg{oro.nifti} package cannot apply an
 arbitrary transform to the imaging data into $(x,y,z)$ space -- such a
 transform may require non-integral indices and interpolation steps.
 The package does accommodate straightforward transformations of
-imaging data; e.g., setting the $x$-axis to increase from right to
+imaging data; e.g., setting the $i$-axis to increase from right to
 left (the neurological convention).  Future versions of
 \pkg{oro.nifti} will attempt to address more complicated spatial
-transformations.
+transformations and provide functionality to display the $(x,y,z)$ axes
+on orthographic plots.
+
 
 \subsection{NIfTI and ANALYZE Data in S4}
 
