@@ -732,18 +732,18 @@ system("ls random*", intern=TRUE)
 Following on from the S4 implementation of both the NIfTI and ANALYZE
 data formats, the ability to extend the NIfTI data format header is
 utilized in the \pkg{oro.nifti} package.  First, extensions are
-properly handled when reading and writing NIfTI data.  Second, users
-are allowed to add extensions to newly-created NIfTI objects using
-various functions and the \pkg{XML} package \citep{XML}.  Third, by
-default all operations that are performed on a NIfTI object will
-generate what we call an \emph{audit trail} that consists of an
-XML-based log.  Each log entry contains information not only about the
-function applied to the NIfTI object, but also various system-level
-information; e.g., version of \proglang{R}, user name, date, time,
-etc.  When writing NIfTI-class objects to disk, the XML-based NIfTI
-extension is converted into plain text and saved appropriately (ecode
-= 6).  The user may control the tracking of data manipulation via the
-audit trail using a global option.  For example, please use the command
+properly handled when reading and writing NIfTI data.  Second, users are
+allowed to add extensions to newly-created NIfTI objects by casting them as
+\code{niftiExtension} objects and adding \code{niftiExtensionSection} objects
+to the \code{extensions} slot.  Third, by default all operations that are
+performed on a NIfTI object will generate what we call an \emph{audit trail}
+that consists of an XML-based log.  Each log entry contains information not
+only about the function applied to the NIfTI object, but also various
+system-level information; e.g., version of \proglang{R}, user name, date, time,
+etc.  When writing NIfTI-class objects to disk, the XML-based NIfTI extension
+is converted into plain text and saved appropriately (ecode = 6).  The user may
+control the tracking of data manipulation via the audit trail using a global
+option.  For example, please use the command
 
 <<niftiAuditTrail,eval=FALSE>>=
 options(niftiAuditTrail=FALSE)
