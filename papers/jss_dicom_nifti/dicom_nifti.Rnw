@@ -70,7 +70,7 @@ image processing and visualization.
   E-mail: \email{volker.schmid@lmu.de}\\
   URL: \url{http://volkerschmid.de}\\
   
-%  Andrew Thornton\\
+  Andrew Thornton\\
   
 }
 %% It is also possible to add a telephone and fax number
@@ -103,10 +103,10 @@ options(prompt="R> ")
 Medical imaging is well established in both the clinical and research
 areas with numerous equipment manufacturers supplying a wide variety
 of modalities.  The DICOM (Digital Imaging and Communications in
-Medicine; \url{http://medical.nema.org}) standard was developed from earlier
-standards and released in 1993. It is the data format for clinical
-imaging equipment and a variety of other devices whose complete
-specification is beyond the scope of this paper.  All major
+Medicine; \url{http://medical.nema.org}) standard was developed from
+earlier standards and released in 1993. It is the data format for
+clinical imaging equipment and a variety of other devices whose
+complete specification is beyond the scope of this paper.  All major
 manufacturers of medical imaging equipment (e.g., GE, Siemens,
 Philips) have so-called DICOM conformance statements that explicitly
 state how their hardware implements DICOM.  The DICOM standard
@@ -254,10 +254,18 @@ explicit and implicit value representations.  The first two bytes
 represent the \code{group} tag and the second two bytes represent the
 \code{element} tag, regardless of the type of VR.  The third set of
 two bytes contains the characters of the VR on which a decision about
-being implicit or explicit is made.  Explicit VRs of type \code{\{OB,
-  OF, OW, SQ, UT, UN\}} skip bytes seven and eight (counting from one
-instead of zero), convert the next four bytes into an integer length
-and read \code{length} number of objects from the DICOM file.
+being implicit or explicit is made.  Explicit VRs of type \code{(OB,
+  OF, OW, SQ, UT, UN)} skip bytes six and seven (counting from zero),
+convert the next four bytes into an integer \code{length} and read
+\code{length} number of objects from the DICOM file.  All other
+explicit VRs follow a slightly different path where bytes six and
+seven (counting from zero) provide an integer \code{length} and all
+remaining bytes are read in as the \code{value}.  If the character
+string in bytes four and five do not correspond to a known VR
+(Figure~\ref{fig:group-element}), then the
+(\code{group},\code{element}) tag is declared to be implicit, the
+\code{length} is taken from bytes four through seven and all remaining
+bytes contribute to the \code{value}.
 
 The basic structure of the resulting object is a list with two
 elements: the DICOM header (\code{hdr}) and the DICOM image
@@ -281,12 +289,12 @@ DICOM file.  Hence, the first five tags in the DICOM header of
 last five tags in the DICOM header are also shown, with the very last
 tag indicating the start of the image data for that file and the
 number of bytes (131072) involved.  When additional tags in the DICOM
-header information are queried
+header information are queried (via \code{extractHeader})
 
 <<DICOM Abdo 02>>=
-abdo$hdr$value[abdo$hdr$name == "BitsAllocated"]
-abdo$hdr$value[abdo$hdr$name == "Rows"]
-abdo$hdr$value[abdo$hdr$name == "Columns"]
+extractHeader(abdo$hdr, "BitsAllocated") # abdo$hdr$value[abdo$hdr$name == "BitsAllocated"]
+extractHeader(abdo$hdr, "Rows") # abdo$hdr$value[abdo$hdr$name == "Rows"]
+extractHeader(abdo$hdr, "Columns") # abdo$hdr$value[abdo$hdr$name == "Columns"]
 @ 
 
 it is clear that the data are consistent with the header information
@@ -310,7 +318,7 @@ across multiple directories, one may use the function
 
 <<DICOM HK40 01>>=
 fname <- system.file("hk-40", package="oro.dicom")
-hk40 <- dicomSeparate(fname)
+hk40 <- dicomSeparate(fname, verbose=TRUE, counter=10)
 unlist(lapply(hk40, length))
 @ 
 
@@ -395,12 +403,15 @@ original data acquisition should accompany the image through the DICOM
 header, and this information is utilized as much as possible by
 \pkg{oro.dicom} to simplify the manipulation of DICOM data.  As
 previously shown, this information is easily available to the user by
-matching DICOM header fields with valid strings
+matching DICOM header fields with valid strings.  Note, the function
+\code{extratHeader} assumes the output should be coerced via
+\code{as.numeric} but this may be disabled setting the input parameter
+\code{numeric=FALSE}.
 
 <<DICOM Abdo 03>>=
-abdo$hdr$value[abdo$hdr$name == "Manufacturer"]
-abdo$hdr$value[abdo$hdr$name == "RepetitionTime"]
-abdo$hdr$value[abdo$hdr$name == "EchoTime"]
+extractHeader(abdo$hdr, "Manufacturer", numeric=FALSE) # abdo$hdr$value[abdo$hdr$name == "Manufacturer"]
+extractHeader(abdo$hdr, "RepetitionTime") # abdo$hdr$value[abdo$hdr$name == "RepetitionTime"]
+extractHeader(abdo$hdr, "EchoTime") # abdo$hdr$value[abdo$hdr$name == "EchoTime"]
 @ 
 
 The basic DICOM file structure does not encourage the analysis of
@@ -451,8 +462,10 @@ dev.off()
       \textbf{(a)} & \textbf{(b)}
     \end{tabular}
   \end{center}
-  \caption{\textbf{(a)} Single MOSAIC image.  \textbf{(b)} Lightbox
-    display of three-dimensional array of images.}
+  \caption{\textbf{(a)} Single MOSAIC image as read in from
+    \code{dicomInfo}.  \textbf{(b)} Lightbox display of
+    three-dimensional array of images after processing via
+    \code{create3D}.}
   \label{fig:mosaic}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -460,7 +473,9 @@ dev.off()
 Figure~\ref{fig:mosaic}a is taken from the raw DICOM file, in mosaic
 format, and displayed with the default margins in \proglang{R}.
 Figure~\ref{fig:mosaic}b is displayed after re-organizing the original
-DICOM file into a 3D array and then converting it to NIfTI format.
+DICOM file into a three-dimensional array (it was also converted to
+the NIfTI format for ease of visualization using the overloaded
+\code{image} function in \pkg{oro.nifti}).
 
 \section[oro.nifti: NIfTI-1 Data Input/Output in R]{\pkg{oro.nifti}: NIfTI-1 Data Input/Output in \proglang{R}}
 
@@ -525,7 +540,9 @@ latter is the name of a valid NIfTI header field used to hold a
 Image information begins, in a single NIfTI file (\code{magic =
   "n+1\textbackslash{}0"}), after the first 352 bytes.  If header
 extensions are used, then the image information is pushed further in
-the byte stream. \textbf{[MORE?]}
+the byte stream.  The \code{image} function has been overloaded so
+that it behaves differently when dealing with medical image objects
+(\code{nifti} and \code{anlz}).  The command
 
 <<mniLR-png,echo=FALSE,results=hide>>=
 png(filename="mniLR.png", width=2*480, height=2*480, bg="black")
@@ -537,11 +554,14 @@ image(mniLR)
 dev.off()
 @ 
 
-produces a 4D array of the image data, with the default NIfTI axes,
-and is displayed on a $10{\times}10$ grid of images
-(Figure~\ref{fig:mniLR+mniRL}a).  Note, the \code{image} function has
-been overloaded with the classes \code{nifti} and \code{anlz} in order
-to display them with minimal user input.
+produces a three-dimensional array of the MNI~brain, with the default
+NIfTI axes, and is displayed on a $10{\times}10$ grid of images
+(Figure~\ref{fig:mniLR+mniRL}a).  The \code{image} function for
+medical image S4 objects is an attempt to balance minimal user input
+with enough flexibility to customize the display when necessary.  For
+example, single slices may be viewed by using the option
+\code{plot.type="single"} in conjuction with the option \code{z=} to
+specify the slice.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[tbp]
@@ -561,10 +581,11 @@ to display them with minimal user input.
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The second example of reading in, and displaying, medical imaging data
-in NIfTI format \texttt{avg152T1\_RL\_nifti.nii.gz} was also obtained
-from the NIfTI website (\url{http://nifti.nimh.nih.gov/nifti-1/}).
-Successful execution of the commands
+The second example of reading in and displaying medical imaging data
+in the NIfTI format \texttt{avg152T1\_RL\_nifti.nii.gz} was also
+obtained from the NIfTI website
+(\url{http://nifti.nimh.nih.gov/nifti-1/}).  Successful execution of
+the commands
 
 <<mniRL-read>>=
 fname <- system.file(file.path("nifti", "mniRL.nii.gz"), package="oro.nifti")
@@ -579,9 +600,9 @@ image(mniRL)
 dev.off()
 @ 
 
-produces a 4D array of the image data that may be displayed in a
-$10{\times}10$ grid of images (Figure~\ref{fig:mniLR+mniRL}b).  The
-two sets of data in Figure~\ref{fig:mniLR+mniRL} are stored in two
+produces a three-dimensinoal array of the MNI~brain that is displayed
+in a $10{\times}10$ grid of images (Figure~\ref{fig:mniLR+mniRL}b).
+The two sets of data in Figure~\ref{fig:mniLR+mniRL} are stored in two
 different orientations, commonly referred to as \emph{radiological}
 and \emph{neurological}.  The radiological convention is where ``right
 is right'' and one is essentially looking through the subject.  The
@@ -950,9 +971,9 @@ dev.off()
 @ 
 
 At default \code{dicom2nifti} takes all image data from the DICOM list
-and creates a 3D image.  Four-dimensinoal image volumes (3D in space
-plus time) are also converted automatically by specifying
-\code{DIM=4}.  Slice positions are taken from the
+and creates a 3D image.  Four-dimensinoal image volumes (three in
+space plus one in time) are also converted automatically by specifying
+\code{DIM=4}, where slice positions are taken from the
 \texttt{ImagePositionPatient} DICOM header field.  For example, using
 \code{DIM=4} on the \code{hk40} DICOM data,
 
@@ -960,20 +981,66 @@ plus time) are also converted automatically by specifying
 (hk40n <- dicom2nifti(hk40, DIM=4))
 @ 
 
-will also produce a 3D image, as the \texttt{ImagePositionPatient}
-field is unique for each single slice of the volume.
+will also produce a three-dimensional volume of images, since the
+\texttt{ImagePositionPatient} field is unique for each single slice of
+the volume.
 
 The functions \code{dicom2nifti} and \code{dicom2analyze} will fail
 when the dimensions of the individual images in the DICOM list do not
 match.  However, they do not check for different series numbers or
-patient~IDs.  In cases where a DICOM file includes images from more
-than one series, the corresponding slices have to be chosen before
-conversion, using \code{dicomTable}, \code{extractHeader}, and
-\code{matchHeader}.
+patient~IDs so caution should be exercised when scripting automated
+workflows for DICOM-to-NIfTI conversion.  In cases where a DICOM file
+includes images from more than one series, the corresponding slices
+have to be chosen before conversion, using \code{dicomTable},
+\code{extractHeader}, and \code{matchHeader}.
 
 \subsection{Multiple-Series Example}
 
+The National Biomedical Imaging Archive (NBIA) is a searchable,
+national repository integrating \emph{in vivo} cancer images with
+clinical and genomic data.  The NBIA provides the scientific community
+with public access to DICOM images, image markup, annotations, and
+rich metadata.\footnote{\url{http://cabig.nci.nih.gov/tools/NCIA}} The
+multiple MRI sequences processed here were downloaded from the
+``RIDER~Neuro~MRI''
+collection.\footnote{\url{http://wiki.nci.nih.gov/display/CIP/RIDER}}
+A small \code{for} loop has been written to operate on a subset of the
+DICOM directory structure, where the \code{SeriesInstanceUID} DICOM
+header field is assumed to be 100\% accurate in series
+differentiation.
 
+<<RIDER Neuro MRI>>=
+subject <- "1086100996"
+DCM <- dicomSeparate(subject, verbose=TRUE, counter=100)
+seriesInstanceUID <- extractHeader(DCM$hdr, "SeriesInstanceUID", FALSE)
+for (uid in unique(seriesInstanceUID)) {
+  index <- which(unlist(lapply(DCM$hdr, function(x) uid %in% x$value)))
+  uid.dcm <- list(hdr=DCM$hdr[index], img=DCM$img[index])
+  patientsName <- extractHeader(uid.dcm$hdr, "PatientsName", FALSE)
+  studyDate <- extractHeader(uid.dcm$hdr, "StudyDate", FALSE)
+  seriesDescription <- extractHeader(uid.dcm$hdr, "SeriesDescription", FALSE)
+  fname <- paste(gsub("[^0-9A-Za-z]", "", 
+                      unique(c(patientsName, studyDate, seriesDescription))), 
+                 collapse="_")
+  cat("##  ", fname, fill=TRUE)
+  if (gsub("[^0-9A-Za-z]", "", unique(seriesDescription)) == "axtensor") {
+    D <- 4
+    reslice <- FALSE
+  } else {
+    D <- 3
+    reslice <- TRUE
+  }
+  uid.nifti <- dicom2nifti(uid.dcm, DIM=D, reslice=reslice,
+                           descrip=c("PatientID", "SeriesDescription"))
+  writeNIfTI(uid.nifti, fname)
+}
+@ 
+
+Note, the diffusion tensor imaging (DTI) data \code{axtensor} is
+assumed to be four dimensional and all other series (the multiple
+flip-angle acquisitions) are assumed to be three dimensional.  There
+is always a balance between what information should be pre-specified
+versus what can easily be extracted from the DICOM headers or images.
 
 \section{Conclusion}
 
@@ -995,8 +1062,10 @@ end user.
 
 \section*{Acknowledgments}
 
-The authors would like to thank the anonymous institutions who have
-made their DICOM data available in the public domain.  VS is supported
+The authors would like to thank the National Biomedical Imaging
+Archive (NBIA), the National Cancer Institute (NCI), the National
+Institute of Health (NIH) and all institutions that have contributed
+medical imaging data to the public domain.  VS is supported
 by the LMU innovative project BioMed-S: Analysis and Modelling of
 Complex Systems.
 
