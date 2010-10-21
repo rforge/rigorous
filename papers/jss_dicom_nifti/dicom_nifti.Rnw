@@ -741,7 +741,7 @@ that consists of an XML-based log.  Each log entry contains information not
 only about the function applied to the NIfTI object, but also various
 system-level information; e.g., version of \proglang{R}, user name, date, time,
 etc.  When writing NIfTI-class objects to disk, the XML-based NIfTI extension
-is converted into plain text and saved appropriately (ecode = 6).  The user may
+is converted into plain text and saved appropriately (\code{ecode = 6}).  The user may
 control the tracking of data manipulation via the audit trail using a global
 option.  For example, please use the command
 
