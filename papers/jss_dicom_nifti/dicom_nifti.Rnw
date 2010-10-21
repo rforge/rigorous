@@ -604,7 +604,7 @@ image(mniRL)
 dev.off()
 @ 
 
-produces a three-dimensinoal array of the MNI~brain that is displayed
+produces a three-dimensional array of the MNI~brain that is displayed
 in a $10{\times}10$ grid of images (Figure~\ref{fig:mniLR+mniRL}b).
 The two sets of data in Figure~\ref{fig:mniLR+mniRL} are stored in two
 different orientations, commonly referred to as \emph{radiological}
@@ -977,7 +977,7 @@ dev.off()
 @ 
 
 At default \code{dicom2nifti} takes all image data from the DICOM list
-and creates a 3D image.  Four-dimensinoal image volumes (three in
+and creates a 3D image.  Four-dimensional image volumes (three in
 space plus one in time) are also converted automatically by specifying
 \code{DIM=4}, where slice positions are taken from the
 \texttt{ImagePositionPatient} DICOM header field.  For example, using
