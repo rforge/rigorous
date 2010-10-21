@@ -538,9 +538,10 @@ latter is the name of a valid NIfTI header field used to hold a
 \subsection{The NIfTI Image}
 
 Image information begins, in a single NIfTI file (\code{magic =
-  "n+1\textbackslash{}0"}), after the first 352 bytes.  If header
-extensions are used, then the image information is pushed further in
-the byte stream.  The \code{image} function has been overloaded so
+"n+1\textbackslash{}0"}), by default after the first 352 bytes. The byte
+position in the file is determined by the \code{voxoffset} slot. Header
+extensions come before the image information and therefore will increase
+\code{voxoffset}. The \code{image} function has been overloaded so
 that it behaves differently when dealing with medical image objects
 (\code{nifti} and \code{anlz}).  The command
 
