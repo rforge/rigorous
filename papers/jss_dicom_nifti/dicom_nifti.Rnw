@@ -537,13 +537,16 @@ latter is the name of a valid NIfTI header field used to hold a
 
 \subsection{The NIfTI Image}
 
-Image information begins, in a single NIfTI file (\code{magic =
-"n+1\textbackslash{}0"}), by default after the first 352 bytes. The byte
-position in the file is determined by the \code{voxoffset} slot. Header
-extensions come before the image information and therefore will increase
-\code{voxoffset}. The \code{image} function has been overloaded so
-that it behaves differently when dealing with medical image objects
-(\code{nifti} and \code{anlz}).  The command
+Image information begins at the byte position determined by the
+\code{voxoffset} slot. In a single NIfTI file (\code{magic =
+"n+1\textbackslash{}0"}), this is by default after the first 352 bytes.  Header
+extensions extend the size of the header and come before the image information
+leading to a consequent increase of \code{voxoffset} for single NIfTI files.
+Split NIfTI files do not have this problem and \code{voxoffset} is set at 0.
+
+The \code{image} function has been overloaded so that it behaves differently
+when dealing with medical image objects (\code{nifti} and \code{anlz}).  The
+command
 
 <<mniLR-png,echo=FALSE,results=hide>>=
 png(filename="mniLR.png", width=2*480, height=2*480, bg="black")
