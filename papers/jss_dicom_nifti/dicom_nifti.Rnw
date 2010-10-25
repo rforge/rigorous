@@ -8,7 +8,7 @@
 
 %% almost as usual
 \author{Brandon Whitcher\\GlaxoSmithKline \And 
-        Volker J. Schmid\\LMU M\"unchen \And
+        Volker J. Schmid\\Ludwig-Maximilians Universit\"at M\"unchen \AND
         Andrew Thornton\\Cardiff University}
 \title{Working with the {DICOM} and {NIfTI} Data Standards in \proglang{R}}
 
@@ -57,7 +57,6 @@ image processing and visualization.
   Brandon Whitcher\\
   GlaxoSmithKline Clinical Imaging Centre\\
   Hammersmith Hospital\\
-  Du Cane Road\\
   London W12 0HS, United Kingdom\\
   E-mail: \email{bjw34032@users.sourceforge.net}\\
   URL: \url{http://rigorousanalytics.blogspot.com/}\\
@@ -66,12 +65,16 @@ image processing and visualization.
   Bioimaging group\\
   Department of Statistics\\
   Ludwig-Maximilians-Universit\"at M\"unchen\\
-  Ludwigstr.~33, 80539 M\"unchen, Germany\\
+  80539 M\"unchen, Germany\\
   E-mail: \email{volker.schmid@lmu.de}\\
   URL: \url{http://volkerschmid.de}\\
   
   Andrew Thornton\\
-  
+  Cardiff University School of Medicine\\
+  Heath Park\\
+  Cardiff CF14 4XN, United Kingdom\\
+  E-mail: \email{art27@cantab.net}\\
+  URL: \url{http://}\\
 }
 %% It is also possible to add a telephone and fax number
 %% before the e-mail in the following format:
@@ -144,15 +147,14 @@ ANALYZE/NIfTI.
 
 The industry standard format, for data acquired using a clinical
 imaging device, is DICOM (Digital Imaging and Communications in
-Medicine; \url{http://medical.nema.org}).  The DICOM ``standard'' is
-very broad and complex.  Roughly speaking each DICOM-compliant file is
-a collection of fields organized into two four-byte sequences
-(group,element) that are represented as hexadecimal numbers and form a
-tag.  The (group,element) combination establishes what type of
-information is forthcoming in the file.  There is no fixed number of
-bytes for a DICOM header.  The final (group,element) tag should be the
-``data'' tag (7FE0,0010), such that all subsequent information is
-related to the image(s).
+Medicine).  The DICOM ``standard'' is very broad and complex.  Roughly
+speaking each DICOM-compliant file is a collection of fields organized
+into two four-byte sequences (group,element) that are represented as
+hexadecimal numbers and form a tag.  The (group,element) combination
+establishes what type of information is forthcoming in the file.
+There is no fixed number of bytes for a DICOM header.  The final
+(group,element) tag should be the ``data'' tag (7FE0,0010), such that
+all subsequent information is related to the image(s).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{table}[tpb]
@@ -190,8 +192,8 @@ related to the image(s).
       \hline
     \end{tabular}
   \end{center}
-  \label{tab:VR}
   \caption{Value representations in the DICOM standard.}
+  \label{tab:VR}
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -238,8 +240,8 @@ Data element with implicit VR:
 \end{verbatim}
 \caption{Byte ordering for a single (group,element) tag in the DICOM
   standard.  Explicit VRs store the VR as text characters in two
-  bytes.  More information is provided in Section~7, Part 3.5-2009 of the
-  DICOM standard (\url{http://medical.nema.org}).}
+  bytes.  More information is provided in Section~7, Part 3.5-2009 of
+  the DICOM standard (\url{http://medical.nema.org}).}
 \label{fig:group-element}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -364,8 +366,6 @@ matchHeader(modality, "mr")[1:5]
 str2time(seriesTime[1:5])
 @ 
 
-
-
 \subsection{The DICOM Image}
 
 Most DICOM files involve a single slice from an acquisition -- the
@@ -388,7 +388,7 @@ dev.off()
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[tbp]
   \centering
-  \includegraphics*[width=0.65\textwidth]{dicom_abdo.png}
+  \includegraphics*[width=0.6\textwidth]{dicom_abdo.png}
   \caption{Coronal slice of the abdomen viewed in
     \textit{neurological} convention (left is right and right is
     left).}
@@ -708,8 +708,7 @@ multi-dimensional array is in agreement with the header values.
 The constructor function \code{nifti} produces valid NIfTI objects,
 including a consistent header, from an arbitrary array.
 <<NIfTI-constructor>>=
-(random.image <- nifti(array(runif(100*100),c(100,100,1)), 
-                       datatype=convert.datatype()$FLOAT32))
+(random.image <- nifti(array(runif(100*100),c(100,100,1)), datatype=16))
 random.image@"dim"
 dim(random.image)
 @ 
@@ -735,18 +734,20 @@ system("ls random*", intern=TRUE)
 Following on from the S4 implementation of both the NIfTI and ANALYZE
 data formats, the ability to extend the NIfTI data format header is
 utilized in the \pkg{oro.nifti} package.  First, extensions are
-properly handled when reading and writing NIfTI data.  Second, users are
-allowed to add extensions to newly-created NIfTI objects by casting them as
-\code{niftiExtension} objects and adding \code{niftiExtensionSection} objects
-to the \code{extensions} slot.  Third, by default all operations that are
-performed on a NIfTI object will generate what we call an \emph{audit trail}
-that consists of an XML-based log.  Each log entry contains information not
-only about the function applied to the NIfTI object, but also various
-system-level information; e.g., version of \proglang{R}, user name, date, time,
-etc.  When writing NIfTI-class objects to disk, the XML-based NIfTI extension
-is converted into plain text and saved appropriately (\code{ecode = 6}).  The user may
-control the tracking of data manipulation via the audit trail using a global
-option.  For example, please use the command
+properly handled when reading and writing NIfTI data.  Second, users
+are allowed to add extensions to newly-created NIfTI objects by
+casting them as \code{niftiExtension} objects and adding
+\code{niftiExtensionSection} objects to the \code{extensions} slot.
+Third, by default all operations that are performed on a NIfTI object
+will generate what we call an \emph{audit trail} that consists of an
+XML-based log.  Each log entry contains information not only about the
+function applied to the NIfTI object, but also various system-level
+information; e.g., version of \proglang{R}, user name, date, time,
+etc.  When writing NIfTI-class objects to disk, the XML-based NIfTI
+extension is converted into plain text and saved appropriately
+(\code{ecode = 6}).  The user may control the tracking of data
+manipulation via the audit trail using a global option.  For example,
+please use the command
 
 <<niftiAuditTrail,eval=FALSE>>=
 options(niftiAuditTrail=FALSE)
@@ -795,7 +796,6 @@ data, are
 \end{itemize}
 The \pkg{mritc} package provides basic interactive visualization of
 ANALYZE/NIfTI data using a \proglang{Tcl/Tk} interface \citep{mritc}.
-\textbf{[WHICH?]}
 
 \subsection{Examples from the NIfTI-1 DFWG}
 
@@ -822,7 +822,7 @@ dev.off()
 @ 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[!htbp]
+\begin{figure}[tbp]
   \begin{center}
     \begin{tabular}{cc}
       \includegraphics*[width=0.45\textwidth]{ffd.png} &
@@ -840,7 +840,7 @@ dev.off()
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[!htbp]
+\begin{figure}[tbp]
   \begin{center}
     \includegraphics*[width=0.65\textwidth]{ffd_orthographic.png}
     \end{center}
@@ -937,7 +937,7 @@ for DICOM conversion.  In addition there are several other
 \subsection{Single-Series Example}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[!htbp]
+\begin{figure}[tbp]
   \begin{center}
     \begin{tabular}{c}
     \includegraphics*[width=0.6\textwidth]{hk40n_image.png}\\
