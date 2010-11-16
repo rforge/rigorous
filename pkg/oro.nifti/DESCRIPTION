@@ -1,15 +1,16 @@
 Package: oro.nifti
-Version: 0.2.1
-Date: 2010-09-01
+Version: 0.2.2
+Date: 2010-10-25
 Title: Rigorous - NIfTI Input / Output
 Author: Brandon Whitcher, Volker Schmid and Andrew Thornton
 Maintainer: Brandon Whitcher <bjw34032@users.sourceforge.net>
-Description: Data input/output functions for data that follow either
-  Analyze or NIfTI standards, part of the Rigorous Analytics bundle.
+Description: Functions for the input/output and visualization of
+  medical imaging data that follow either the ANALYZE or NIfTI formats.
+  This package is part of the Rigorous Analytics bundle.
 Depends: R (>= 2.10), grDevices, graphics, methods, utils
 Suggests: bitops, splines, XML
 License: BSD
 URL: http://rigorousanalytics.blogspot.com, http://rig.oro.us.com/
-LazyLoad: yes
+LazyLoad: no
 LazyData: no
 ZipData: no

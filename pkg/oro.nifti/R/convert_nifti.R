@@ -283,10 +283,12 @@ as.nifti <- function(from, value=NULL, verbose=FALSE) {
     #value@"srow_z" <- R[3,]
   }
   integertype <- function(from) {
-    integer.ranges <- list("BINARY" = c(0, 1),
-                           "UINT8" = c(0, 255),
+    integer.ranges <- list("UINT8" = c(0, 2^8-1),
                            "INT16" = c(-2^15, 2^15-1),
-                           "INT32" = c(-2^31, 2^31-1))
+                           "INT32" = c(-2^31, 2^31-1),
+                           "INT8" = c(-2^7, 2^7-1),
+                           "INT64" = c(-2^63, 2^63-1),
+                           "UINT64" = c(0, 2^64))
     fromRange <- range(from)
     for (i in 1:length(integer.ranges)) {
       if (fromRange[1] >= integer.ranges[[i]][1] &&
@@ -309,46 +311,50 @@ as.nifti <- function(from, value=NULL, verbose=FALSE) {
   }
   if (is(from, "anlz")) {
     nim <- anlz.as.nifti(from, value)
-  } else if (is.array(from)) {
-    ## Determine a sensible datatype
-    dataClass <- class(from[1])
-    datatypeString <- switch(dataClass,
-                             logical = "BINARY",
-                             integer = integertype(from),
-                             numeric = floattype(from),
-                             stop("Can't transform data in from: ",
-                                  class(from[1])))
-    nim@"data_type" <- datatypeString
-    nim@"datatype" <- convert.datatype()[[datatypeString]]
-    nim@"bitpix" <- convert.bitpix()[[datatypeString]]
-    nim@"cal_min" <- min(from, na.rm=TRUE)
-    nim@"cal_max" <- max(from, na.rm=TRUE)
-    nim@"dim_" <- c(length(dim(from)), dim(from))
-    if (length(nim@"dim_") < 8) {
-      nim@"dim_" <- c(nim@"dim_", rep(1, 8 - length(nim@"dim_")))
-    }
-    nim@.Data <- from
-    if (getOption("niftiAuditTrail") && is(nim, "niftiAuditTrail")) {
-      audit.trail(nim) <- niftiAuditTrailCreated(history=nim, call=match.call())
-    }
   } else {
-    if (is.list(from)) {
-      nim <- lapply(from, function(x) as.nifti(x, value))
-      lapply(names(from),
-             function(x) {
-               if (is.nifti(nim[[x]])) {
-                 nim[[x]]@"intent_code" <<- convert.intent()[["Estimate"]]
-                 nim[[x]]@"intent_name" <<- substr(x, 1, 15)
-                 audit.trail(nim[[x]]) <<-
-                   niftiAuditTrailEvent(nim[[x]], type="Intent Changed",
-                                        comment=paste("Parameter Estimate:", x))
-               }
-             })
-    } else {
-      if (verbose) {
-        warning("Cannot convert class =", class(from), "to nifti object")
+    if (is.array(from)) {
+      ## Determine a sensible datatype
+      dataClass <- class(from[1])
+      datatypeString <- switch(dataClass,
+                               logical = integertype(from),
+                               integer = integertype(from),
+                               numeric = floattype(from),
+                               stop("Can't transform data in from: ",
+                                    class(from[1])))
+      nim@"data_type" <- datatypeString
+      nim@"datatype" <- convert.datatype()[[datatypeString]]
+      nim@"bitpix" <- convert.bitpix()[[datatypeString]]
+      nim@"cal_min" <- min(from, na.rm=TRUE)
+      nim@"cal_max" <- max(from, na.rm=TRUE)
+      nim@"dim_" <- c(length(dim(from)), dim(from))
+      if (length(nim@"dim_") < 8) {
+        nim@"dim_" <- c(nim@"dim_", rep(1, 8 - length(nim@"dim_")))
       }
-      nim <- from
+      nim@.Data <- from
+      if (getOption("niftiAuditTrail") && is(nim, "niftiAuditTrail")) {
+        audit.trail(nim) <-
+          niftiAuditTrailCreated(history=nim, call=match.call())
+      }
+    } else {
+      if (is.list(from)) {
+        nim <- lapply(from, function(x) as.nifti(x, value))
+        lapply(names(from),
+               function(x) {
+                 if (is.nifti(nim[[x]])) {
+                   nim[[x]]@"intent_code" <<- convert.intent()[["Estimate"]]
+                   nim[[x]]@"intent_name" <<- substr(x, 1, 15)
+                   audit.trail(nim[[x]]) <<-
+                     niftiAuditTrailEvent(nim[[x]],
+                                          type="Intent Changed",
+                                          comment=paste("Parameter Estimate:", x))
+                 }
+               })
+      } else {
+        if (verbose) {
+          warning("Cannot convert class =", class(from), "to nifti object")
+        }
+        nim <- from
+      }
     }
   }
   return(nim)

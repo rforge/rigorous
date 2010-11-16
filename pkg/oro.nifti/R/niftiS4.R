@@ -314,10 +314,11 @@ nifti <- function(img=array(0, dim=rep(1,4)), dim, datatype=2, cal.min=NULL,
                   cal.max=NULL, pixdim=NULL, ...) {
   ## Set dimensions
   if (missing(dim)) {
-    if (is.array(img))
+    if (is.array(img)) {
       dim <- base::dim(img)
-    else
+    } else {
       dim <- c(1, length(img))
+    }
   }
   ld <- length(dim)
   ## if (ld < 3) {

@@ -42,10 +42,8 @@ enableAuditTrail <- function() {
   if (require("XML")) {
     if (!isClass("niftiAuditTrail")) {
       options("niftiAuditTrail"=TRUE)
-      setClass("niftiAuditTrail",
-               representation(trail="XMLAbstractNode"),
-               prototype(trail=newAuditTrail()),
-               contains="niftiExtension")
+      setClass("niftiAuditTrail", representation(trail="XMLAbstractNode"),
+               prototype(trail=newAuditTrail()), contains="niftiExtension")
     }
   }
 }
@@ -79,8 +77,9 @@ niftiExtensionToAuditTrail <- function(nim, workingDirectory=NULL,
                                        filename=NULL, call=NULL) {
   if (getOption("niftiAuditTrail")) {
     require("XML")
-    if (!is(nim, "niftiAuditTrail"))
+    if (!is(nim, "niftiAuditTrail")) {
       nim <- as(nim, "niftiAuditTrail")
+    }
     ## We enforce that there is a single extension with ecode == oro.nifti.ecode
     ecodes <- lapply(nim@extensions, function(x) x@ecode)
     oei <- which(ecodes == oro.nifti.info("ecode"))
@@ -121,7 +120,6 @@ niftiAuditTrailToExtension <- function(nim, workingDirectory=NULL,
                                      filename=filename, call=call)
     ## Serialize the XML to sec@edata
     sec@edata <- saveXML(audit.trail(nim))
-
     ## Fix the esize to be congruent to 0 mod 16
     sec@esize <- nchar(sec@edata, type="bytes") + 8
     sec@esize <- (-sec@esize %% 16) + sec@esize
@@ -135,18 +133,21 @@ niftiAuditTrailSystemNode <- function(type="system-info",
   if (getOption("niftiAuditTrail")) {
     require("XML")
     if (is(call, "character") && is(try(get(call, mode="function"),
-                                        silent=TRUE), "function")) 
+                                        silent=TRUE), "function")) {
       call <- as.character(as.expression(getLastCallWithName(call)))
-    if (is(call, "call"))
+    }
+    if (is(call, "call")) {
       call <- as.character(as.expression(call))
+    }
     currentDateTime <- format(Sys.time(), "%a %b %d %X %Y %Z")
     children <- .listToNodes(c("workingDirectory"=workingDirectory,
                                  "filename"=filename, "call"=call))
-    sysinfo <- .listToNodes(c("r-version"=R.version["version.string"],
-                 "date"=currentDateTime,
-                 "user"=Sys.getenv("LOGNAME"),
-                 "package-version"=packageDescription("oro.nifti")["Version"]))
-    if(is.null(children)) {
+    sysinfo <-
+      .listToNodes(c("r-version"=R.version["version.string"],
+                     "date"=currentDateTime,
+                     "user"=Sys.getenv("LOGNAME"),
+                     "package-version"=packageDescription("oro.nifti")["Version"]))
+    if (is.null(children)) {
       children <- sysinfo
     } else {
       children <- c(children, newXMLNode("system", sysinfo))
@@ -195,8 +196,10 @@ niftiAuditTrailCreated <- function(history=NULL, call=NULL,
 
 	lastEvent <- historyChildren[[length(historyChildren)]]
 	
-	if (xmlName(lastEvent) == "event" && xmlValue(lastEvent[["type"]]) == "processing") {
-	  # We are in some processing history; the given call is not the correct call
+	if (xmlName(lastEvent) == "event" &&
+            xmlValue(lastEvent[["type"]]) == "processing") {
+	  ## We are in some processing history;
+          ## the given call is not the correct call
 	  call <- xmlValue(lastEvent[["call"]])
 	  historyChildren <- historyChildren[1:(length(historyChildren) - 1)]
 	} 
@@ -209,8 +212,9 @@ niftiAuditTrailCreated <- function(history=NULL, call=NULL,
 	## OK, serialize and reParse the history
 	historyChildren <-
           lapply(historyChildren,
-                 function(x) xmlRoot(xmlParse(iconv(saveXML(x), to="UTF-8"),
-                                              asText=TRUE)))
+                 function(x) {
+                   xmlRoot(xmlParse(iconv(saveXML(x), to="UTF-8"), asText=TRUE))
+                 })
 	historyNode <- addChildren(historyNode, historyChildren)
 	created <- addChildren(created, historyNode)
       }
@@ -226,16 +230,19 @@ niftiAuditTrailEvent <- function(trail, type=NULL, call=NULL, comment=NULL) {
       return(niftiAuditTrailEvent(audit.trail(trail), type, call, comment))
     }
     require("XML")
-    if (is(call, "character") && is(try(get(call, mode="function"),
-                                        silent=TRUE),"function")) 
+    if (is(call, "character") &&
+        is(try(get(call, mode="function"), silent=TRUE), "function")) {
       call <- as.character(as.expression(getLastCallWithName(call)))
-    if (is(call, "call"))
+    }
+    if (is(call, "call")) {
       call <- as.character(as.expression(call))
+    }
     currentDateTime <- format(Sys.time(), "%a %b %d %X %Y %Z")
-    eventNode <- newXMLNode("event", .listToNodes(c("type"=type, "call"=call,
-                                       "date"=currentDateTime, 
-				       "comment"=comment, 
-				       "user"=Sys.getenv("LOGNAME"))))
+    eventNode <- newXMLNode("event",
+                            .listToNodes(c("type"=type, "call"=call,
+                                           "date"=currentDateTime, 
+                                           "comment"=comment, 
+                                           "user"=Sys.getenv("LOGNAME"))))
     trail <- addChildren(trail, eventNode)
     return(trail)
   }
