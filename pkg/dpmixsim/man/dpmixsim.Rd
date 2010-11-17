@@ -7,31 +7,39 @@
 
 \title{ Dirichlet Process mixture model for clustering and image segmentation }
 \description{
-  \code{dpmixsim} implements a Dirichlet Process mixture (DPM)
-  model. The DPM model is a Bayesian nonparametric methodology that
-  relies on MCMC simulations for exploring mixture models with an
-  unknown number of components. The function implements conjugate models
-  with normal structure (conjugate normal-normal DP mixture model).
+  \code{dpmixsim} implements a Dirichlet Process mixture (DPM) model.
+  The DPM model is a Bayesian nonparametric methodology that relies on MCMC simulations
+  for exploring mixture models with an unknown number of components.
+  The function implements conjugate models with normal structure (conjugate normal-normal
+  DP mixture model).
+
 }
 
 \usage{
-dpmixsim(x, M=1, a=1, b=2, upalpha=1, a0=2, b0=2, maxiter=4000, rec=1000,
-  fsave=NULL, kmax=30)
+dpmixsim(x, M=1, a=1, b=1, upalpha=1, a0=2, b0=2, maxiter=4000, rec=3000,
+  fsave=NA, kmax=30, nclinit=NA, minvar=0.001)
 }
 \arguments{
   \item{x}{ scaled input data as vector in range \{0,1\} }
   \item{M}{ DP precision hyperparameter }
   \item{a}{ Gamma prior hyperparameter }
   \item{b}{ Gamma prior hyperparameter }
-  \item{upalpha}{ is a logical variable (default = \samp{TRUE}) for
-  simulations with \{automatic,fixed\} calibration of the precision
-  hyperparameter M }
-  \item{a0}{ Gamma prior hyperparameter for M }
-  \item{b0}{ Gamma prior hyperparameter for M } 
+  \item{upalpha}{ is a logical variable for simulations with
+  \{automatic,fixed\} calibration of the precision hyperparameter M
+  (default = \samp{TRUE}) }
+  \item{a0}{ Gamma prior hyperparameter for M (default 2)}
+  \item{b0}{ Gamma prior hyperparameter for M (default 2)} 
   \item{maxiter}{ maximum number of MCMC iteration steps }
   \item{rec}{ record the last \samp{rec} iteration steps }
   \item{fsave}{ filename for saving the MCMC simulation (def: \samp{NULL} do not save) }
-  \item{kmax}{ maximum number of clusters in the simulation, default 30 }
+  \item{kmax}{ maximum number of clusters in the simulation, (default 30) }
+  \item{nclinit}{ number of initial clusters to use at the beginning of the simulation.
+   If not specified (NA) the number of initial clusters is equal to the length of x
+   (one element per cluster); (default: NA) }
+  \item{minvar}{ minimum value admissible for a cluster variance (default=0.001).
+   Decreasing \samp{minval} may improve resolution (distribution fitness), but increases
+   the maximum number of admissible clusters (\samp{kmax}). In this case, you may have to
+   increase (\samp{kmax}) as well.}
 }
 
 \details{
@@ -59,6 +67,7 @@ dpmixsim(x, M=1, a=1, b=2, upalpha=1, a0=2, b0=2, maxiter=4000, rec=1000,
   \item{varrec}{ sigma cluster parameters }
 }
 
+
 \references{ 
 Adelino Ferreira da Silva, A Dirichlet process mixture model for
  brain MRI tissue classification,
@@ -85,40 +94,46 @@ Adelino Ferreira da Silva, Bayesian mixture models of variable
 }
 
 \examples{
-## Example 1: simple test using 'galaxy' data
-   data("galaxy")
-   x <- prescale(galaxy$speed) 
-   res <- dpmixsim(x, M=1, a=1, b=0.001, upalpha=1, maxiter=4000, rec=3000)
-## post-simulation
-   z <- postdpmixciz(x, res=res, rec=3000, ngrid=100, plot=TRUE)
-## Example 2: MRI segmentation
-## Testing note: this example should reproduce the equivalent segmented images
-## used in the author's references 
-   slicedata <- readsliceimg(fbase="t1_pn3_rf0", swap=FALSE)
-   image(slicedata$niislice, col=gray((0:255)/256), main="original image")
-   x <- prescale(premask(slicedata, subsamp=TRUE))
-   fsave <- file.path(tempdir(), "segtest2.sav")
-   # answ <- readline("Run MCMC simulation first ? ")
-   # run <- FALSE
-   # if (substr(answ, 1, 1) == "y") { run <- TRUE }
-   rec <- 2000
-   ngrid <- 100
-   # if(run) {
-   res <- dpmixsim(x, rec=rec, fsave=fsave)
-   # } else {
-   #  load(file=fsave)
-   #  cat("loaded",fsave,"\n")
-   # }
-## post-simulation
-   z <- postdpmixciz(x, res=res, rec=rec, ngrid=ngrid)
-   x <- prescale(premask(slicedata, subsamp=FALSE)) # use full-sized image after estimation 
-   cx <- postdataseg(x, z, ngrid=ngrid)
-   cat("*** view grouped segmentations:\n")
-   postimgclgrp(slicedata$mask, cx, palcolor=FALSE)
-   cat("*** display all clusters:\n")
-   postimgcomps(slicedata$mask, cx)
-   cat("*** re-cluster with 4 clusters:\n")
-   postkcluster(slicedata$mask, cx, clk=4)
+\dontrun{
+## Example 1: simple test using `galaxy' data
+  data("galaxy")
+  x0 <- galaxy$speed
+  x  <- prescale(x0) 
+  maxiter <- 4000; rec <- 3000; ngrid <- 100
+  res <- dpmixsim(x, M=1, a=1, b=0.1, upalpha=1, maxiter=maxiter, rec=rec,
+    nclinit=4)
+  z <-  postdpmixciz(x=x, res=res, rec=rec, ngrid=ngrid, plot=T)
+  ##
+  res <- dpmixsim(x, M=2, a=1, b=0.001, upalpha=0, maxiter=maxiter,
+    rec=rec, nclinit=4)
+  z <-  postdpmixciz(x, res=res, rec=rec, ngrid=ngrid, plot=T)
+##-----------------
+## Example 2: 
+  demo(testMarronWand)
+##-----------------
+## Example 3: MRI segmentation
+## Testing note: this example should reproduce the equivalent segmented
+## images used in the author's references 
+  slicedata <- readsliceimg(fbase="t1_pn3_rf0", swap=FALSE)
+  image(slicedata$niislice, col=gray((0:255)/256), main="original image")
+  x0 <- premask(slicedata, subsamp=TRUE)
+  x  <- prescale(x0) 
+  rec <- 3000
+  res <- dpmixsim(x, M=1, a=1, b=1, upalpha=1, maxiter=4000,
+      rec=rec, nclinit=8, minvar=0.002)
+  ## post-simulation
+  ngrid <- 200
+  z <- postdpmixciz(x, res=res, rec=rec, ngrid=ngrid, plot=TRUE)
+  x0 <- premask(slicedata, subsamp=FALSE) # use full-sized image after estimation 
+  x  <- prescale(x0) 
+  cx   <- postdataseg(x, z, ngrid=ngrid)
+  cat("*** view grouped segmentations:\n")
+  postimgclgrp(slicedata$mask, cx, palcolor=FALSE)
+  cat("*** display all clusters:\n")
+  postimgcomps(slicedata$mask, cx)
+  cat("*** re-cluster with 4 clusters:\n")
+  postkcluster(slicedata$mask, cx, clk=4)
+}
 }
 
-\keyword{models}
+\keyword{ models }

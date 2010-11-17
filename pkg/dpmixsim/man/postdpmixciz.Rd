@@ -41,25 +41,16 @@ Adelino Ferreira da Silva, Bayesian mixture models of variable
 
 \examples{
 \dontrun{
-## Example 2: MRI brain image segmentation
+## Example: MRI brain image segmentation
   slicedata <- readsliceimg(fbase="t1_pn3_rf0", swap=FALSE)
   image(slicedata$niislice, col=gray((0:255)/256), main="original image")
   x0 <- premask(slicedata, subsamp=TRUE)
   x  <- prescale(x0) 
-  fsave <- "/tmp/segtest2.sav"
-  answ <- readline("Run MCMC simulation first ? ")
-  run <- FALSE
-  if (substr(answ, 1, 1) == "y") { run <- TRUE }
-  rec <- 2000
-  ngrid <- 100
-  if (run) {
-    res <- dpmixsim(x, M=1, a=1, b=2, upalpha=1, maxiter=4000, rec=rec,
-                    fsave=fsave)
-  } else {
-    load(file=fsave)
-    cat("loaded",fsave,"\n")
-  }
+  rec <- 3000
+  res <- dpmixsim(x, M=1, a=1, b=2, upalpha=1, maxiter=4000,
+      rec=rec, nclinit=8)
   ## post-simulation
+  ngrid <- 200
   z <- postdpmixciz(x, res=res, rec=rec, ngrid=ngrid, plot=TRUE)
 }}
 

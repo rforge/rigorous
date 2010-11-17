@@ -45,6 +45,6 @@ Adelino Ferreira da Silva, Bayesian mixture models of variable
 }
 \examples{
 \dontrun{
-## see Example 2 in `dpmixsim'.
+## see Examples in `dpmixsim'.
 }}
 \keyword{dplot}

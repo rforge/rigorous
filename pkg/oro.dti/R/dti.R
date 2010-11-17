@@ -141,7 +141,7 @@ tensor.volume <- function(volume, G, b, mask, weight=FALSE, boot=FALSE,
   Yhat <- Z %*% beta
   ## Residuals
   u <- Y - Yhat
-  if(boot) {
+  if (boot) {
     ## Distribution from Mammen (1993)
     F1 <- function(n) {
       p <- (sqrt(5) + 1)/2/sqrt(5)
@@ -159,14 +159,18 @@ tensor.volume <- function(volume, G, b, mask, weight=FALSE, boot=FALSE,
     ## Perform the wild bootstrap
     beta.boot <- array(NA, c(k,n,Nboot+1))
     beta.boot[,,1] <- beta
-    for(i in 1:Nboot+1) {
-      if(!(i %% 10)) cat("  i =", i, fill=TRUE)
+    for (i in 1:Nboot+1) {
+      if (!(i %% 10)) {
+        cat("  i =", i, fill=TRUE)
+      }
       epsilon <- matrix(F2(m*n), m, n)
       estar <- a * u * epsilon
       Ystar <- Yhat + estar
       beta.boot[,,i] <- qr.coef(qr(Z), Ystar)
     }
-  } else beta.boot <- NULL
+  } else {
+    beta.boot <- NULL
+  }
   list(D = DT, b = beta.boot)
 }
 
@@ -189,9 +193,10 @@ tensor.slice.multiple <- function(slice, G, b, weight=TRUE, scan.seq=NULL,
   beta <- qr.coef(qr(Z), Y)
   ## Hat matrix
   ## H <- Z %*% solve(t(Z) %*% Z) %*% t(Z)
-  if(weight) {
-    if(is.null(scan.seq))
+  if (weight) {
+    if(is.null(scan.seq)) {
       stop("Cannot estimate weighting matrix without scanning sequence")
+    }
     ## Compute weight matrix
     V7 <- Y[,as.logical(unlist(mask))]
     V <- numeric(nrow(Y))
@@ -208,18 +213,18 @@ tensor.slice.multiple <- function(slice, G, b, weight=TRUE, scan.seq=NULL,
   Yhat <- Z %*% beta
   ## Residuals
   u <- Y - Yhat
-  if(boot) {
+  if (boot) {
     ## Perform the non-parametric bootstrap
     beta.boot <- array(NA, c(nrow(beta),ncol(beta),Nboot+1))
     beta.boot[,,1] <- beta
-    for(j in 2:(Nboot+1)) {
+    for (j in 1:Nboot+1) {
       Yb <- matrix(NA, nrow(Y), ncol(Y))
       ## Resample the b=0 images
       s0 <- sample(which(scan.seq == 0), replace=TRUE)
       Yb[scan.seq == 0,] <- Y[s0,]
       ## Resample the chunks of diffusion-weighted images
       s1 <- sample(1:10, replace=TRUE)
-      for(k in 1:10) {
+      for (k in 1:10) {
         ind <- (7 * (k-1)):(7 * k - 2) + 2
         inds <- (7 * (s1[k] - 1)):(7 * s1[k] - 2) + 2
         Yb[ind,] <- Y[inds,] 
@@ -228,8 +233,9 @@ tensor.slice.multiple <- function(slice, G, b, weight=TRUE, scan.seq=NULL,
       beta.boot[,,j] <- qr.coef(qrVZ, (1/V) * Yb)
     }
   }
-  else
+  else {
     beta.boot <- NULL
+  }
   ## Residual sum of squares (RSS)
   ## RSS <- t(Y) %*% Y - t(Yhat) %*% Yhat
   ## diag.RSS <- colSums(u^2) / (nrow(G) - p)
@@ -242,11 +248,9 @@ eigen.slice <- function(DT, analytic=TRUE, debug=FALSE) {
   ##
   ## Computes the eigenvalue decomposition for the diffusion tensor
   ##
-
   M <- nrow(DT)
   N <- ncol(DT)
-
-  if(analytic) {
+  if (analytic) {
     ## Analytical Computation of the Eigenvalues and Eigenvectors in DT-MRI
     ## Hasan, Basser, Parker and Alexander (2001)
     ## Journal of Magnetic Resonance 152, 41-47.
@@ -289,23 +293,26 @@ eigen.slice <- function(DT, analytic=TRUE, debug=FALSE) {
     return(list(value=lambda, vector=e))
   } else {
     ## Function that creates a 3x3 matrix for the diffusion tensor
-    sym.mat <- function(x)
+    sym.mat <- function(x) {
       matrix(c(x[1], x[4], x[5], x[4], x[2], x[6], x[5], x[6], x[3]), 3, 3)
-    
+    }    
     DT.value <- array(NA, c(M,N,3))
     DT.vector <- vector("list", 3)
-    for(i in 1:3)
+    for (i in 1:3) {
       DT.vector[[i]] <- array(NA, c(M,N,3))
-    for(i in 1:M) {
-      if(debug) cat(" i =", i, fill=TRUE)
-      for(j in 1:N) {
-        if(any(is.na(DT[i,j,]))) {
+    }
+    for (i in 1:M) {
+      if(debug) {
+        cat(" i =", i, fill=TRUE)
+      }
+      for (j in 1:N) {
+        if (any(is.na(DT[i,j,]))) {
           DT.vector[[1]][i,j,] <- DT.vector[[2]][i,j,] <-
             DT.vector[[3]][i,j,] <- rep(NA,3)
         } else {
           temp <- eigen(sym.mat(DT[i,j,]), symmetric=TRUE)
           DT.value[i,j,] <- temp$values
-          if(all(is.na(temp$values))) {
+          if (all(is.na(temp$values))) {
             DT.vector[[1]][i,j,] <- DT.vector[[2]][i,j,] <-
               DT.vector[[3]][i,j,] <- rep(NA,3)
           } else {

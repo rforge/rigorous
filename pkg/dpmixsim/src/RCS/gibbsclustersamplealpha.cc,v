@@ -1,4 +1,27 @@
-//$Id: gibbsclustersamplealpha.cc,v 1.1 2010/07/25 17:29:47 afs Exp afs $
+head	1.1;
+access;
+symbols;
+locks
+	afs:1.1; strict;
+comment	@// @;
+
+
+1.1
+date	2010.07.25.17.29.47;	author afs;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@//$Id: gibbsclustersamplealpha.cc,v 1.7 2010/07/25 09:34:20 afs Exp afs $
 //
 // Updating alpha: a0, b0, prior for alpha if alpha is updated
 //
@@ -88,13 +111,11 @@ void gibbsdpm(const double* xin, const int* ps, int* njinit, int* pnjlen, const 
   //
   for (register int iter=0; iter < *maxiter; ++iter) {
     //
-    // ----------step 3: sig | s, theta, x ----- AND --- step 2: phi | s, sig, x  ----//
-    // Sampling step 2 and step 3 first
-    // ! using one sig per cluster
+    // ------------------- step 3: sig | s, theta, x -------------------//
+    // ! usinge one sig per cluster
     // ! rgamma.c uses shape and scale
-    // sig  =  1/rgamma(1, a+n/2, b+ sum((x-theta)^2)/2 ) 
+    // sig  =  1/rgamma(1, a+n/2, b+ sum((x-theta)^2)/2 ) // original code
     // rate =  b + sum((x-theta)^2)/2 
-    // ~ N(sum_(x_i=j) x_i/nj(1+sig), sig/nj(1+sig))
     for (map_citr it=stb.begin(); it != stb.end(); ++it) {
       const int key              = (*it).first;
       const int mdim             = (*it).second.size();
@@ -108,9 +129,31 @@ void gibbsdpm(const double* xin, const int* ps, int* njinit, int* pnjlen, const 
       double sigmaval            = 1.0 / rgamma(shape, scale); 
       if(sigmaval < *minvar) sigmaval = *minvar;
       sigmap[key]                = sigmaval;
-			const double sjkey         = aux.sum();
-      const double den           = mdim*(sigmaval+1.0);
-      theta[key]                 = rnorm(sjkey/den, sqrt(sigmaval/den));
+			if((iter >= 100) && (iter <= 104)) 
+				cout << "aux.sum()= " << aux.sum() << endl;
+    }
+    //
+    // Sampling step 2 and step 3 first
+    // ------------------- step 2: phi | s, sig, x ----------------------//
+    // ~ N(sum_(x_i=j) x_i/nj(1+sig), sig/nj(1+sig))
+    // sj = sum x_i, s_i = j..... for cluster 1,...,n (with empty clusters)
+    for (map_citr it=stb.begin(); it != stb.end(); ++it) {
+      const int key             = (*it).first;
+      const int mdim            = (*it).second.size();
+      set_citr t1               = stb[key].begin();
+      set_citr t2               = stb[key].end();
+      double sjkey              = 0.0;
+      for(; t1 != t2; ++t1)
+        sjkey                  += x[*t1];
+
+			if((iter >= 100) && (iter <= 104)) 
+				cout << "sjkey= " << sjkey << endl;
+
+      const double sig          = sigmap[key];
+      const double den          = mdim*(sig+1.0);
+      // const double den       = (mdim*sigplus);
+      // theta[currentkey]      = rnorm(sjkey/den, sig/den);
+      theta[key]                = rnorm(sjkey/den, sqrt(sig/den));
     }
     //
     // ------------------- step 1: s_i | theta_(-i), sig, x -------------//
@@ -118,52 +161,52 @@ void gibbsdpm(const double* xin, const int* ps, int* njinit, int* pnjlen, const 
     // reducing the number of weight calculations to the number of clusters
     //---------------------
     // initialize valarrays 
-    size_t clsize               = stb.size();
+    int clsize     = stb.size();
     valarray<double> thetaval(clsize);
     valarray<double> sigval(clsize);
     valarray<double> mdimval(clsize); // ! need double for valarray ops
-    map_citr it                 = stb.begin();
-    map_ctab ith                = theta.begin();
-    map_ctab its                = sigmap.begin();
-    for (size_t j=0; j < stb.size(); ++j, ++ith, ++its, ++it) {
-      thetaval[j]               = (*ith).second;
-      sigval[j]                 = (*its).second;
-      mdimval[j]                = (*it).second.size();
+    map_citr it    = stb.begin();
+    map_ctab ith   = theta.begin();
+    map_ctab its   = sigmap.begin();
+    for (int i=0; i < stb.size(); ++i, ++ith, ++its, ++it) {
+      thetaval[i]  = (*ith).second;
+      sigval[i]    = (*its).second;
+      mdimval[i]   =  (*it).second.size();
     }
     //---------------------
     for(register int i=0; i < n; ++i) {
       if(clsize != stb.size()) { // resize and update
-        clsize                  = stb.size();
+        clsize        = stb.size();
         thetaval.resize(clsize);  
         sigval.resize(clsize);  
         mdimval.resize(clsize);  
-        map_citr it             = stb.begin();
-        map_ctab ith            = theta.begin();
-        map_ctab its            = sigmap.begin();
-        for (size_t j=0; j < stb.size(); ++j, ++ith, ++its, ++it) {
-          thetaval[j]           = (*ith).second;
-          sigval[j]             = (*its).second;
-          mdimval[j]            = (*it).second.size();
+        map_citr it   = stb.begin();
+        map_ctab ith  = theta.begin();
+        map_ctab its  = sigmap.begin();
+        for (int i=0; i < stb.size(); ++i, ++ith, ++its, ++it) {
+          thetaval[i] = (*ith).second;
+          sigval[i]   = (*its).second;
+          mdimval[i]  = (*it).second.size();
         }
       }
-      // else : use updated mdimval
+      // else : just use updated mdimval
       //------------------
       valarray<double> prob(clsize);
       valarray<double> mw(clsize);
-      mw                        = exp(-(pow((x[i]-thetaval),2))/(sigval * 2.0))/(sqrt(sigval));
-      prob                      = mdimval * mw;
-      map_citr it0              = stb.begin();
-      map_citr itsi             = stb.find(s[i]);
-      const int kx              = distance(it0, itsi);
-      prob[kx]                  = (mdimval[kx] - 1) * mw[kx]; 
-      const double sigplus      = sigval.max()+1.0;
-      const double bnew         = alpha*exp(-xsq[i]/(sigplus*2.0))/(sqrt(sigplus));
-      const double bden         = prob.sum() + bnew;
-      const int clsizep         = stb.size()+1;
+      mw                   = exp(-(pow((x[i]-thetaval),2))/(sigval * 2.0))/(sqrt(sigval));
+      prob                 = mdimval * mw;
+      map_citr it0         = stb.begin();
+      map_citr itsi        = stb.find(s[i]);
+      const int kx         = distance(it0, itsi);
+      prob[kx]             = (mdimval[kx] - 1) * mw[kx]; 
+      const double sigplus = sigval.max()+1.0;
+      const double bnew    = alpha*exp(-xsq[i]/(sigplus*2.0))/(sqrt(sigplus));
+      const double bden    = prob.sum() + bnew;
+      const int clsizep    = stb.size()+1;
       valarray<double> probs(clsizep);
-      probs                     = prob[slice(0,clsize,1)];
-      probs[clsizep-1]          = bnew;
-      probs                    /= bden;
+      probs                = prob[slice(0,clsize,1)];
+      probs[clsizep-1]     = bnew;
+      probs               /= bden;
       // sample probabilities: 1st sampling option
       partial_sum(&probs[0], &probs[0]+clsizep, &probs[0]);
       const double* rprob       = find_if(&probs[0], &probs[0]+clsizep,
@@ -172,18 +215,20 @@ void gibbsdpm(const double* xin, const int* ps, int* njinit, int* pnjlen, const 
       //-----------------------------------------------
       int newcl, choice;
       if(cl < (clsizep-1)) {
-        newcl                   = 0;
-        map_citr it             = stb.begin();
-        advance(it, cl); 
-        const int key           = (*it).first;
-        // begin MX2 //?? random schoice within cluster really required ?
-        set_citr itset           = stb[key].begin();
+         newcl             = 0;
+         map_citr it       = stb.begin();
+         advance(it, cl); 
+         const int key     = (*it).first;
+        //?? random schoice within cluster really required ?
+        // begin MX2 
+        set_citr itset     = stb[key].begin();
         // end MX2 
-        choice                   = *itset;
+        //
+        choice             =  *itset;
       }
       else {
-        newcl                    = 1;
-        choice                   = -1; // don't care
+        newcl              = 1;
+        choice             = -1; // don't care
       }
       // ------------------------------------------------
       int currentkey;
@@ -201,36 +246,36 @@ void gibbsdpm(const double* xin, const int* ps, int* njinit, int* pnjlen, const 
             sigmap.erase(s[i]);
           }
           ++nj[s[choice]];
-          s[i]                   = s[choice];
+          s[i]                 = s[choice];
           /*
           // remove old element from previous position in set
-          map_citr it            = stb.find(siold);
+          map_citr it          = stb.find(siold);
           if(it != stb.end()) stb[siold].erase(i);
           // insert in appropriate set of clusters;  first nonzero place
           stb[s[choice]].insert(i);
-          currentkey             = s[choice];
+          currentkey           = s[choice];
           */
           // remove old element from previous position in set
           // and  update mdimval for old and new position
-          map_citr it            = stb.begin();
-          map_citr itold         = stb.find(siold);
+          map_citr it          = stb.begin();
+          map_citr itold       = stb.find(siold);
           if(itold != stb.end()) {
             stb[siold].erase(i);
-            size_t ixup          = distance(it, itold); 
-            mdimval[ixup]        = (*itold).second.size(); // just update mdimval
+            size_t ixup        = distance(it, itold); 
+            mdimval[ixup]      = (*itold).second.size(); // just update mdimval
           }
           // insert in appropriate set of clusters;  first nonzero place
           stb[s[choice]].insert(i);
-          currentkey             = s[choice];
-          map_citr itchoice      = stb.find(s[choice]);
-          size_t ixup            = distance(it, itchoice);
-          mdimval[ixup]          = (*itchoice).second.size(); // just update mdimval
+          currentkey           = s[choice];
+          map_citr itchoice    = stb.find(s[choice]);
+          size_t ixup          = distance(it, itchoice);
+          mdimval[ixup]        = (*itchoice).second.size(); // just update mdimval
         }
         else 
           continue;
-          // currentkey          = s[choice];
+          // currentkey        = s[choice];
       } else {                        // new cluster from G=N(0, 1)
-        const int siold          = s[i];
+        const int siold        = s[i];
         // DEATH: decrease cluster size 
         --nj[siold];
         if (nj[siold] < 0){ 
@@ -242,55 +287,57 @@ void gibbsdpm(const double* xin, const int* ps, int* njinit, int* pnjlen, const 
           sigmap.erase(siold);
         }
         // BIRTH of cluster : we need to update table(s) 
-        // const int newcluster  = find(nj, nj+n, 0) - nj;
-        const int newcluster     = find(nj.begin(), nj.end(), 0) - nj.begin();
-        s[i]                     = newcluster;
-        nj[newcluster]           = 1;
+        // const int newcluster     = find(nj, nj+n, 0) - nj;
+        const int newcluster   = find(nj.begin(), nj.end(), 0) - nj.begin();
+        s[i]                   = newcluster;
+        nj[newcluster]         = 1;
         // insert a new cluster 
         set<int> ms; 
         ms.insert(i);
         stb.insert(pair<int, set<int> >(newcluster, ms));  
         // remove old element from previous position in set
-        map_citr it              = stb.find(siold);
+        map_citr it            = stb.find(siold);
         if(it != stb.end()) stb[siold].erase(i);
         // !! the previous statement may have erased the inserted element 
         // !! find another solution for this double insertion
         stb[newcluster].insert(i);
-        currentkey               = newcluster;
-        // theta[currentkey]     = rnorm(x[i]/sigplus, sqrt(sig/sigplus));
-        theta[currentkey]        = rnorm(x[i]/2.0, sqrt(0.5));
-        sigmap[currentkey]       = 1.0;
-        // map_crtab ti          = sigmap.rbegin();
-        // sigmap[currentkey]    = (*ti).second; // use max cluster value
+        currentkey             = newcluster;
+        // theta[currentkey]   = rnorm(x[i]/sigplus, sqrt(sig/sigplus));
+        theta[currentkey]      = rnorm(x[i]/2.0, sqrt(0.5));
+        // sigmap[currentkey]  = 0.5;
+        map_crtab ti           = sigmap.rbegin();
+        sigmap[currentkey]     = (*ti).second; // use max cluster value
+        // map_ctab ti         = sigmap.begin();
+        // sigmap[currentkey]  = (*ti).second; // use min cluster value
       }
     }
     // ------------------------ updating alpha --------------------------//
     if(*upalpha) {
-      const int ncl              = stb.size();
-      double dtemp1              = alpha + 1.0;
-      double dtemp2              = (double) n;
-      const double dtemp         = *b0-log(rbeta(dtemp1, dtemp2));
-      dtemp1                     = (*a0+ncl-1.0) / (n*dtemp);
+      const int ncl             = stb.size();
+      double dtemp1             = alpha + 1.0;
+      double dtemp2             = (double) n;
+      const double dtemp        = *b0-log(rbeta(dtemp1, dtemp2));
+      dtemp1                    = (*a0+ncl-1.0) / (n*dtemp);
       if(unif_rand() < dtemp1) {
-        alpha                    = rgamma(*a0+ncl, 1.0/dtemp);
+        alpha                   = rgamma(*a0+ncl, 1.0/dtemp);
       }
       else {
-        alpha                    = rgamma(*a0+ncl-1.0, 1.0/dtemp);
+        alpha                   = rgamma(*a0+ncl-1.0, 1.0/dtemp);
       }
     }
     // ------------------------ record -----------------------------------------//
 #ifdef RECORD
     if(iter >= startrec){ 
-      const int k                = iter-startrec;
-      const int ncl              = stb.size(); // counting the number of clusters
+      const int k               = iter-startrec;
+      const int ncl             = stb.size(); // counting the number of clusters
       assert(ncl <= *kmax);
-      krec[k]                    = ncl;
+      krec[k]                   = ncl;
       int kn=k*(*kmax);
       for (map_citr it=stb.begin(); it != stb.end(); ++it, ++kn) {
-        phirec[kn]               = theta[(*it).first];
-        w[kn]                    = double((*it).second.size())/n; // weights
-        // w[kn]                 = double((*it).second.size()); // weights
-        varrec[kn]               = sigmap[(*it).first];
+        phirec[kn]              = theta[(*it).first];
+        w[kn]                   = double((*it).second.size())/n; // weights
+        // w[kn]                = double((*it).second.size()); // weights
+        varrec[kn]              = sigmap[(*it).first];
       }
     }
     if(iter%100 == 0)
@@ -316,3 +363,4 @@ void testprint(map<int, set<int> >& table)
 }
 //======================================================================//
 
+@
