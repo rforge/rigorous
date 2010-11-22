@@ -30,21 +30,19 @@
 
 \references{ 
 Adelino Ferreira da Silva, A Dirichlet process mixture model for
- brain MRI tissue classification,
- \emph{Medical Image Analysis} 11 (2007) 169-182.
+ brain MRI tissue classification, \emph{Medical Image Analysis} 11
+ (2007) 169-182.
 
 Adelino Ferreira da Silva, Bayesian mixture models of variable
- dimension for image segmentation,
- \emph{Comput. Methods Programs Biomed.} 94 (2009) 1-14.
+ dimension for image segmentation, \emph{Comput. Methods Programs
+ Biomed.} 94 (2009) 1-14.
+
+Anja Struyf, Mia Hubert and Peter J. Rousseeuw (1996): Clustering in an
+  Object-Oriented Environment.  \emph{Journal of Statistical Software},
+  1.  \url{http://www.stat.ucla.edu/journals/jss/}
 }
 
-\references{ 
-Anja Struyf, Mia Hubert & Peter J. Rousseeuw (1996): Clustering in an
-  Object-Oriented Environment. Journal of Statistical Software, 1.
-  http://www.stat.ucla.edu/journals/jss/
-}
-
-\author{ Adelino Ferreira da Silva, Universidade Nova de Lisboa,
+\author{Adelino Ferreira da Silva, Universidade Nova de Lisboa,
   Faculdade de Ciencias e Tecnologia, Portugal, \email{afs@fct.unl.pt}.
 }
 
