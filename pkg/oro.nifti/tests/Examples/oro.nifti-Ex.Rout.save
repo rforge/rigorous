@@ -1,7 +1,8 @@
 
-R version 2.11.1 (2010-05-31)
+R version 2.12.0 (2010-10-15)
 Copyright (C) 2010 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
+Platform: x86_64-unknown-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -21,9 +22,10 @@ Type 'q()' to quit R.
 > source(file.path(R.home("share"), "R", "examples-header.R"))
 > options(warn = 1)
 > library('oro.nifti')
+Creating a new generic function for "image" in "oro.nifti"
 Loading required package: XML
 
-oro.nifti: Rigorous - NIfTI Input / Output (version = 0.2.1)
+oro.nifti: Rigorous - NIfTI Input / Output (version = 0.2.2)
 
 > 
 > assign(".oldSearch", search(), pos = 'CheckExEnv')
@@ -319,7 +321,7 @@ ANALYZE 7.5 format
 [1] "FSL3.2beta"
 > descrip(mniLR) <- paste(descrip(mniLR), version$version.string, sep="; ")
 > descrip(mniLR)
-[1] "FSL3.2beta; R version 2.11.1 (2010-05-31)"
+[1] "FSL3.2beta; R version 2.12.0 (2010-10-15)"
 > 
 > 
 > 
@@ -852,7 +854,7 @@ detaching ‘package:splines’
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  5.25 0.1 5.588 0 0 
+Time elapsed:  6.42 0.08 6.505 0 0 
 > grDevices::dev.off()
 null device 
           1 
