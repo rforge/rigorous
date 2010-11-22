@@ -47,9 +47,14 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
   fname <- sub(".gz", "", fname)
   fname <- sub(".nii", "", fname)
 
+  if (!(file.exists(paste(fname, "nii", sep=".")) ||
+      file.exists(paste(fname, "nii.gz", sep=".")))) {
+    stop("File not found!")
+  }
+
   if (file.exists(paste(fname, "nii", sep=".")) &&
       file.exists(paste(fname, "nii.gz", sep="."))) {
-    stop("-- Both compressed and uncompressed files exist! --")
+    stop("Both compressed and uncompressed files exist!")
   } else {
     ## If uncompressed files exist, then upload!
     if (file.exists(paste(fname, "nii", sep="."))) {      
@@ -292,6 +297,12 @@ readANALYZE <- function(fname, verbose=FALSE, warn=-1) {
   fname <- sub(".gz", "", fname)
   fname <- sub(".hdr", "", fname)
   fname <- sub(".img", "", fname)
+
+  if (!(file.exists(paste(fname, "hdr", sep=".")) &&
+      file.exists(paste(fname, "img", sep=".")))||(file.exists(paste(fname, "hdr.gz", sep=".")) &&
+      file.exists(paste(fname, "img.gz", sep=".")))) {
+    stop("Files not found!")
+  }
 
   ## If uncompressed files exist, then upload!
   if (file.exists(paste(fname, "hdr", sep=".")) &&
