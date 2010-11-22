@@ -1,0 +1,282 @@
+
+R version 2.12.0 (2010-10-15)
+Copyright (C) 2010 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+Platform: x86_64-unknown-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "dpmixsim"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> library('dpmixsim')
+Loading required package: oro.nifti
+Creating a new generic function for "image" in "oro.nifti"
+Loading required package: XML
+
+oro.nifti: Rigorous - NIfTI Input / Output (version = 0.2.2)
+
+Loading required package: cluster
+> 
+> assign(".oldSearch", search(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("dpmixsim")
+> ### * dpmixsim
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: dpmixsim
+> ### Title: Dirichlet Process mixture model for clustering and image
+> ###   segmentation
+> ### Aliases: dpmixsim
+> ### Keywords: models
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D ## Example 1: simple test using `galaxy' data
+> ##D   data("galaxy")
+> ##D   x0 <- galaxy$speed
+> ##D   x  <- prescale(x0) 
+> ##D   maxiter <- 4000; rec <- 3000; ngrid <- 100
+> ##D   res <- dpmixsim(x, M=1, a=1, b=0.1, upalpha=1, maxiter=maxiter, rec=rec,
+> ##D     nclinit=4)
+> ##D   z <-  postdpmixciz(x=x, res=res, rec=rec, ngrid=ngrid, plot=T)
+> ##D   ##
+> ##D   res <- dpmixsim(x, M=2, a=1, b=0.001, upalpha=0, maxiter=maxiter,
+> ##D     rec=rec, nclinit=4)
+> ##D   z <-  postdpmixciz(x, res=res, rec=rec, ngrid=ngrid, plot=T)
+> ##D ##-----------------
+> ##D ## Example 2: 
+> ##D   demo(testMarronWand)
+> ##D ##-----------------
+> ##D ## Example 3: MRI segmentation
+> ##D ## Testing note: this example should reproduce the equivalent segmented
+> ##D ## images used in the author's references 
+> ##D   slicedata <- readsliceimg(fbase="t1_pn3_rf0", swap=FALSE)
+> ##D   image(slicedata$niislice, col=gray((0:255)/256), main="original image")
+> ##D   x0 <- premask(slicedata, subsamp=TRUE)
+> ##D   x  <- prescale(x0) 
+> ##D   rec <- 3000
+> ##D   res <- dpmixsim(x, M=1, a=1, b=1, upalpha=1, maxiter=4000,
+> ##D       rec=rec, nclinit=8, minvar=0.002)
+> ##D   ## post-simulation
+> ##D   ngrid <- 200
+> ##D   z <- postdpmixciz(x, res=res, rec=rec, ngrid=ngrid, plot=TRUE)
+> ##D   x0 <- premask(slicedata, subsamp=FALSE) # use full-sized image after estimation 
+> ##D   x  <- prescale(x0) 
+> ##D   cx   <- postdataseg(x, z, ngrid=ngrid)
+> ##D   cat("*** view grouped segmentations:\n")
+> ##D   postimgclgrp(slicedata$mask, cx, palcolor=FALSE)
+> ##D   cat("*** display all clusters:\n")
+> ##D   postimgcomps(slicedata$mask, cx)
+> ##D   cat("*** re-cluster with 4 clusters:\n")
+> ##D   postkcluster(slicedata$mask, cx, clk=4)
+> ## End(Not run)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("galaxy")
+> ### * galaxy
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: galaxy
+> ### Title: Galaxy velocities
+> ### Aliases: galaxy
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> data(galaxy)
+> ## maybe str(galaxy) ; plot(galaxy) ...
+> 
+> 
+> 
+> cleanEx()
+> nameEx("postdataseg")
+> ### * postdataseg
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: postdataseg
+> ### Title: Data segmentation
+> ### Aliases: postdataseg
+> ### Keywords: utilities
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D ## see Example 2 in dpmixsim.
+> ## End(Not run)
+> 
+> 
+> cleanEx()
+> nameEx("postdpmixciz")
+> ### * postdpmixciz
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: postdpmixciz
+> ### Title: Summary statistics and cluster estimation
+> ### Aliases: postdpmixciz
+> ### Keywords: utilities
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D ## Example: MRI brain image segmentation
+> ##D   slicedata <- readsliceimg(fbase="t1_pn3_rf0", swap=FALSE)
+> ##D   image(slicedata$niislice, col=gray((0:255)/256), main="original image")
+> ##D   x0 <- premask(slicedata, subsamp=TRUE)
+> ##D   x  <- prescale(x0) 
+> ##D   rec <- 3000
+> ##D   res <- dpmixsim(x, M=1, a=1, b=2, upalpha=1, maxiter=4000,
+> ##D       rec=rec, nclinit=8)
+> ##D   ## post-simulation
+> ##D   ngrid <- 200
+> ##D   z <- postdpmixciz(x, res=res, rec=rec, ngrid=ngrid, plot=TRUE)
+> ## End(Not run)
+> 
+> 
+> cleanEx()
+> nameEx("postimgclgrp")
+> ### * postimgclgrp
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: postimgclgrp
+> ### Title: Segment image with the estimated number of components
+> ### Aliases: postimgclgrp
+> ### Keywords: dplot
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D ## see Examples in `dpmixsim'.
+> ## End(Not run)
+> 
+> 
+> cleanEx()
+> nameEx("postimgcomps")
+> ### * postimgcomps
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: postimgcomps
+> ### Title: Display cluster components
+> ### Aliases: postimgcomps
+> ### Keywords: dplot
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D ## see Examples in `dpmixsim'.
+> ## End(Not run)
+> 
+> 
+> cleanEx()
+> nameEx("postkcluster")
+> ### * postkcluster
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: postkcluster
+> ### Title: Segmentation with a fixed number of clusters
+> ### Aliases: postkcluster
+> ### Keywords: cluster
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D ## see Examples in `dpmixsim'.
+> ## End(Not run)
+> 
+> 
+> cleanEx()
+> nameEx("premask")
+> ### * premask
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: premask
+> ### Title: Data preparation
+> ### Aliases: premask
+> ### Keywords: utilities
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D   slicedata <- readsliceimg(fbase="t1_pn3_rf0", swap=FALSE)
+> ##D   x0 <- premask(slicedata, subsamp=TRUE)
+> ##D   x  <- prescale(x0) 
+> ##D   print(str(x))
+> ## End(Not run)
+> 
+> 
+> cleanEx()
+> nameEx("prescale")
+> ### * prescale
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: prescale
+> ### Title: Data preparation
+> ### Aliases: prescale
+> ### Keywords: utilities
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D   data("galaxy")
+> ##D   x0 <- galaxy$speed
+> ##D   x  <- prescale(x0) 
+> ##D   print(range(x))
+> ## End(Not run)
+> 
+> 
+> cleanEx()
+> nameEx("readsliceimg")
+> ### * readsliceimg
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: readsliceimg
+> ### Title: Read MRI slice data
+> ### Aliases: readsliceimg
+> ### Keywords: IO
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D slicedata <- readsliceimg(fbase="t1_pn3_rf0", swap=FALSE)
+> ##D print(str(slicedata))
+> ## End(Not run)
+> 
+> 
+> ### * <FOOTER>
+> ###
+> cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  0.88 0 0.88 0 0 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')
