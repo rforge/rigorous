@@ -68,8 +68,9 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
   } else {
     ## If uncompressed files exist, then upload!
     if (file.exists(paste(fname, "nii", sep="."))) {      
-      if (verbose)
+      if (verbose) {
         cat(paste("  files = ", fname, ".nii", sep=""), fill=TRUE)
+      }
       nim <- read.nifti.content(fname, gzipped=FALSE, verbose=verbose,
                                 warn=warn, reorient=reorient, call=call)
       options(warn=oldwarn)
