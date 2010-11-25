@@ -1,6 +1,6 @@
 ##
 ##
-## Copyright (c) 2009, Brandon Whitcher and Volker Schmid
+## Copyright (c) 2009,2010 Brandon Whitcher and Volker Schmid
 ## All rights reserved.
 ## 
 ## Redistribution and use in source and binary forms, with or without
@@ -248,7 +248,6 @@ as.nifti <- function(from, value=NULL, verbose=FALSE) {
     slots <- c("dim_", "datatype", "bitpix", "pixdim", "descrip",
                "aux_file", ".Data")
     sapply(slots, function(x) { slot(value, x) <<- slot(from, x); NULL })
-    ## value@"data_type" <- convert.datatype(value@datatype)
     calset <- !(from@"cal_max" == 0 && from@"cal_min" == 0)
     value@"cal_max" <- ifelse(calset, from@"cal_min", from@"glmax")
     value@"cal_min" <- ifelse(calset, from@"cal_max", from@"glmin")
