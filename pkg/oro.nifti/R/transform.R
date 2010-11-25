@@ -429,7 +429,7 @@ translateCoordinate <- function(i, nim, verbose=FALSE) {
     scaling[3,3] <- scaling[3,3] * scalingFactor
     ## Now we can reorient the data only if the X axes are aligned with the I
     ## axes i.e. there are only 3 non-zero values in the matrix RS 
-    RS <- R %*% S
+    RS <- R %*% scaling
     return(RS %*% (i - 1) + shift)
 
   }
