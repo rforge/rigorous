@@ -1,6 +1,6 @@
 ##
 ##
-## Copyright (c) 2009, Brandon Whitcher and Volker Schmid
+## Copyright (c) 2009,2010 Brandon Whitcher and Volker Schmid
 ## All rights reserved.
 ## 
 ## Redistribution and use in source and binary forms, with or without
@@ -119,7 +119,7 @@ reorient <- function(nim, data, verbose=FALSE, invert=FALSE) {
     ## which is either = 1 or -1
     if (abs(scalingFactor) != 1) { 
       if (verbose) {
-	cat("ScalingFactor (nim@\"pixdim\"[1]) <-", scalingFactor,
+	cat("ScalingFactor (nim@\"pixdim\"[1]) =", scalingFactor,
 	    "!= -1 or 1. Defaulting to 1", fill=TRUE)
       }
       scalingFactor <- 1 
@@ -379,21 +379,31 @@ translateCoordinate <- function(i, nim, verbose=FALSE) {
   ## More NBs:
   ## 1. By default the i index varies most rapidly, etc.
   ## 2. The ANALYZE 7.5 coordinate system is
-  ##   +x = Left  +y = Anterior  +z = Superior
+  ##    +x = Left  +y = Anterior  +z = Superior
   ## (A left-handed co-ordinate system)
   ## 3. The three methods below give the locations of the voxel centres in the 
-  ##   x,y,z system. In many cases programs will want to display the data on
-  ##   other grids. In which case the program will be required to convert the
-  ##   desired (x,y,z) values in to voxel values using the inverse
-  ##   transformation.
+  ##    x,y,z system. In many cases programs will want to display the data on
+  ##    other grids. In which case the program will be required to convert the
+  ##    desired (x,y,z) values in to voxel values using the inverse
+  ##    transformation.
   ## 4. Method 2 uses a factor qfac which is either -1 or 1. qfac is stored in
-  ##   pixdim[0]. if pixdim[0]!= 1 or -1, which should not occur, we assume 1.
+  ##    pixdim[0]. if pixdim[0]!= 1 or -1, which should not occur, we assume 1.
   ## 5. The units of the xyzt are set in xyzt_units field
-  
+
+  if (length(i) == 1) {
+    i <- rep(i, 3)
+  }
+  if (! is.matrix(i)) {
+    i <- as.matrix(i)
+  }
+  if (verbose) {
+    cat("Input voxel coordinate:", fill=TRUE)
+    print(i)
+  }
   ## Method 2. when qform_code > 0, which should be the "normal" case
   if (nim@"qform_code" > 0) { 
     if (verbose) {
-      cat("QForm_code <-", nim@"qform_code", ": Orientation by Method 2.",
+      cat("QForm_code =", nim@"qform_code", ": Orientation by Method 2.",
 	fill=TRUE)
     }
     ## The [x] coordinates are given by the pixdim[] scales:
@@ -421,7 +431,7 @@ translateCoordinate <- function(i, nim, verbose=FALSE) {
     ## first enforce scalingFactor = 1 or -1
     if (scalingFactor != 1 && scalingFactor != -1) { 
       if (verbose) {
-	cat("ScalingFactor (nim@\"pixdim\"[1]) <-", scalingFactor,
+	cat("ScalingFactor (nim@\"pixdim\"[1]) =", scalingFactor,
 	    "!= -1 or 1. Defaulting to 1", fill=TRUE)
       }
       scalingFactor <- 1 
@@ -431,13 +441,11 @@ translateCoordinate <- function(i, nim, verbose=FALSE) {
     ## axes i.e. there are only 3 non-zero values in the matrix RS 
     RS <- R %*% scaling
     return(RS %*% (i - 1) + shift)
-
   }
-
   ## Method 3. when sform_code > 0
   if (nim@"sform_code" > 0) {
     if (verbose) {
-      cat("SForm_code <- ", nim@"sform_code", ": Orientation by Method 3.",
+      cat("SForm_code =", nim@"sform_code", ": Orientation by Method 3.",
 	  fill=TRUE)
     }
     ## [x] is given by a general affine transformation from [i]
@@ -453,7 +461,6 @@ translateCoordinate <- function(i, nim, verbose=FALSE) {
     A <- S[,1:3]
     return (A %*% (i - 1) + shift)
   }
-
   ## Method 1. The `old' way used only if "qform_code" is 0
   ## The co-ord mapping from [i] to [x] is the ANALYZE 7.5 way.
   ## A simple scaling relationship applies
