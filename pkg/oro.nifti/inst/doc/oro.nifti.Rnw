@@ -165,8 +165,7 @@ from the NIfTI website (\url{nifti.nimh.nih.gov/nifti-1/}).
 Successful execution of the command:
 
 <<mniLR_nifti>>=
-mni.LR <- readNIfTI(system.file("nifti/mniLR.nii.gz", package="oro.nifti"))
-mni.LR
+(mni.LR <- readNIfTI(system.file("nifti/mniLR.nii.gz", package="oro.nifti")))
 audit.trail(mni.LR)
 descrip(mni.LR)
 @ 
@@ -204,8 +203,7 @@ from the NIfTI website (\url{nifti.nimh.nih.gov/nifti-1/}).
 Successful execution of the command
 
 <<mniRL_nifti>>=
-mni.RL <- readNIfTI(system.file("nifti/mniRL.nii.gz", package="oro.nifti"))
-mni.RL
+(mni.RL <- readNIfTI(system.file("nifti/mniRL.nii.gz", package="oro.nifti")))
 @ 
 <<figure2-png,echo=FALSE,results=hide>>=
 png(filename="mniRL.png", width=400, height=400, bg="black")
@@ -242,8 +240,7 @@ medical imaging data set in NIfTI format
 command
 
 <<filtered_func_data>>=
-ffd <- readNIfTI(system.file("nifti/ffd.nii.gz", package="oro.nifti"))
-ffd
+(ffd <- readNIfTI(system.file("nifti/ffd.nii.gz", package="oro.nifti")))
 @ 
 <<figure3-png,echo=FALSE,results=hide>>=
 png(filename="ffd.png", width=400, height=400, bg="black")
@@ -302,8 +299,7 @@ obtained from the NIfTI website (\url{nifti.nimh.nih.gov/nifti-1/}).
 Successful execution of the command
 
 <<zstat1>>=
-zstat1 <- readNIfTI(system.file("nifti/zstat1.nii.gz", package="oro.nifti"))
-zstat1
+(zstat1 <- readNIfTI(system.file("nifti/zstat1.nii.gz", package="oro.nifti")))
 @ 
 <<figure4-png,echo=FALSE,results=hide>>=
 png("ffd_zstat1.png", width=400, height=400, bg="black")
