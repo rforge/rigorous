@@ -137,8 +137,7 @@ read.nifti.content <- function(fname, onefile=TRUE, gzipped=TRUE,
   nim@"extents" <- readBin(fid, integer(), size=4, endian=endian)
   nim@"session_error" <- readBin(fid, integer(), size=2, endian=endian)
   nim@"regular" <- .readCharWithEmbeddedNuls(fid, n=1)
-  nim@"dim_info" <- readBin(fid, integer(), size=1, signed=FALSE,
-                            endian=endian)
+  nim@"dim_info" <- .readCharWithEmbeddedNuls(fid, n=1) # readBin(fid, integer(), size=1, signed=FALSE, endian=endian)
   nim@"dim_" <- readBin(fid, integer(), 8, size=2, endian=endian)
   nim@"intent_p1" <- readBin(fid, numeric(), size=4, endian=endian)
   nim@"intent_p2" <- readBin(fid, numeric(), size=4, endian=endian)
@@ -224,7 +223,9 @@ read.nifti.content <- function(fname, onefile=TRUE, gzipped=TRUE,
     }
   }
 
-  if (verbose) cat("  seek(fid) =", seek(fid), fill=TRUE) 
+  if (verbose) {
+    cat("  seek(fid) =", seek(fid), fill=TRUE)
+  }
   n <- prod(nim@"dim_"[2:5])
   if (!onefile) {
     close(fid)
