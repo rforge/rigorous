@@ -25,7 +25,7 @@ Type 'q()' to quit R.
 Creating a new generic function for "image" in "oro.nifti"
 Loading required package: XML
 
-oro.nifti: Rigorous - NIfTI Input / Output (version = 0.2.2)
+oro.nifti: Rigorous - NIfTI Input / Output (version = 0.2.3)
 
 > 
 > assign(".oldSearch", search(), pos = 'CheckExEnv')
@@ -371,7 +371,7 @@ Name:           .Data     sizeof_hdr      data_type        db_name
 Class:          array        numeric      character      character
                                                                   
 Name:         extents  session_error        regular       dim_info
-Class:        numeric        numeric      character        numeric
+Class:        numeric        numeric      character      character
                                                                   
 Name:            dim_      intent_p1      intent_p2      intent_p3
 Class:         vector        numeric        numeric        numeric
@@ -488,7 +488,7 @@ Name:        data_type         db_name         extents   session_error
 Class:       character       character         numeric         numeric
                                                                       
 Name:          regular        dim_info            dim_       intent_p1
-Class:       character         numeric          vector         numeric
+Class:       character       character          vector         numeric
                                                                       
 Name:        intent_p2       intent_p3     intent_code        datatype
 Class:         numeric         numeric         numeric         numeric
@@ -553,7 +553,7 @@ Name:         db_name        extents  session_error        regular
 Class:      character        numeric        numeric      character
                                                                   
 Name:        dim_info           dim_      intent_p1      intent_p2
-Class:        numeric         vector        numeric        numeric
+Class:      character         vector        numeric        numeric
                                                                   
 Name:       intent_p3    intent_code       datatype         bitpix
 Class:        numeric        numeric        numeric        numeric
@@ -894,7 +894,7 @@ QForm_code = 1 : Orientation by Method 2.
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  9.74 0.16 10.052 0 0 
+Time elapsed:  6.07 0.12 6.192 0 0 
 > grDevices::dev.off()
 null device 
           1 

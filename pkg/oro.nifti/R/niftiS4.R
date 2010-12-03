@@ -1,6 +1,6 @@
 ##
 ##
-## Copyright (c) 2009, Brandon Whitcher and Volker Schmid
+## Copyright (c) 2009,2010 Brandon Whitcher and Volker Schmid
 ## All rights reserved.
 ## 
 ## Redistribution and use in source and binary forms, with or without
@@ -57,8 +57,8 @@ setClass("nifti",
                         "scl_slope"="numeric",
                         "scl_inter"="numeric",
                         "slice_end"="numeric",
-                        "slice_code"="numeric",
-                        "xyzt_units"="numeric",
+                        "slice_code"="numeric", # character?
+                        "xyzt_units"="numeric", # character?
                         "cal_max"="numeric",
                         "cal_min"="numeric",
                         "slice_duration"="numeric",
@@ -310,8 +310,8 @@ setValidity("niftiExtensionSection", function(object) {
 ## nifti()
 #############################################################################
 
-nifti <- function(img=array(0, dim=rep(1,4)), dim, datatype=2, cal.min=NULL,
-                  cal.max=NULL, pixdim=NULL, ...) {
+nifti <- function(img=array(0, dim=rep(1,4)), dim, datatype=2,
+                  cal.min=NULL, cal.max=NULL, pixdim=NULL, ...) {
   ## Set dimensions
   if (missing(dim)) {
     if (is.array(img)) {
