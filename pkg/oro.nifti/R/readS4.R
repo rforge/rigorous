@@ -1,6 +1,6 @@
 ##
 ##
-## Copyright (c) 2009, Brandon Whitcher and Volker Schmid
+## Copyright (c) 2009,2010 Brandon Whitcher and Volker Schmid
 ## All rights reserved.
 ## 
 ## Redistribution and use in source and binary forms, with or without
@@ -137,7 +137,7 @@ read.nifti.content <- function(fname, onefile=TRUE, gzipped=TRUE,
   nim@"extents" <- readBin(fid, integer(), size=4, endian=endian)
   nim@"session_error" <- readBin(fid, integer(), size=2, endian=endian)
   nim@"regular" <- .readCharWithEmbeddedNuls(fid, n=1)
-  nim@"dim_info" <- .readCharWithEmbeddedNuls(fid, n=1) # readBin(fid, integer(), size=1, signed=FALSE, endian=endian)
+  nim@"dim_info" <- .readCharWithEmbeddedNuls(fid, n=1)
   nim@"dim_" <- readBin(fid, integer(), 8, size=2, endian=endian)
   nim@"intent_p1" <- readBin(fid, numeric(), size=4, endian=endian)
   nim@"intent_p2" <- readBin(fid, numeric(), size=4, endian=endian)
@@ -250,9 +250,9 @@ read.nifti.content <- function(fname, onefile=TRUE, gzipped=TRUE,
                       fname, ".img", sep=""))
            )
   close(fid)
-
+  ##
   ## THE SLOW BIT FOLLOWS
-
+  ##
   ## 3D IMAGE (VOLUME) ORIENTATION AND LOCATION IN SPACE:
   ## There are 3 different methods by which continuous coordinates can
   ## attached to voxels.  The discussion below emphasizes 3D volumes,
@@ -299,7 +299,6 @@ readANALYZE <- function(fname, verbose=FALSE, warn=-1) {
   ## Warnings?
   oldwarn <- getOption("warn")
   options(warn=warn)
-
   if (verbose) {
     cat(paste("  fname =", fname), fill=TRUE)
   }
@@ -307,14 +306,12 @@ readANALYZE <- function(fname, verbose=FALSE, warn=-1) {
   fname <- sub(".gz", "", fname)
   fname <- sub(".hdr", "", fname)
   fname <- sub(".img", "", fname)
-
   if (! (file.exists(paste(fname, "hdr", sep=".")) &&
          file.exists(paste(fname, "img", sep="."))) &&
       ! (file.exists(paste(fname, "hdr.gz", sep=".")) &&
          file.exists(paste(fname, "img.gz", sep=".")))) {
     stop("File(s) not found!")
   }
-
   ## If uncompressed files exist, then upload!
   if (file.exists(paste(fname, "hdr", sep=".")) &&
       file.exists(paste(fname, "img", sep="."))) {      

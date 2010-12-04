@@ -1,6 +1,6 @@
 ##
 ##
-## Copyright (c) 2009, Brandon Whitcher and Volker Schmid
+## Copyright (c) 2009,2010 Brandon Whitcher and Volker Schmid
 ## All rights reserved.
 ## 
 ## Redistribution and use in source and binary forms, with or without
@@ -53,7 +53,6 @@ hotmetal <- function(n=64) {
   x <- seq(0, 1, length.out=64)
   xg <- seq(0, 1, length.out=n)
   for (k in 1:3) {
-    ## hold <- splint(x, rgb.hot[,k], xg)
     hold <- splines::interpSpline(x, rgb.hot[,k])
     hold <- predict(hold, xg)$y
     hold[hold < 0] <- 0

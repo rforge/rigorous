@@ -57,7 +57,6 @@ tim.colors <- function(n=64) {
   x <- seq(0, 1, length.out=64)
   xg <- seq(0, 1, length.out=n)
   for (k in 1:3) {
-    ## hold <- splint(x, rgb.hot[,k], xg)
     hold <- splines::interpSpline(x, rgb.tim[,k])
     hold <- predict(hold, xg)$y
     hold[hold < 0] <- 0

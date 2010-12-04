@@ -34,7 +34,7 @@
 
 writeNIfTI <- function(nim, filename, gzipped=TRUE, verbose=FALSE, warn=-1) {
   ## Warnings?
-  oldwarn <- options()$warn
+  oldwarn <- getOption("warn")
   options(warn=warn)
   ## Basic error checking
   validNIfTI <- getValidity(getClassDef("nifti"))
@@ -171,7 +171,7 @@ writeNIfTI <- function(nim, filename, gzipped=TRUE, verbose=FALSE, warn=-1) {
 writeANALYZE <- function(aim, filename, gzipped=TRUE, verbose=FALSE,
                          warn=-1) {
   ## Warnings?
-  oldwarn <- options()$warn
+  oldwarn <- getOption("warn")
   options(warn=warn)
   ## Basic error checking
   validANALYZE <- getValidity(getClassDef("anlz"))
@@ -228,7 +228,6 @@ writeANALYZE <- function(aim, filename, gzipped=TRUE, verbose=FALSE,
   writeBin(as.integer(aim@"smax"), fid, size=4)
   writeBin(as.integer(aim@"smin"), fid, size=4)
   close(fid)
-  
   ## Write image file...
   if (gzipped) {
     fid <- gzfile(paste(filename, "img.gz", sep="."), "wb")
@@ -248,7 +247,6 @@ writeANALYZE <- function(aim, filename, gzipped=TRUE, verbose=FALSE,
          "8" = writeBin(as.integer(data), fid, size=aim@"bitpix"/8),
          "16" = writeBin(as.numeric(data), fid, size=aim@"bitpix"/8),
          "64" = writeBin(as.double(data), fid, size=aim@"bitpix"/8))
-    
   close(fid)
   ## Warnings?
   options(warn=oldwarn)

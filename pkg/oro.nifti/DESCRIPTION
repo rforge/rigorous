@@ -7,7 +7,7 @@ Maintainer: Brandon Whitcher <bjw34032@users.sourceforge.net>
 Description: Functions for the input/output and visualization of
   medical imaging data that follow either the ANALYZE or NIfTI formats.
   This package is part of the Rigorous Analytics bundle.
-Depends: R (>= 2.10), grDevices, graphics, methods, utils
+Depends: R (>= 2.10.0), grDevices, graphics, methods, utils
 Suggests: bitops, XML
 Imports: splines
 Enhances: fmri
