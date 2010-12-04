@@ -32,9 +32,7 @@
 ##
 
 tim.colors <- function(n=64) {
-  require("splines")
-  ## tims original 64 color definition definition:
-  
+  ## Tim Hoar's original 64 color definition definition:
   orig <- c("#00008F", "#00009F", "#0000AF", "#0000BF",
             "#0000CF", "#0000DF", "#0000EF", "#0000FF",
             "#0010FF", "#0020FF", "#0030FF", "#0040FF",
@@ -51,14 +49,16 @@ tim.colors <- function(n=64) {
             "#FF3000", "#FF2000", "#FF1000", "#FF0000",
             "#EF0000", "#DF0000", "#CF0000", "#BF0000",
             "#AF0000", "#9F0000", "#8F0000", "#800000")
-  if (n==64) return(orig)
+  if (n == 64) {
+    return(orig)
+  }
   rgb.tim <- t(col2rgb(orig))
   temp <- matrix(NA, ncol=3, nrow=n)
   x <- seq(0, 1, length.out=64)
   xg <- seq(0, 1, length.out=n)
   for (k in 1:3) {
     ## hold <- splint(x, rgb.hot[,k], xg)
-    hold <- interpSpline(x, rgb.tim[,k])
+    hold <- splines::interpSpline(x, rgb.tim[,k])
     hold <- predict(hold, xg)$y
     hold[hold < 0] <- 0
     hold[hold > 255] <- 255

@@ -339,7 +339,6 @@ ANALYZE 7.5 format
 > ### ** Examples
 > 
 > hotmetal(10) 
-Loading required package: splines
  [1] "#010000" "#4C0000" "#960000" "#E00000" "#FF2C00" "#FF7600" "#FFC100"
  [8] "#FFFF12" "#FFFF81" "#FFFFF1"
 > image(outer(1:20,1:20,"+"), col=hotmetal(75), main="hotmetal")
@@ -347,9 +346,6 @@ Loading required package: splines
 > 
 > 
 > cleanEx()
-
-detaching ‘package:splines’
-
 > nameEx("nifti-class")
 > ### * nifti-class
 > 
@@ -730,7 +726,6 @@ detaching ‘package:bitops’
 > ### ** Examples
 > 
 > tim.colors(10) 
-Loading required package: splines
  [1] "#00008F" "#0000FF" "#0070FF" "#00DFFF" "#50FFAF" "#BFFF40" "#FFCF00"
  [8] "#FF6000" "#EF0000" "#800000"
 > image(outer(1:20, 1:20, "+"), col=tim.colors(75), main="tim.colors")
@@ -738,9 +733,6 @@ Loading required package: splines
 > 
 > 
 > cleanEx()
-
-detaching ‘package:splines’
-
 > nameEx("transformCoordinate")
 > ### * transformCoordinate
 > 
@@ -894,7 +886,7 @@ QForm_code = 1 : Orientation by Method 2.
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  6.07 0.12 6.192 0 0 
+Time elapsed:  6.07 0.09 6.267 0 0 
 > grDevices::dev.off()
 null device 
           1 

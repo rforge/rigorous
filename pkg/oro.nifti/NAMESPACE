@@ -1,11 +1,13 @@
 import("grDevices", "graphics", "methods", "utils")
+importFrom("splines", "interpSpline")
 
 exportPattern("^[^\\.]")
 
 exportClasses("nifti",
               "anlz",
               "niftiExtension",
-              "niftiExtensionSection")
+              "niftiExtensionSection",
+              "niftiAuditTrail")
 
 exportMethods("audit.trail<-",
               "audit.trail",

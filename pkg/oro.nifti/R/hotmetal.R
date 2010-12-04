@@ -32,7 +32,6 @@
 ##
 
 hotmetal <- function(n=64) {
-  require("splines")
   orig <- c("#010000", "#0C0000", "#170000", "#210000", "#2C0000",
             "#360000", "#410000", "#4C0000", "#560000", "#610000",
             "#6C0000", "#760000", "#810000", "#8B0000", "#960000",
@@ -46,14 +45,16 @@ hotmetal <- function(n=64) {
             "#FFFF22", "#FFFF32", "#FFFF42", "#FFFF52", "#FFFF62",
             "#FFFF72", "#FFFF81", "#FFFF91", "#FFFFA1", "#FFFFB1",
             "#FFFFC1", "#FFFFD1", "#FFFFE1", "#FFFFF1")
-  if (n == 64) return(orig)
+  if (n == 64) {
+    return(orig)
+  }
   rgb.hot <- t(col2rgb(orig))
   temp <- matrix(NA, ncol=3, nrow=n)
   x <- seq(0, 1, length.out=64)
   xg <- seq(0, 1, length.out=n)
   for (k in 1:3) {
     ## hold <- splint(x, rgb.hot[,k], xg)
-    hold <- interpSpline(x, rgb.hot[,k])
+    hold <- splines::interpSpline(x, rgb.hot[,k])
     hold <- predict(hold, xg)$y
     hold[hold < 0] <- 0
     hold[hold > 255] <- 255
