@@ -778,10 +778,10 @@ QForm_code = 1 : Orientation by Method 2.
 > 
 > flush(stderr()); flush(stdout())
 > 
-> ### Name: writeANALYZE
+> ### Name: writeANALYZE-methods
 > ### Title: writeANALYZE
-> ### Aliases: writeANALYZE
-> ### Keywords: file
+> ### Aliases: writeANALYZE-methods writeANALYZE,anlz-method writeANALYZE
+> ### Keywords: file methods
 > 
 > ### ** Examples
 > 
@@ -830,10 +830,11 @@ QForm_code = 1 : Orientation by Method 2.
 > 
 > flush(stderr()); flush(stdout())
 > 
-> ### Name: writeNIfTI
+> ### Name: writeNIfTI-methods
 > ### Title: writeNIfTI
-> ### Aliases: writeNIfTI
-> ### Keywords: file
+> ### Aliases: writeNIfTI-methods writeNIfTI,nifti-method
+> ###   writeNIfTI,anlz-method writeNIfTI
+> ### Keywords: file methods
 > 
 > ### ** Examples
 > 
@@ -886,7 +887,7 @@ QForm_code = 1 : Orientation by Method 2.
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  6.07 0.09 6.267 0 0 
+Time elapsed:  6.29 0.09 6.392 0 0 
 > grDevices::dev.off()
 null device 
           1 

@@ -178,16 +178,21 @@ setMethod("writeNIfTI", signature(nim="anlz"),
 ############################################################################
 ############################################################################
 
-writeANALYZE <- function(aim, filename, gzipped=TRUE, verbose=FALSE,
-                         warn=-1) {
+setGeneric("writeANALYZE", function(aim,  ...) standardGeneric("writeANALYZE"))
+setMethod("writeANALYZE", signature(aim="anlz"), 
+	  function(aim, filename, gzipped=TRUE, verbose=FALSE, warn=-1) {
+            .writeANALYZE(aim, filename, gzipped, verbose, warn)
+          })
+.writeANALYZE <- function(aim, filename, gzipped=TRUE, verbose=FALSE,
+                          warn=-1) {
   ## Warnings?
   oldwarn <- getOption("warn")
   options(warn=warn)
   ## Basic error checking
-  validANALYZE <- getValidity(getClassDef("anlz"))
-  if (! validANALYZE(aim)) {
-    stop("Ouch!")
-  }
+  ##validANALYZE <- getValidity(getClassDef("anlz"))
+  ##if (! validANALYZE(aim)) {
+  ##  stop("Ouch!")
+  ##}
   ## Write header file...
   if (gzipped) {
     fid <- gzfile(paste(filename, ".hdr.gz", sep=""), "wb")
