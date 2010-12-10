@@ -3,7 +3,11 @@
 %
 % $Id: $
 
-\name{writeNIfTI}
+\name{writeNIfTI-methods}
+\docType{methods}
+\alias{writeNIfTI-methods}
+\alias{writeNIfTI,nifti-method}
+\alias{writeNIfTI,anlz-method}
 \alias{writeNIfTI}
 \title{writeNIfTI}
 \description{
@@ -11,10 +15,11 @@
   NIfTI format.
 }
 \usage{
-writeNIfTI(nim, filename, gzipped = TRUE, verbose = FALSE, warn = -1)
+\S4method{writeNIfTI}{nifti}(nim, filename, gzipped = TRUE, verbose = FALSE, warn = -1)
+\S4method{writeNIfTI}{anlz}(nim, filename, gzipped = TRUE, verbose = FALSE, warn = -1)
 }
 \arguments{
-  \item{nim}{is an object of class \code{nifti}.}
+  \item{nim}{is an object of class \code{nifti} or \code{anlz}.}
   \item{filename}{is the path and file name to save the NIfTI file
     (.nii) \bold{without} the suffix.}
   \item{gzipped}{is a character string that enables exportation of
@@ -23,6 +28,13 @@ writeNIfTI(nim, filename, gzipped = TRUE, verbose = FALSE, warn = -1)
     allows text-based feedback during execution of the function.}
   \item{warn}{is a number to regulate the display of warnings (default =
     -1).  See \code{\link{options}} for more details.}
+}
+\section{Methods}{
+  \describe{
+  \item{object = "anlz"}{Convert ANALYZE object to class \code{nifti}
+    and write the NIfTI volume to disk.}
+  \item{object = "nifti"}{Write NIfTI volume to disk.}
+  }
 }
 \details{
   The \code{writeNIfTI} function utilizes the internal \code{writeBin}
@@ -82,6 +94,7 @@ unlist(equal)
 }
 }
 \author{
-  Brandon Whitcher <\email{bjw34032@users.sourceforge.net}> and
-  Volker Schmid <\email{volkerschmid@users.sourceforge.net}>}
+  Brandon Whitcher \email{bjw34032@users.sourceforge.net} and
+  Volker Schmid \email{volkerschmid@users.sourceforge.net}}
 \keyword{file}
+\keyword{methods}

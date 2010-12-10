@@ -32,15 +32,25 @@
 ## $Id: writeS4.R 332 2010-01-29 16:54:07Z bjw34032 $
 ##
 
-writeNIfTI <- function(nim, filename, gzipped=TRUE, verbose=FALSE, warn=-1) {
+setGeneric("writeNIfTI", function(nim,  ...) standardGeneric("writeNIfTI"))
+setMethod("writeNIfTI", signature(nim="nifti"), 
+	  function(nim, filename, gzipped=TRUE, verbose=FALSE, warn=-1) {
+            .writeNIfTI(nim, filename, gzipped, verbose, warn)
+          })
+setMethod("writeNIfTI", signature(nim="anlz"), 
+	  function(nim, filename, gzipped=TRUE, verbose=FALSE, warn=-1) {
+            .writeNIfTI(as(nim, "nifti"), filename, gzipped, verbose, warn)
+          })
+.writeNIfTI <- function(nim, filename, gzipped=TRUE, verbose=FALSE,
+                        warn=-1) {
   ## Warnings?
   oldwarn <- getOption("warn")
   options(warn=warn)
   ## Basic error checking
-  validNIfTI <- getValidity(getClassDef("nifti"))
-  if (! validNIfTI(nim)) {
-    stop("-- aborting writeNIfTI --")
-  }
+  ##validNIfTI <- getValidity(getClassDef("nifti"))
+  ##if (! validNIfTI(nim)) {
+  ##  stop("-- aborting writeNIfTI --")
+  ##}
   ## Write header file...
   if (gzipped) {
     fid <- gzfile(paste(filename, "nii.gz", sep="."), "wb")

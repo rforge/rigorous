@@ -23,7 +23,6 @@ writeANALYZE(aim, filename, gzipped = TRUE, verbose = FALSE, warn = -1)
     allows text-based feedback during execution of the function.}
   \item{warn}{is a number to regulate the display of warnings (default =
     -1).  See \code{\link{options}} for more details.}
-
 }
 \details{
   The \code{writeANALYZE} function utilizes the internal \code{writeBin}
@@ -73,6 +72,6 @@ unlist(equal)
 }
 }
 \author{
-  Brandon Whitcher <\email{bjw34032@users.sourceforge.net}>
+  Brandon Whitcher \email{bjw34032@users.sourceforge.net}
 }
 \keyword{file}
