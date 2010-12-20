@@ -15,11 +15,11 @@
 \title{Extract or Replace NIfTI/Analyze Description}
 \description{
   Methods that act on the \dQuote{description} character string in the
-  NIfTI or Analyze header.
+  NIfTI or ANALYZE header.
 }
 \usage{
 \S4method{descrip}{nifti}(object)
-\S4method{descrip}{anlz}(object)
+%\S4method{descrip}{anlz}(object)
 }
 \arguments{
   \item{object}{is an object of class \code{nifti} or \code{anlz}.}
@@ -30,14 +30,16 @@
   \item{object = "nifti"}{Extract or replace NIfTI description.}
   }
 }
-\author{Brandon Whitcher <\email{bjw34032@users.sourceforge.net}>}
+\author{Brandon Whitcher \email{bjw34032@users.sourceforge.net}}
 \examples{
 \dontrun{
 url <- "http://nifti.nimh.nih.gov/nifti-1/data/avg152T1_LR_nifti.nii.gz"
-urlfile <- file.path(system.file("nifti", package="oro.nifti"), "mniLR.nii.gz")
+urlfile <- file.path(system.file("nifti", package="oro.nifti"),
+                     "mniLR.nii.gz")
 download.file(url, urlfile, quiet=TRUE)
 }
-urlfile <- file.path(system.file("nifti", package="oro.nifti"), "mniLR.nii.gz")
+urlfile <- file.path(system.file("nifti", package="oro.nifti"),
+                     "mniLR.nii.gz")
 mniLR <- readNIfTI(urlfile)
 descrip(mniLR)
 descrip(mniLR) <- paste(descrip(mniLR), version$version.string, sep="; ")

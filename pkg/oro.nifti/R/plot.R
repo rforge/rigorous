@@ -1,6 +1,6 @@
 ##
 ##
-## Copyright (c) 2009, Brandon Whitcher and Volker Schmid
+## Copyright (c) 2009, 2010, Brandon Whitcher and Volker Schmid
 ## All rights reserved.
 ## 
 ## Redistribution and use in source and binary forms, with or without
@@ -102,6 +102,8 @@ image.nifti <- function(x, z=1, w=1, col=gray(0:64/64),
 
 setMethod("image", signature(x="nifti"), image.nifti)
 setMethod("image", signature(x="anlz"), image.nifti)
+##setMethod("image", signature(x="array"), image.nifti)
+setMethod("image", signature(x="afni"), image.nifti)
 
 #############################################################################
 ## overlay() for class="nifti"
@@ -182,6 +184,8 @@ setMethod("overlay", signature(x="array", y="nifti"), overlay.nifti)
 setMethod("overlay", signature(x="nifti", y="array"), overlay.nifti)
 setMethod("overlay", signature(x="array", y="anlz"), overlay.nifti)
 setMethod("overlay", signature(x="anlz", y="array"), overlay.nifti)
+setMethod("overlay", signature(x="afni", y="afni"), overlay.nifti)
+setMethod("overlay", signature(x="afni", y="array"), overlay.nifti)
 
 #############################################################################
 ## orthographic() for class="nifti"
@@ -267,6 +271,11 @@ setGeneric("orthographic", function(x, ...) standardGeneric("orthographic"))
 setMethod("orthographic", signature(x="nifti"), orthographic.nifti)
 setMethod("orthographic", signature(x="anlz"), orthographic.nifti)
 setMethod("orthographic", signature(x="array"),
+          function(x) {
+            x <- as(x, "nifti")
+            orthographic.nifti(x)
+          })
+setMethod("orthographic", signature(x="afni"),
           function(x) {
             x <- as(x, "nifti")
             orthographic.nifti(x)

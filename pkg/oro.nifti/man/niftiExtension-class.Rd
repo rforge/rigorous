@@ -9,8 +9,8 @@
 \alias{niftiExtension-class}
 \title{Class "niftiExtension"}
 \description{
-  An extension of the NIfTI class that allows "extensions" that conform
-  to the NIfTI data standard.
+  An extension of the NIfTI class that allows \dQuote{extensions} that
+  conform to the NIfTI data standard.
 }
 \section{Objects from the Class}{
   Objects can be created by calls of the form
@@ -77,13 +77,13 @@
   Class \code{"\linkS4class{vector}"}, by class "nifti", distance 6, with explicit test and coerce.
 }
 \section{Methods}{
-  No methods defined with class "niftiExtension" in the signature.
+  No methods defined with class \code{"niftiExtension"} in the signature.
 }
 \references{
   NIfTI-1\cr
   \url{http://nifti.nimh.nih.gov/}
 }
-\author{Andrew Thornton <\email{zeripath@users.sourceforge.net}>}
+\author{Andrew Thornton \email{zeripath@users.sourceforge.net}}
 \seealso{
   \code{\linkS4class{nifti}}, \code{\linkS4class{niftiAuditTrail}}
 }

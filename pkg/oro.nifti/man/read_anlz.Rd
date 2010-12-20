@@ -5,7 +5,7 @@
 
 \name{readANALYZE}
 \alias{readANALYZE}
-\alias{read.analyze.content}
+%\alias{read.analyze.content}
 \title{readANALYZE}
 \description{
   These functions read in the header information and multi-dimensional
@@ -13,13 +13,13 @@
 }
 \usage{
 readANALYZE(fname, verbose = FALSE, warn = -1)
-read.analyze.content(fname, gzipped = TRUE, verbose = FALSE, warn = -1)
+%read.analyze.content(fname, gzipped = TRUE, verbose = FALSE, warn = -1)
 }
 \arguments{
   \item{fname}{Pathname of the Analyze pair of files .img and .hdr
     without the suffix.}
-  \item{gzipped}{Allows the import/export of compressed (.gz) files
-    (default = \code{TRUE}).}
+%  \item{gzipped}{Allows the import/export of compressed (.gz) files
+%    (default = \code{TRUE}).}
   \item{verbose}{is a logical variable (default = \code{FALSE}) that
     allows text-based feedback during execution of the function.}
   \item{warn}{is a number to regulate the display of warnings (default =
@@ -59,6 +59,8 @@ image(colin, oma=rep(2,4))
 orthographic(colin, oma=rep(2,4))
 }
 }
-\author{Brandon Whitcher <\email{bjw34032@users.sourceforge.net}>,
-  Volker Schmid <\email{volkerschmid@users.sourceforge.net}>}
+\author{
+  Brandon Whitcher \email{bjw34032@users.sourceforge.net},\cr
+  Volker Schmid \email{volkerschmid@users.sourceforge.net}
+}
 \keyword{file}

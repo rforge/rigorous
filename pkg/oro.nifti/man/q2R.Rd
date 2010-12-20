@@ -20,25 +20,26 @@ quaternion2rotation(b, c, d)
 }
 \details{
   The quaternion representation is chosen for its compactness in
-  representing rotations.  The orientation of the (x,y,z) axes relative
-  to the (i,j,k) axes in 3D space is specified using a unit quaternion
-  [a,b,c,d], where a*a+b*b+c*c+d*d=1.  The (b,c,d) values are all that
-  is needed, since we require that a = sqrt(1.0-(b*b+c*c+d*d)) be
-  nonnegative.  The (b,c,d) values are stored in the
-  (quatern_b,quatern_c,quatern_d) fields.
+  representing rotations.  The orientation of the \eqn{(x,y,z)} axes
+  relative to the \eqn{(i,j,k)} axes in 3D space is specified using a
+  unit quaternion \eqn{[a,b,c,d]}, where
+  \eqn{a^2+b^2+c^2+d^2=1}{a*a+b*b+c*c+d*d=1}.  The
+  \eqn{(b,c,d)} values are all that is needed, since we require that
+  \eqn{a=[1-(b^2+c^2+d^2)]^{1/2}}{a=sqrt(1.0-(b*b+c*c+d*d))} be
+  non-negative.  The \eqn{(b,c,d)} values are stored in the
+  (\code{quatern_b}, \code{quatern_c}, \code{quatern_d}) fields.
 }
 \value{
-  The (proper) 3x3 rotation matrix.
+  The (proper) \eqn{3{\times}3}{3x3} rotation matrix.
 }
 \references{
   NIfTI-1\cr
   \url{http://nifti.nimh.nih.gov/}
 }
 \examples{
-R <- quaternion2rotation(1, 0, 0)
 ## This R matrix is represented by quaternion [a,b,c,d] = [0,1,0,0]
 ## (which encodes a 180 degree rotation about the x-axis).
-R
+(R <- quaternion2rotation(1, 0, 0))
 }
-\author{Brandon Whitcher <\email{bjw34032@users.sourceforge.net}>}
+\author{Brandon Whitcher \email{bjw34032@users.sourceforge.net}}
 %\keyword{}

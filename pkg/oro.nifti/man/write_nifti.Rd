@@ -15,8 +15,10 @@
   NIfTI format.
 }
 \usage{
-\S4method{writeNIfTI}{nifti}(nim, filename, gzipped = TRUE, verbose = FALSE, warn = -1)
-\S4method{writeNIfTI}{anlz}(nim, filename, gzipped = TRUE, verbose = FALSE, warn = -1)
+\S4method{writeNIfTI}{nifti}(nim, filename, gzipped = TRUE, verbose = FALSE,
+            warn = -1)
+\S4method{writeNIfTI}{anlz}(nim, filename, gzipped = TRUE, verbose = FALSE,
+            warn = -1)
 }
 \arguments{
   \item{nim}{is an object of class \code{nifti} or \code{anlz}.}
@@ -58,7 +60,7 @@
   \url{http://nifti.nimh.nih.gov/}
 }
 \seealso{
-  \code{\link{writeANALYZE}}
+  \code{\link{writeAFNI}}, \code{\link{writeANALYZE}}
 }
 \examples{
 norm <- dnorm(seq(-5, 5, length=32), sd=2)
@@ -75,7 +77,8 @@ data <- readNIfTI("test-nifti-image-uint8", verbose=TRUE)
 image(img.nifti, oma=rep(2,4), bg="white")
 image(data, oma=rep(2,4), bg="white")
 abs.err <- abs(data - img.nifti)
-image(as(abs.err, "nifti"), zlim=range(img.nifti), oma=rep(2,4), bg="white")
+image(as(abs.err, "nifti"), zlim=range(img.nifti), oma=rep(2,4),
+      bg="white")
 
 \dontrun{
 ## Loop through all possible data types
@@ -94,7 +97,8 @@ unlist(equal)
 }
 }
 \author{
-  Brandon Whitcher \email{bjw34032@users.sourceforge.net} and
-  Volker Schmid \email{volkerschmid@users.sourceforge.net}}
+  Brandon Whitcher \email{bjw34032@users.sourceforge.net},\cr
+  Volker Schmid \email{volkerschmid@users.sourceforge.net}
+}
 \keyword{file}
 \keyword{methods}

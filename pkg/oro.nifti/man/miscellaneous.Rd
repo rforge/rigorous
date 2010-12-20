@@ -10,7 +10,7 @@
 \alias{NTIM}
 \title{Dimension Accessor Functions}
 \description{
-  Functions to extract the higher dimensions from Analyze/NIfTI data.
+  Functions to extract the higher dimensions from ANALYZE/NIfTI data.
 }
 \usage{
 nsli(x)
@@ -35,5 +35,5 @@ NTIM(x)
   \code{\link{readNIfTI}}, \code{\link{readANALYZE}}
 }
 % \examples{}
-\author{Brandon Whitcher <\email{bjw34032@users.sourceforge.net}>}
+\author{Brandon Whitcher \email{bjw34032@users.sourceforge.net} }
 \keyword{misc}

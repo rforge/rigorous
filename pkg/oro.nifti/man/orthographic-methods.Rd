@@ -10,20 +10,22 @@
 \alias{orthographic,nifti-method}
 \alias{orthographic,anlz-method}
 \alias{orthographic,array-method}
+\alias{orthographic,afni-method}
 \alias{orthographic.nifti}
-\title{Methods for Function 'orthographic' in Package 'dcemri'}
+\title{Methods for Function `orthographic' in Package `dcemriS4'}
 \description{
-  Produce orthographic display for \code{nifti} objects.
+  Produce orthographic display for \code{nifti}, \code{anlz} and
+  \code{afni} objects.
 }
 \usage{
 \S4method{orthographic}{nifti}(x, xyz = NULL, crosshairs = TRUE,
-                       col.crosshairs = "red", w = 1, zlim = NULL,
-                       col = gray(0:64/64), xlab = "", ylab = "",
-                       axes = FALSE, oma=rep(0,4), mar=rep(0,4),
-                       bg="black", text=NULL, text.color="white", ...)
+             col.crosshairs = "red", w = 1, zlim = NULL,
+             col = gray(0:64/64), xlab = "", ylab = "", axes = FALSE,
+             oma=rep(0,4), mar=rep(0,4), bg="black", text=NULL,
+             text.color="white", ...)
 }
 \arguments{
-  \item{x}{is an object of class \code{"nifti"} or similar.}
+  \item{x}{is an object of class \code{nifti} or similar.}
   \item{xyz}{is the coordinate for the center of the crosshairs.}
   \item{crosshairs}{is a logical value for the presence of crosshairs in
     all three orthogonal planes (default = TRUE).}
@@ -46,12 +48,13 @@
 }
 \section{Methods}{
   \describe{
+    \item{x = "afni"}{Produce orthographic display for \code{x}.}
     \item{x = "anlz"}{Produce orthographic display for \code{x}.}
     \item{x = "array"}{Produce orthographic display for \code{x}.}
     \item{x = "nifti"}{Produce orthographic display for \code{x}.}
   }
 }
-\author{Brandon Whitcher <\email{bjw34032@users.sourceforge.net}>}
+\author{Brandon Whitcher \email{bjw34032@users.sourceforge.net}}
 \seealso{
   \code{\link{image-methods}}, \code{\link{overlay-methods}}
 }

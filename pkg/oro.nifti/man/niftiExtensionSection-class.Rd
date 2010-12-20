@@ -28,15 +28,16 @@
   }
 }
 \section{Methods}{
-  No methods defined with class "niftiExtensionSection" in the signature.
+  No methods defined with class \dQuote{niftiExtensionSection} in the
+  signature.
 }
 \references{
   NIfTI-1\cr
   \url{http://nifti.nimh.nih.gov/}
 }
 \author{
-  Brandon Whitcher <\email{bjw34032@users.sourceforge.net}>,
-  Andrew Thornton <\email{zeripath@users.sourcefore.net}>
+  Brandon Whitcher \email{bjw34032@users.sourceforge.net},\cr
+  Andrew Thornton \email{zeripath@users.sourcefore.net}
 }
 \seealso{
   \code{\linkS4class{niftiExtension}}, \code{\linkS4class{nifti}}

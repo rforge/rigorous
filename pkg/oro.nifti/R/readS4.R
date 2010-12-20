@@ -71,8 +71,8 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
       if (verbose) {
         cat(paste("  files = ", fname, ".nii", sep=""), fill=TRUE)
       }
-      nim <- read.nifti.content(fname, gzipped=FALSE, verbose=verbose,
-                                warn=warn, reorient=reorient, call=call)
+      nim <- .read.nifti.content(fname, gzipped=FALSE, verbose=verbose,
+                                 warn=warn, reorient=reorient, call=call)
       options(warn=oldwarn)
       return(nim)
     }
@@ -81,8 +81,8 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
       if (verbose) {
         cat(paste("  files = ", fname, ".nii.gz", sep=""), fill=TRUE)
       }
-      nim <- read.nifti.content(fname, gzipped=TRUE, verbose=verbose,
-                                warn=warn, reorient=reorient, call=call)
+      nim <- .read.nifti.content(fname, gzipped=TRUE, verbose=verbose,
+                                 warn=warn, reorient=reorient, call=call)
       options(warn=oldwarn)
       return(nim)
     }
@@ -94,9 +94,9 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
 ############################################################################
 ############################################################################
 
-read.nifti.content <- function(fname, onefile=TRUE, gzipped=TRUE,
-                               verbose=FALSE, warn=-1, reorient=FALSE,
-                               call=NULL) {
+.read.nifti.content <- function(fname, onefile=TRUE, gzipped=TRUE,
+                                verbose=FALSE, warn=-1, reorient=FALSE,
+                                call=NULL) {
   ## Open appropriate file
   if (gzipped) {
     suffix <- ifelse(onefile, "nii.gz", "hdr.gz")
@@ -318,8 +318,8 @@ readANALYZE <- function(fname, verbose=FALSE, warn=-1) {
     if (verbose) {
       cat(paste("  files = ", fname, ".{hdr,img}", sep=""), fill=TRUE)
     }
-    aim <- read.analyze.content(fname, gzipped=FALSE, verbose=verbose,
-                                warn=warn)
+    aim <- .read.analyze.content(fname, gzipped=FALSE, verbose=verbose,
+                                 warn=warn)
     options(warn=oldwarn)
     return(aim)
   }
@@ -329,8 +329,8 @@ readANALYZE <- function(fname, verbose=FALSE, warn=-1) {
     if (verbose) {
       cat(paste("  files = ", fname, ".{hdr.gz,img.gz}", sep=""), fill=TRUE)
     }
-    aim <- read.analyze.content(fname, gzipped=TRUE, verbose=verbose,
-                                warn=warn)
+    aim <- .read.analyze.content(fname, gzipped=TRUE, verbose=verbose,
+                                 warn=warn)
     options(warn=oldwarn)
     return(aim)
   }
@@ -341,8 +341,8 @@ readANALYZE <- function(fname, verbose=FALSE, warn=-1) {
 ############################################################################
 ############################################################################
 
-read.analyze.content <- function(fname, gzipped=TRUE, verbose=FALSE,
-                                 warn=-1) {
+.read.analyze.content <- function(fname, gzipped=TRUE, verbose=FALSE,
+                                  warn=-1) {
   ## Open header file
   if (gzipped) {
     fname <- paste(fname, "hdr.gz", sep=".")

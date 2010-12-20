@@ -16,21 +16,23 @@
 \alias{overlay,array,nifti-method}
 \alias{overlay,array,anlz-method}
 \alias{overlay,array,array-method}
+\alias{overlay,afni,afni-method}
+\alias{overlay,afni,array-method}
 \alias{overlay.nifti}
 \title{Methods for Function overlay}
 \description{Methods for function \code{overlay}}
 \usage{
 \S4method{overlay}{nifti,nifti}(x, y, z=1, w=1, col.x=gray(0:64/64),
-      col.y=hotmetal(), zlim.x=NULL, zlim.y=NULL,
-      plot.type=c("multiple","single"), xlab="", ylab="",
-      axes=FALSE, oma=rep(0,4), mar=rep(0,4), bg="black", ...)
-\S4method{overlay}{anlz,anlz}(x, y, z=1, w=1, col.x=gray(0:64/64),
-      col.y=hotmetal(), zlim.x=NULL, zlim.y=NULL,
-      plot.type=c("multiple","single"), xlab="", ylab="",
-      axes=FALSE, oma=rep(0,4), mar=rep(0,4), bg="black", ...)
+        col.y=hotmetal(), zlim.x=NULL, zlim.y=NULL,
+        plot.type=c("multiple","single"), xlab="", ylab="", axes=FALSE,
+        oma=rep(0,4), mar=rep(0,4), bg="black", ...)
+%\S4method{overlay}{anlz,anlz}(x, y, z=1, w=1, col.x=gray(0:64/64),
+%      col.y=hotmetal(), zlim.x=NULL, zlim.y=NULL,
+%      plot.type=c("multiple","single"), xlab="", ylab="",
+%      axes=FALSE, oma=rep(0,4), mar=rep(0,4), bg="black", ...)
 }
 \arguments{
-  \item{x,y}{is an object of class \code{"nifti"} or \code{"anlz"}.}
+  \item{x,y}{is an object of class \code{nifti} or similar.}
   \item{z}{is the slice to be displayed (ignored when \code{plot.type =
       "multiple"}).}
   \item{w}{is the time point to be displayed (4D arrays only).}
@@ -58,9 +60,10 @@
 \describe{
   \item{x = "nifti", y = "nifti"}{Produce overlay of \code{y} on \code{x}.}
   \item{x = "anlz", y = "anlz"}{Produce overlay of \code{y} on \code{x}.}
+  \item{x = "afni", y = "afni"}{Produce overlay of \code{y} on \code{x}.}
  }
 }
-\author{Brandon Whitcher <\email{bjw34032@users.sourceforge.net}>}
+\author{Brandon Whitcher \email{bjw34032@users.sourceforge.net}}
 \seealso{
   \code{\link{image-methods}}, \code{\link{overlay-methods}}
 }

@@ -14,7 +14,8 @@
   Analyze format.
 }
 \usage{
-\S4method{writeANALYZE}{anlz}(aim, filename, gzipped = TRUE, verbose = FALSE, warn = -1)
+\S4method{writeANALYZE}{anlz}(aim, filename, gzipped = TRUE, verbose = FALSE,
+            warn = -1)
 }
 \arguments{
   \item{aim}{is an object of class \code{anlz}.}
@@ -44,7 +45,7 @@
   \url{http://www.mayo.edu/bir/PDF/ANALYZE75.pdf}
 }
 \seealso{
-  \code{\link{writeNIfTI}}
+  \code{\link{writeAFNI}}, \code{\link{writeNIfTI}}
 }
 \examples{
 norm <- dnorm(seq(-5, 5, length=32), sd=2)

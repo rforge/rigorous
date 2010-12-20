@@ -5,7 +5,7 @@
 
 \name{readAFNI}
 \alias{readAFNI}
-\alias{read.afni.content}
+%\alias{read.afni.content}
 \title{readAFNI}
 \description{
   These functions read in the header information and multidimensional
@@ -14,7 +14,7 @@
 }
 \usage{
 readAFNI(fname, vol = NULL, verbose = FALSE, warn = -1, call = NULL)
-read.afni.content(fname, vol, verbose = FALSE, warn = -1, call = NULL)
+%read.afni.content(fname, vol, verbose = FALSE, warn = -1, call = NULL)
 }
 \arguments{
   \item{fname}{is the file name of the AFNI file.}

@@ -13,8 +13,8 @@
   Constructor for NIfTI class objects.
 }
 \usage{
-nifti(img = array(0, dim = rep(1, 4)), dim, datatype = 2, cal.min = NULL,
-      cal.max = NULL, pixdim = NULL, ...)
+nifti(img = array(0, dim = rep(1, 4)), dim, datatype = 2,
+      cal.min = NULL, cal.max = NULL, pixdim = NULL, ...)
 is.nifti(x)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -39,7 +39,7 @@ is.nifti(x)
   \url{http://nifti.nimh.nih.gov/}
 }
 \author{
-  Brandon Whitcher <\email{bjw34032@users.sourceforge.net}>
+  Brandon Whitcher \email{bjw34032@users.sourceforge.net}
 }
 \seealso{
   \code{\linkS4class{nifti}}, \code{\link{anlz}}

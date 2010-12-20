@@ -25,10 +25,118 @@ Type 'q()' to quit R.
 Creating a new generic function for "image" in "oro.nifti"
 Loading required package: XML
 
-oro.nifti: Rigorous - NIfTI Input / Output (version = 0.2.3)
+oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.2.4)
 
 > 
 > assign(".oldSearch", search(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("afni-class")
+> ### * afni-class
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: afni-class
+> ### Title: Class "afni"
+> ### Aliases: afni-class show,afni-method
+> ### Keywords: classes
+> 
+> ### ** Examples
+> 
+> showClass("afni")
+Class "afni" [package "oro.nifti"]
+
+Slots:
+                                                        
+Name:                     .Data             DATASET_RANK
+Class:                    array                  integer
+                                                        
+Name:        DATASET_DIMENSIONS               TYPESTRING
+Class:                  integer                character
+                                                        
+Name:                SCENE_DATA          ORIENT_SPECIFIC
+Class:                  integer                  integer
+                                                        
+Name:                    ORIGIN                    DELTA
+Class:                  numeric                  numeric
+                                                        
+Name:                TAXIS_NUMS             TAXIS_FLOATS
+Class:                  integer                  numeric
+                                                        
+Name:             TAXIS_OFFSETS            IDCODE_STRING
+Class:                  numeric                character
+                                                        
+Name:               IDCODE_DATE         BYTEORDER_STRING
+Class:                character                character
+                                                        
+Name:               BRICK_STATS              BRICK_TYPES
+Class:                  numeric                  integer
+                                                        
+Name:          BRICK_FLOAT_FACS               BRICK_LABS
+Class:                  numeric                character
+                                                        
+Name:             BRICK_STATAUX                 STAT_AUX
+Class:                  numeric                  numeric
+                                                        
+Name:              HISTORY_NOTE              NOTES_COUNT
+Class:                character                  integer
+                                                        
+Name:               NOTE_NUMBER          TAGALIGN_MATVEC
+Class:                character                  numeric
+                                                        
+Name:             VOLREG_MATVEC            VOLREG_ROTCOM
+Class:                    array                character
+                                                        
+Name:         VOLREG_CENTER_OLD       VOLREG_CENTER_BASE
+Class:                  numeric                  numeric
+                                                        
+Name:   VOLREG_ROTPARENT_IDCODE    VOLREG_ROTPARENT_NAME
+Class:                character                character
+                                                        
+Name:  VOLREG_GRIDPARENT_IDCODE   VOLREG_GRIDPARENT_NAME
+Class:                character                character
+                                                        
+Name:       VOLREG_INPUT_IDCODE        VOLREG_INPUT_NAME
+Class:                character                character
+                                                        
+Name:        VOLREG_BASE_IDCODE         VOLREG_BASE_NAME
+Class:                character                character
+                                                        
+Name:         VOLREG_ROTCOM_NUM       IDCODE_ANAT_PARENT
+Class:                  integer                character
+                                                        
+Name:                 TO3D_ZPAD       IDCODE_WARP_PARENT
+Class:                  integer                character
+                                                        
+Name:                 WARP_TYPE                WARP_DATA
+Class:                  integer                  numeric
+                                                        
+Name:                 MARKS_XYZ                MARKS_LAB
+Class:                  numeric                character
+                                                        
+Name:                MARKS_HELP              MARKS_FLAGS
+Class:                character                  integer
+                                                        
+Name:                TAGSET_NUM            TAGSET_FLOATS
+Class:                  integer                  numeric
+                                                        
+Name:             TAGSET_LABELS                  LABEL_1
+Class:                character                character
+                                                        
+Name:                   LABEL_2             DATASET_NAME
+Class:                character                character
+                                                        
+Name:          DATASET_KEYWORDS           BRICK_KEYWORDS
+Class:                character                character
+
+Extends: 
+Class "array", from data part
+Class "matrix", by class "array", distance 2, with explicit test and coerce
+Class "structure", by class "array", distance 2
+Class "vector", by class "array", distance 3, with explicit coerce
+Class "vector", by class "array", distance 5, with explicit test and coerce
+> 
+> 
+> 
 > cleanEx()
 > nameEx("anlz-class")
 > ### * anlz-class
@@ -95,8 +203,7 @@ Class "vector", by class "array", distance 5, with explicit test and coerce
 > 
 > ### ** Examples
 > 
-> aim <- anlz() # default
-> aim
+> (aim <- anlz()) # default
 ANALYZE 7.5 format
   Type            : anlz
   Data Type       : 2 (UNSIGNED_CHAR)
@@ -123,13 +230,13 @@ ANALYZE 7.5 format
 > ### ** Examples
 > 
 > ## Not run: 
-> ##D ## Sternberg Item Recognition Paradigm (SIRP) fMRI Study + XML Extension Data
+> ##D ## Sternberg Item Recognition Paradigm (SIRP) fMRI Study + XML
+> ##D ## Extension Data
 > ##D URL <- "http://nifti.nimh.nih.gov/nifti-1/data/sirp_fmri_study_ver4.tar.gz"
 > ##D download.file(URL, dest="sirp.tar.gz", quiet=TRUE)
 > ##D fnames <- system("tar zxvf sirp.tar.gz", intern=TRUE)
 > ##D sirp <- readNIfTI(fnames[1]) # newsirp_final_XML.nii
-> ##D sirp.xml <- xmlTreeParse(sirp@"extensions"[[1]]@"edata", asText=TRUE)
-> ##D sirp.xml
+> ##D (sirp.xml <- xmlTreeParse(sirp@"extensions"[[1]]@"edata", asText=TRUE))
 > ## End(Not run)
 > 
 > 
@@ -205,16 +312,37 @@ ANALYZE 7.5 format
 > 
 > ## Not run: 
 > ##D url <- "http://nifti.nimh.nih.gov/nifti-1/data/avg152T1_RL_nifti.nii.gz"
-> ##D urlfile <- file.path(system.file("nifti", package="oro.nifti"), "mniRL.nii.gz")
+> ##D urlfile <- file.path(system.file("nifti", package="oro.nifti"),
+> ##D                      "mniRL.nii.gz")
 > ##D download.file(url, urlfile, quiet=TRUE)
 > ## End(Not run)
-> urlfile <- file.path(system.file("nifti", package="oro.nifti"), "mniRL.nii.gz")
+> urlfile <- file.path(system.file("nifti", package="oro.nifti"),
++                      "mniRL.nii.gz")
 > mniRL <- readNIfTI(urlfile)
 > aux.file(mniRL)
 [1] "none                   "
 > aux.file(mniRL) <- "avg152T1_RL_nifti"
 > aux.file(mniRL)
 [1] "avg152T1_RL_nifti"
+> 
+> 
+> 
+> cleanEx()
+> nameEx("convert_afni")
+> ### * convert_afni
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: convert.scene
+> ### Title: Convert AFNI data codes
+> ### Aliases: convert.scene
+> ### Keywords: misc
+> 
+> ### ** Examples
+> 
+> ## 4 = CT for anatomic data
+> convert.scene(4, "3DIM_HEAD_ANAT")
+[1] "CT"
 > 
 > 
 > 
@@ -265,12 +393,10 @@ ANALYZE 7.5 format
 > ## Use the code directly to obtain the abbreviation
 > convert.datatype(4)
 [1] "INT16"
-> 
 > ## No arguments produces a list structure
 > ## Use the abbreviation to obtain the code
 > convert.bitpix()$INT16
 [1] 16
-> 
 > ## No arguments produces a list structure
 > ## Use the abbreviation to obtain the code
 > convert.intent()$Estimate
@@ -278,18 +404,15 @@ ANALYZE 7.5 format
 > ## Use the code directly to obtain the abbreviation
 > convert.intent(1001)
 [1] "Estimate"
-> 
 > ## 4 = MNI_152
 > convert.form(4)
 [1] "MNI_152"
-> 
 > ## 2 = mm
 > convert.units(2)
 [1] "mm"
 > ## 8 = sec
 > convert.units(8)
 [1] "sec"
-> 
 > ## 0 = Unknown
 > convert.slice(0)
 [1] "Unknown"
@@ -312,10 +435,12 @@ ANALYZE 7.5 format
 > 
 > ## Not run: 
 > ##D url <- "http://nifti.nimh.nih.gov/nifti-1/data/avg152T1_LR_nifti.nii.gz"
-> ##D urlfile <- file.path(system.file("nifti", package="oro.nifti"), "mniLR.nii.gz")
+> ##D urlfile <- file.path(system.file("nifti", package="oro.nifti"),
+> ##D                      "mniLR.nii.gz")
 > ##D download.file(url, urlfile, quiet=TRUE)
 > ## End(Not run)
-> urlfile <- file.path(system.file("nifti", package="oro.nifti"), "mniLR.nii.gz")
+> urlfile <- file.path(system.file("nifti", package="oro.nifti"),
++                      "mniLR.nii.gz")
 > mniLR <- readNIfTI(urlfile)
 > descrip(mniLR)
 [1] "FSL3.2beta"
@@ -625,10 +750,9 @@ Class:   numeric   numeric character
 > 
 > ### ** Examples
 > 
-> R <- quaternion2rotation(1, 0, 0)
 > ## This R matrix is represented by quaternion [a,b,c,d] = [0,1,0,0]
 > ## (which encodes a 180 degree rotation about the x-axis).
-> R
+> (R <- quaternion2rotation(1, 0, 0))
      [,1] [,2] [,3]
 [1,]    1    0    0
 [2,]    0   -1    0
@@ -644,7 +768,7 @@ Class:   numeric   numeric character
 > 
 > ### Name: readANALYZE
 > ### Title: readANALYZE
-> ### Aliases: readANALYZE read.analyze.content
+> ### Aliases: readANALYZE
 > ### Keywords: file
 > 
 > ### ** Examples
@@ -676,7 +800,7 @@ Class:   numeric   numeric character
 > 
 > ### Name: readNIfTI
 > ### Title: readNIfTI
-> ### Aliases: readNIfTI read.nifti.content
+> ### Aliases: readNIfTI
 > ### Keywords: file
 > 
 > ### ** Examples
@@ -689,7 +813,8 @@ Class:   numeric   numeric character
 > ## End(Not run)
 > ## The NIfTI file provided here contains the first 18 volumes (10%)
 > ## of the original data set
-> urlfile <- file.path(system.file("nifti", package="oro.nifti"), "ffd.nii.gz")
+> urlfile <- file.path(system.file("nifti", package="oro.nifti"),
++                      "ffd.nii.gz")
 > (ffd <- readNIfTI(urlfile))
 NIfTI-1 format
   Type            : niftiAuditTrail
@@ -864,7 +989,8 @@ QForm_code = 1 : Orientation by Method 2.
 > image(img.nifti, oma=rep(2,4), bg="white")
 > image(data, oma=rep(2,4), bg="white")
 > abs.err <- abs(data - img.nifti)
-> image(as(abs.err, "nifti"), zlim=range(img.nifti), oma=rep(2,4), bg="white")
+> image(as(abs.err, "nifti"), zlim=range(img.nifti), oma=rep(2,4),
++       bg="white")
 > 
 > ## Not run: 
 > ##D ## Loop through all possible data types
@@ -887,7 +1013,7 @@ QForm_code = 1 : Orientation by Method 2.
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  6.29 0.09 6.392 0 0 
+Time elapsed:  6.27 0.19 6.475 0 0 
 > grDevices::dev.off()
 null device 
           1 

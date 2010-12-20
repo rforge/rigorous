@@ -27,7 +27,7 @@ convert.orient.anlz(orientation)
   A character string.
 }
 \references{
-  ANALYZE 7.5 \url{http://www.mayo.edu/bir/PDF/ANALYZE75.pdf}
+  ANALYZE 7.5\cr\url{http://www.mayo.edu/bir/PDF/ANALYZE75.pdf}
 }
 \seealso{
   \code{\link{convert.datatype}}, \code{\link{convert.bitpix}},
@@ -44,5 +44,5 @@ convert.orient.anlz(2)
 ##  4 = "coronal flipped"
 convert.orient.anlz(4)
 }
-\author{Brandon Whitcher <\email{bjw34032@users.sourceforge.net}>}
+\author{ Brandon Whitcher \email{bjw34032@users.sourceforge.net} }
 %\keyword{}

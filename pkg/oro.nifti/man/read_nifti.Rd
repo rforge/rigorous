@@ -5,7 +5,7 @@
 
 \name{readNIfTI}
 \alias{readNIfTI}
-\alias{read.nifti.content}
+%\alias{read.nifti.content}
 \title{readNIfTI}
 \description{
   These functions read in the header information and multidimensional
@@ -14,8 +14,8 @@
 }
 \usage{
 readNIfTI(fname, verbose=FALSE, warn=-1, reorient=TRUE, call=NULL)
-read.nifti.content(fname, onefile=TRUE, gzipped=TRUE, verbose=FALSE,
-                   warn=-1, reorient=FALSE, call=NULL)
+%read.nifti.content(fname, onefile=TRUE, gzipped=TRUE, verbose=FALSE,
+%                   warn=-1, reorient=FALSE, call=NULL)
 }
 \arguments{
   \item{fname}{is the file name of the NIfTI file(s).}
@@ -25,11 +25,11 @@ read.nifti.content(fname, onefile=TRUE, gzipped=TRUE, verbose=FALSE,
     -1).  See \code{options} for more details.}
   \item{reorient}{is a logical variable (default = \code{TRUE}) that
     enforces Qform/Sform transformations.}
-  \item{onefile}{(logical) allows the scanning of single-file format
-    (.nii) or dual-file format (.hdr and .img) NIfTI files (default =
-    \code{TRUE}).} 
-  \item{gzipped}{(logical) allows the importation of compressed (.gz)
-    files (default = \code{TRUE}).}
+%  \item{onefile}{(logical) allows the scanning of single-file format
+%    (.nii) or dual-file format (.hdr and .img) NIfTI files (default =
+%    \code{TRUE}).} 
+%  \item{gzipped}{(logical) allows the importation of compressed (.gz)
+%    files (default = \code{TRUE}).}
   \item{call}{keeps track of the current function call for use in the
     NIfTI extension.}
 %  \item{ignoreQform}{is a logical variable (default = \code{FALSE}) that
@@ -53,14 +53,14 @@ read.nifti.content(fname, onefile=TRUE, gzipped=TRUE, verbose=FALSE,
     }
 }
 \value{
-  ...
+  An object of class \code{nifti}.
 }
 \references{
   NIfTI-1\cr
   \url{http://nifti.nimh.nih.gov/}
 }
 \seealso{
-  \code{\link{readANALYZE}}
+  \code{\link{readAFNI}}, \code{\link{readANALYZE}}
 }
 \examples{
 \dontrun{
@@ -71,14 +71,15 @@ download.file(url, urlfile, quiet=TRUE)
 }
 ## The NIfTI file provided here contains the first 18 volumes (10\%)
 ## of the original data set
-urlfile <- file.path(system.file("nifti", package="oro.nifti"), "ffd.nii.gz")
+urlfile <- file.path(system.file("nifti", package="oro.nifti"),
+                     "ffd.nii.gz")
 (ffd <- readNIfTI(urlfile))
 image(ffd, oma=rep(2,4))
 orthographic(ffd, oma=rep(2,4))
 }
 \author{
-  Brandon Whitcher <\email{bjw34032@users.sourceforge.net}>,
-  Volker Schmid <\email{volkerschmid@users.sourceforge.net}>,
-  Andrew Thornton <\email{zeripath@users.sourceforge.net}>
+  Brandon Whitcher \email{bjw34032@users.sourceforge.net},\cr
+  Volker Schmid \email{volkerschmid@users.sourceforge.net},\cr
+  Andrew Thornton \email{zeripath@users.sourceforge.net}
 }
 \keyword{file}

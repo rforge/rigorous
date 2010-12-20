@@ -271,8 +271,8 @@ readAFNI <- function(fname, vol=NULL, verbose=FALSE, warn=-1, call=NULL) {
   if (verbose) {
     cat(paste("  files = ", fname, ".HEAD/BRIK", sep=""), fill=TRUE)
   }
-  nim <- read.afni.content(fname, vol=vol, verbose=verbose, warn=warn,
-                           call=call)
+  nim <- .read.afni.content(fname, vol=vol, verbose=verbose, warn=warn,
+                            call=call)
   options(warn=oldwarn)
   invisible(nim)
 }
@@ -281,7 +281,7 @@ readAFNI <- function(fname, vol=NULL, verbose=FALSE, warn=-1, call=NULL) {
 ############################################################################
 ############################################################################
 
-read.afni.content <- function(fname, vol, verbose=FALSE, warn=-1,
+.read.afni.content <- function(fname, vol, verbose=FALSE, warn=-1,
                               call=NULL) {
   ## we know these files exist
   fname.head <- paste(fname, "HEAD", sep=".")

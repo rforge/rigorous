@@ -30,16 +30,13 @@ is.anlz(x)
   ANALYZE 7.5\cr
   \url{http://www.mayo.edu/bir/PDF/ANALYZE75.pdf}
 }
-\author{
-  Brandon Whitcher <\email{bjw34032@users.sourceforge.net}>
-}
+\author{ Brandon Whitcher \email{bjw34032@users.sourceforge.net} }
 \seealso{
   \code{\linkS4class{anlz}}, \code{\linkS4class{nifti}},
   \code{\link{nifti}}
 }
 \examples{
-aim <- anlz() # default
-aim
+(aim <- anlz()) # default
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -71,11 +71,14 @@
   }
 }
 \section{Extends}{
-  Class \code{"\linkS4class{array}"}, from data part.
-  Class \code{"\linkS4class{matrix}"}, by class "array", distance 2, with explicit test and coerce.
-  Class \code{"\linkS4class{structure}"}, by class "array", distance 2.
-  Class \code{"\linkS4class{vector}"}, by class "array", distance 3, with explicit coerce.
-  Class \code{"\linkS4class{vector}"}, by class "array", distance 5, with explicit test and coerce.
+  Class \code{"\linkS4class{array}"}, from data part.\cr
+  Class \code{"\linkS4class{matrix}"}, by class "array", distance 2,
+  with explicit test and coerce. \cr
+  Class \code{"\linkS4class{structure}"}, by class "array", distance 2.\cr
+  Class \code{"\linkS4class{vector}"}, by class "array", distance 3,
+  with explicit coerce.\cr
+  Class \code{"\linkS4class{vector}"}, by class "array", distance 5,
+  with explicit test and coerce.
 }
 \section{Methods}{
   \describe{
@@ -89,7 +92,7 @@
   }
 }
 \references{ANALYZE 7.5\cr\url{http://www.mayo.edu/bir/PDF/ANALYZE75.pdf}}
-\author{Brandon Whitcher <\email{bjw34032@users.sourceforge.net}>}
+\author{ Brandon Whitcher \email{bjw34032@users.sourceforge.net} }
 \seealso{
   \code{\linkS4class{nifti}}, \code{\linkS4class{niftiExtension}}
 }

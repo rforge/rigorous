@@ -8,24 +8,26 @@
 \alias{image.nifti}
 \alias{image-methods}
 \alias{image,ANY-method}
+\alias{image,afni-method}
 \alias{image,anlz-method}
 \alias{image,nifti-method}
 \title{Methods for Function `image'}
 \description{
-  Produce images for \code{nifti} objects.
+  Produce \dQuote{lightbox} layout of images for \code{nifti},
+  \code{anlz} and \code{afni} objects.
 }
 \usage{
 \S4method{image}{nifti}(x, z=1, w=1, col=gray(0:64/64),
       plot.type=c("multiple","single"), zlim=NULL, xlab="",
       ylab="", axes=FALSE, oma=rep(0,4), mar=rep(0,4),
       bg="black", ...)
-\S4method{image}{anlz}(x, z=1, w=1, col=gray(0:64/64),
-      plot.type=c("multiple","single"), zlim=NULL, xlab="",
-      ylab="", axes=FALSE, oma=rep(0,4), mar=rep(0,4),
-      bg="black", ...)
+%\S4method{image}{anlz}(x, z=1, w=1, col=gray(0:64/64),
+%      plot.type=c("multiple","single"), zlim=NULL, xlab="",
+%      ylab="", axes=FALSE, oma=rep(0,4), mar=rep(0,4),
+%      bg="black", ...)
 }
 \arguments{
-  \item{x}{is an object of class \code{"nifti"}.}
+  \item{x}{is an object of class \code{nifti} or similar.}
   \item{z}{is the slice to be displayed (ignored when \code{plot.type =
       "multiple"}).}
   \item{w}{is the time point to be displayed (4D arrays only).}
@@ -45,7 +47,8 @@
 }
 \details{
   Uses the S3 generic function \code{image}, with medical-image friendly
-  settings, to display \code{nifti} and \code{anlz} class objects.
+  settings, to display \code{nifti}, \code{anlz} and \code{afni} class
+  objects in a \dQuote{lightbox} layout.
 }
 %\value{}
 \section{Methods}{
@@ -53,10 +56,11 @@
     \item{x = "ANY"}{Generic function: see \code{\link[graphics]{image}}.}
     \item{x = "nifti"}{Produce images for \code{x}.}
     \item{x = "anlz"}{Produce images for \code{x}.}
+    \item{x = "afni"}{Produce images for \code{x}.}
   }
 }
 %\references{}
-\author{Brandon Whitcher <\email{bjw34032@users.sourceforge.net}>}
+\author{Brandon Whitcher \email{bjw34032@users.sourceforge.net}}
 \seealso{
   \code{\link{orthographic-methods}}, \code{\link{overlay-methods}}
 }
