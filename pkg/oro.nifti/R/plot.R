@@ -102,8 +102,11 @@ image.nifti <- function(x, z=1, w=1, col=gray(0:64/64),
 
 setMethod("image", signature(x="nifti"), image.nifti)
 setMethod("image", signature(x="anlz"), image.nifti)
-##setMethod("image", signature(x="array"), image.nifti)
-setMethod("image", signature(x="afni"), image.nifti)
+setMethod("image", signature(x="afni"),
+          function(x, ...) {
+            x <- as(x, "nifti")
+            image.nifti(x, ...)
+          })
 
 #############################################################################
 ## overlay() for class="nifti"
@@ -184,8 +187,17 @@ setMethod("overlay", signature(x="array", y="nifti"), overlay.nifti)
 setMethod("overlay", signature(x="nifti", y="array"), overlay.nifti)
 setMethod("overlay", signature(x="array", y="anlz"), overlay.nifti)
 setMethod("overlay", signature(x="anlz", y="array"), overlay.nifti)
-setMethod("overlay", signature(x="afni", y="afni"), overlay.nifti)
-setMethod("overlay", signature(x="afni", y="array"), overlay.nifti)
+setMethod("overlay", signature(x="afni", y="afni"),
+          function(x, y, ...) {
+            x <- as(x, "nifti")
+            y <- as(y, "nifti")
+            overlay.nifti(x, y, ...)
+          })
+setMethod("overlay", signature(x="afni", y="array"),
+          function(x, y, ...) {
+            x <- as(x, "nifti")
+            overlay.nifti(x, y, ...)
+          })
 
 #############################################################################
 ## orthographic() for class="nifti"
@@ -271,12 +283,12 @@ setGeneric("orthographic", function(x, ...) standardGeneric("orthographic"))
 setMethod("orthographic", signature(x="nifti"), orthographic.nifti)
 setMethod("orthographic", signature(x="anlz"), orthographic.nifti)
 setMethod("orthographic", signature(x="array"),
-          function(x) {
+          function(x, ...) {
             x <- as(x, "nifti")
-            orthographic.nifti(x)
+            orthographic.nifti(x, ...)
           })
 setMethod("orthographic", signature(x="afni"),
-          function(x) {
+          function(x, ...) {
             x <- as(x, "nifti")
-            orthographic.nifti(x)
+            orthographic.nifti(x, ...)
           })

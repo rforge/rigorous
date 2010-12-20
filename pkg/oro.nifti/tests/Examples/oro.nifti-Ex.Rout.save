@@ -761,6 +761,28 @@ Class:   numeric   numeric character
 > 
 > 
 > cleanEx()
+> nameEx("read_afni")
+> ### * read_afni
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: readAFNI
+> ### Title: readAFNI
+> ### Aliases: readAFNI
+> ### Keywords: file IO
+> 
+> ### ** Examples
+> 
+> ## Taken from the AFNI Matlab Library
+> ## http://afni.nimh.nih.gov/pub/dist/data/afni_matlab_data.tgz
+> afni.path <- system.file("afni", package="oro.nifti")
+> orig <- readAFNI(file.path(afni.path, "ARzs_CW_avvr.DEL+orig"))
+> image(orig, zlim=c(0.5,256), oma=rep(2,4))
+> orthographic(orig, zlim=c(0.5,256), oma=rep(2,4))
+> 
+> 
+> 
+> cleanEx()
 > nameEx("read_anlz")
 > ### * read_anlz
 > 
@@ -1013,7 +1035,7 @@ QForm_code = 1 : Orientation by Method 2.
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  6.27 0.19 6.475 0 0 
+Time elapsed:  6.59 0.6 6.719 0 0 
 > grDevices::dev.off()
 null device 
           1 
