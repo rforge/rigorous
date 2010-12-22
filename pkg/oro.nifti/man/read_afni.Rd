@@ -57,5 +57,5 @@ orig <- readAFNI(file.path(afni.path, "ARzs_CW_avvr.DEL+orig"))
 image(orig, zlim=c(0.5,256), oma=rep(2,4))
 orthographic(orig, zlim=c(0.5,256), oma=rep(2,4))
 }
-\keyword{ file }
-\keyword{ IO }
+\keyword{file}
+\keyword{methods}

@@ -502,12 +502,15 @@ readAFNI <- function(fname, vol=NULL, verbose=FALSE, warn=-1, call=NULL) {
     j <- 0
     while (j < length(value)) {
       left <- length(value) - j
-      if (left > 4) left <- 5
-      a <- paste(a, paste(value[(j+1):(j+left)], collapse="  "), "\n", sep = "  ")
+      if (left > 4) {
+        left <- 5
+      }
+      a <- paste(a, paste(value[(j+1):(j+left)], collapse="  "), "\n",
+                 sep="  ")
       j <- j + 5
     }
   }
-  writeChar(a, conhead, eos = NULL)
+  writeChar(a, conhead, eos=NULL)
 }
 
 writeAFNI <- function(nim, ...) {
