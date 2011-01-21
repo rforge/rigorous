@@ -41,16 +41,20 @@ setMethod("writeNIfTI", signature(nim="anlz"),
 	  function(nim, filename, gzipped=TRUE, verbose=FALSE, warn=-1) {
             .writeNIfTI(as(nim, "nifti"), filename, gzipped, verbose, warn)
           })
+setMethod("writeNIfTI", signature(nim="array"), 
+	  function(nim, filename, gzipped=TRUE, verbose=FALSE, warn=-1) {
+            .writeNIfTI(as(nim, "nifti"), filename, gzipped, verbose, warn)
+          })
 .writeNIfTI <- function(nim, filename, gzipped=TRUE, verbose=FALSE,
                         warn=-1) {
   ## Warnings?
   oldwarn <- getOption("warn")
   options(warn=warn)
   ## Basic error checking
-  ##validNIfTI <- getValidity(getClassDef("nifti"))
-  ##if (! validNIfTI(nim)) {
-  ##  stop("-- aborting writeNIfTI --")
-  ##}
+  validNIfTI <- getValidity(getClassDef("nifti"))
+  if (is.character(validNIfTI(nim))) {
+    stop("-- aborting writeNIfTI --")
+  }
   ## Write header file...
   if (gzipped) {
     fid <- gzfile(paste(filename, "nii.gz", sep="."), "wb")
@@ -189,10 +193,11 @@ setMethod("writeANALYZE", signature(aim="anlz"),
   oldwarn <- getOption("warn")
   options(warn=warn)
   ## Basic error checking
-  ##validANALYZE <- getValidity(getClassDef("anlz"))
-  ##if (! validANALYZE(aim)) {
-  ##  stop("Ouch!")
-  ##}
+  validANALYZE <- getValidity(getClassDef("anlz"))
+  if (is.character(error <- validANALYZE(aim))) {
+    cat(error, fill=TRUE)
+    stop("-- aborting writeANALYZE --")
+  }
   ## Write header file...
   if (gzipped) {
     fid <- gzfile(paste(filename, ".hdr.gz", sep=""), "wb")

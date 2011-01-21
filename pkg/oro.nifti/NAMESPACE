@@ -4,10 +4,11 @@ importFrom("splines", "interpSpline")
 exportPattern("^[^\\.]")
 
 exportClasses("nifti",
+              "afni",
               "anlz",
               "niftiExtension",
-              "niftiExtensionSection",
-              "niftiAuditTrail")
+              "niftiExtensionSection") #,
+#              "niftiAuditTrail")
 
 exportMethods("audit.trail<-",
               "audit.trail",
@@ -15,6 +16,8 @@ exportMethods("audit.trail<-",
               "aux.file",
               "descrip<-",
               "descrip",
+              "image",
               "orthographic",
               "overlay",
-              "show")
+              "show",
+              "writeNIfTI")

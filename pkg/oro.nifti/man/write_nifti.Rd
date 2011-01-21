@@ -8,6 +8,7 @@
 \alias{writeNIfTI-methods}
 \alias{writeNIfTI,nifti-method}
 \alias{writeNIfTI,anlz-method}
+\alias{writeNIfTI,array-method}
 \alias{writeNIfTI}
 \title{writeNIfTI}
 \description{
@@ -18,6 +19,8 @@
 \S4method{writeNIfTI}{nifti}(nim, filename, gzipped = TRUE, verbose = FALSE,
             warn = -1)
 \S4method{writeNIfTI}{anlz}(nim, filename, gzipped = TRUE, verbose = FALSE,
+            warn = -1)
+\S4method{writeNIfTI}{array}(nim, filename, gzipped = TRUE, verbose = FALSE,
             warn = -1)
 }
 \arguments{
@@ -35,6 +38,8 @@
   \describe{
   \item{object = "anlz"}{Convert ANALYZE object to class \code{nifti}
     and write the NIfTI volume to disk.}
+  \item{object = "array"}{Convert array to class \code{nifti} and write
+    the NIfTI volume to disk.}
   \item{object = "nifti"}{Write NIfTI volume to disk.}
   }
 }
