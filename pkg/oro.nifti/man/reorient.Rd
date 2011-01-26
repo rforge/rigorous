@@ -32,5 +32,5 @@ inverseReorient(nim, verbose=FALSE)
   \code{\link{performPermutation}}
 }
 %\examples{}
-\author{Andrew Thornton <\email{zeripath@users.sourceforge.net}>}
+\author{ Andrew Thornton \email{zeripath@users.sourceforge.net} }
 %\keyword{}

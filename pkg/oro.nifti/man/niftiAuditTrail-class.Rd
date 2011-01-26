@@ -86,7 +86,7 @@
   NIfTI-1\cr
   \url{http://nifti.nimh.nih.gov/}
 }
-\author{Andrew Thornton <\email{zeripath@users.sourceforge.net}>}
+\author{Andrew Thornton \email{zeripath@users.sourceforge.net}}
 \seealso{
   \code{\linkS4class{nifti}}, \code{\linkS4class{niftiExtension}}
 }

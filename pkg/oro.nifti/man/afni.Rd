@@ -25,7 +25,7 @@ is.afni(x)
   AFNI\cr
   \url{http://afni.nimh.nih.gov/pub/dist/src/README.attributes}
 }
-\author{Karsten Tabelow <\email{karsten.tabelow@wias-berlin.de}>}
+\author{Karsten Tabelow \email{karsten.tabelow@wias-berlin.de}}
 \seealso{
   \code{\linkS4class{afni}}
 }

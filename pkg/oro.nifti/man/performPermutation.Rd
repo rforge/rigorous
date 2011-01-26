@@ -31,5 +31,5 @@ transform nifti data into neuroradiological convention.
 %\references{}
 \seealso{\code{\link{reorient}},\code{\link{inverseReorient}}}
 %\examples{}
-\author{Andrew Thornton <\email{zeripath@users.sourceforge.net}>}
+\author{Andrew Thornton \email{zeripath@users.sourceforge.net}}
 %\keyword{}

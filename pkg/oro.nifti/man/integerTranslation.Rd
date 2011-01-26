@@ -29,5 +29,5 @@ invertIntegerTranslation(nim, verbose = FALSE)
 %\references{}
 %\seealso{}
 %\examples{}
-\author{Andrew Thornton <\email{zeripath@users.sourceforge.net}>}
+\author{Andrew Thornton \email{zeripath@users.sourceforge.net}}
 %\keyword{}

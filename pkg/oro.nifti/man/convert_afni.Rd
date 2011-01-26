@@ -34,5 +34,5 @@
 ## 4 = CT for anatomic data
 convert.scene(4, "3DIM_HEAD_ANAT")
 }
-\author{Karsten Tabelow <\email{karsten.tabelow@wias-berlin.de}>}
+\author{ Karsten Tabelow \email{karsten.tabelow@wias-berlin.de} }
 \keyword{ misc }

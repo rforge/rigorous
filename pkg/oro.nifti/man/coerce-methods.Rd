@@ -46,7 +46,7 @@
   }
 }
 %\references{}
-\author{Andrew Thornton <\email{zeripath@users.sourceforge.net}>}
+\author{ Andrew Thornton \email{zeripath@users.sourceforge.net} }
 \seealso{
   \code{\link{as}}
 }

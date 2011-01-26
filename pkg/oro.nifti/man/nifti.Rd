@@ -21,7 +21,9 @@ is.nifti(x)
 \arguments{
   \item{img}{is a multidimensional array of data.}
   \item{dim}{is the dimension of the data (default = \code{missing}).}
-  \item{datatype}{...}
+  \item{datatype}{is an integer that denotes the type of data contained
+    in each voxel.  See \code{\link{convert.datatype}} or the NIfTI
+    documentation for more details.}
   \item{cal.min}{allows user-specified minimum value in the array
     (visualization purposes only).}
   \item{cal.max}{allows user-specified minimum value in the array

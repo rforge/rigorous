@@ -3,10 +3,10 @@
 %
 % $Id: $
 
-\name{Convert Between Objects fmridata and oro.nifti}
+\name{Convert Between fmridata and oro.nifti}
 \alias{oro2fmri}
 \alias{fmri2oro}
-\title{Convert Between Objects fmridata and oro.nifti}
+\title{Convert Between fmridata and oro.nifti Objects}
 \description{
   NIfTI data can be converted between \code{fmridata} S3 objects
   (from the \pkg{fmri} package) and \code{nifti} S4 objects.

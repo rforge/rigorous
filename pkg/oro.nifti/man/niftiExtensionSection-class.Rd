@@ -9,7 +9,9 @@
 \alias{niftiExtensionSection-class}
 \title{Class "niftiExtensionSection"}
 \description{
-  ...
+  A \code{niftiExtensionSection} contains the fields that conform to the
+  NIfTI standard regarding header extensions.  A \code{niftiExtension}
+  is composed of one or more of these objects.
 }
 \section{Objects from the Class}{
   Objects can be created by calls of the form

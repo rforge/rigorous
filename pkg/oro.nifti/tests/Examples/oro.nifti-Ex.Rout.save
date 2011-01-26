@@ -25,7 +25,7 @@ Type 'q()' to quit R.
 Creating a new generic function for "image" in "oro.nifti"
 Loading required package: XML
 
-oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.2.4)
+oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.2.5)
 
 > 
 > assign(".oldSearch", search(), pos = 'CheckExEnv')
@@ -1012,7 +1012,7 @@ QForm_code = 1 : Orientation by Method 2.
 > ### Name: writeNIfTI-methods
 > ### Title: writeNIfTI
 > ### Aliases: writeNIfTI-methods writeNIfTI,nifti-method
-> ###   writeNIfTI,anlz-method writeNIfTI
+> ###   writeNIfTI,anlz-method writeNIfTI,array-method writeNIfTI
 > ### Keywords: file methods
 > 
 > ### ** Examples
@@ -1067,7 +1067,7 @@ QForm_code = 1 : Orientation by Method 2.
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  7.84 0.21 8.068 0 0 
+Time elapsed:  7.36 0.16 7.653 0 0 
 > grDevices::dev.off()
 null device 
           1 

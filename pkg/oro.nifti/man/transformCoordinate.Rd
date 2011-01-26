@@ -16,7 +16,7 @@ translateCoordinate(i, nim, verbose=FALSE)
 \arguments{
   \item{i}{An index vector in \code{nim}.}
   \item{nim}{An object of class \code{nifti}.}
-  \item{verbose}{Be verbose...}
+  \item{verbose}{Provide detailed output to the user.}
 }
 \details{
   This function takes as input a \code{nifti} object and an index vector
