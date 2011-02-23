@@ -28,16 +28,16 @@ conform to the DICOM standard or ANALYZE/NIfTI formats.  DICOM data,
 from a single file or single directory or directory tree, may be
 uploaded into \proglang{R} using basic data structures: a data frame
 for the header information and a matrix for the image data.  A list
-structure is used to organize multiple DICOM files.  The \proglang{S}4 class
-framework is used to develop basic ANALYZE and NIfTI classes, where
-NIfTI extensions may be used to extend the fixed-byte NIfTI header.
-One example of this, that has been implemented, is an XML-based
-``audit trail'' that tracks the history of operations applied to a
-dataset.  The conversion from DICOM to ANALYZE/NIfTI is
-straightforward using the capabilities of both packages.  The \proglang{S}4
-classes have been developed to provide a user-friendly interface to
-the ANALYZE/NIfTI data formats; allowing easy data input, data output,
-image processing and visualization.
+structure is used to organize multiple DICOM files.  The \proglang{S}4
+class framework is used to develop basic ANALYZE and NIfTI classes,
+where NIfTI extensions may be used to extend the fixed-byte NIfTI
+header.  One example of this, that has been implemented, is an
+XML-based ``audit trail'' that tracks the history of operations
+applied to a dataset.  The conversion from DICOM to ANALYZE/NIfTI is
+straightforward using the capabilities of both packages.  The
+\proglang{S}4 classes have been developed to provide a user-friendly
+interface to the ANALYZE/NIfTI data formats; allowing easy data input,
+data output, image processing and visualization.
 
 }
 \Keywords{export, imaging, import, medical, visualization}
@@ -139,11 +139,18 @@ In addition, NIfTI extension allow to store any additional information.
 
 The material presented here provides users with a method of
 interacting with DICOM, ANALYZE and NIfTI files in \proglang{R}
-\citep{R}.  Real-world datasets, that are publicly available, are
-used to illustrate the basic functionality of the two packages:
+\citep{R}.  Real-world datasets, that are publicly available, are used
+to illustrate the basic functionality of the two packages:
 \pkg{oro.dicom} and \pkg{oro.nifti}.  Major features include data
 input/output, visualization and conversion from DICOM to
-ANALYZE/NIfTI.
+ANALYZE/NIfTI.  \textcolor{BrickRed}{These packages should appeal not
+  only to other \proglang{R} package developers, but also to
+  scientists who want to manipulate medical imaging data using
+  \proglang{R} without writing and validating basic data input/output
+  functionality.  Packages already available on CRAN that utilize
+  \pkg{oro.dicom} and \pkg{oro.nifti} include \pkg{cudaBayesreg}
+  \citep{cudaBayesreg}, \pkg{dcemriS4} \citep{dcemriS4} and
+  \pkg{dpmixsim} \citep{dpmixsim}.}
 
 \section[oro.dicom: DICOM Data Input/Output in R]{\pkg{oro.dicom}: DICOM Data Input/Output in \proglang{R}}
 

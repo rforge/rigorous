@@ -1,0 +1,219 @@
+\documentclass[11pt]{article}
+\usepackage{a4wide}
+\usepackage[usenames]{color}
+\usepackage[authoryear,round]{natbib}
+\bibliographystyle{plainnat}
+\pagestyle{plain}
+
+\begin{document}
+
+% Title
+
+\begin{center}
+{\Large \textbf{Working with the {DICOM} and {NIfTI} Data Standards in \textsf{R}}}
+
+\bigskip
+
+March~1, 2011
+
+\end{center}
+
+\section*{Reviewer \#1}
+
+We would like to thank the reviewer for all his/her comments and
+suggestions.
+
+\subsection*{Main Remarks}
+
+\begin{itemize}
+
+\item The paper clearly describes what the packages can do. However,
+  some questions raised my mind while reading the paper. How should
+  you describe the users that are going the use the packages? And how
+  did you implement their specific needs?  
+
+\item For example 1: Suppose I am a practical researcher, which
+  acquires imaging data to support a research question.  Which
+  functions would mostly provide in my needs?
+
+\item For example 2: Suppose I am a statistician that wants to use
+  your package to enhance the statistical data analysis of imaging
+  data.  What are the main functionalities of header manipulation that
+  I can use?
+
+\item Above questions are more or less addressed in the paper, but I
+  think it should be better specified what the specific purposes of
+  the packages are.  I would like to suggest a description of the
+  intended users in the introduction of the paper.  Additionally, some
+  clear examples that are specifically intended for the described
+  users would be highly beneficial for the clearness of the paper.
+
+\end{itemize}
+
+\subsection*{Minor Remarks}
+
+\begin{itemize} 
+
+\item section 2, 1st paragraph: DICOM abbreviation is already defined
+  in the introduction
+
+\item section2, 2nd paragraph: At the end you say that the fourth
+  column of the DICOM format is not implemented. Why is this the case?
+
+\item subsection 2.2: last sentence: extractHeader
+
+\end{itemize}
+
+\section*{Reviewer \#2}
+
+We would like to thank the reviewer for all his/her comments and
+suggestions.
+
+\subsection*{Major Points}
+
+\begin{itemize}
+
+\item This brings me directly to the main criticism regarding this
+  manuscript: There is no application of a statistical test or a
+  linear modeling on imaging data.  Instead, pre-calculated maps are
+  loaded in chapter 3.7 to present overlay capabilities.  One may ask
+  why these libraries were just added to R?  Furthermore, the authors
+  stated in chapter 3.6, that (interactive) visualization is ``however
+  best performed outside of R''.  Again: Where is then the benefit of
+  the library, when these things can be done outside of R more
+  fluidly?
+
+\item I therefore strongly suggest adding at least a (real world)
+  statistical example with image data, where R can show its
+  outstanding performance in its field.  This could convince the
+  reader from the benefit they would have when using this library in
+  R.  The increased space requirements for that can then be saved at
+  the expense of the detailed description of some (binary) internals
+  of DICOM and ANALYZE/NIfTI.
+
+\end{itemize}
+
+\subsection*{Minor Points}
+
+\begin{itemize}
+
+\item Page 2, Chapter 2, line 1: The first sentence is (somehow)
+  redundant.
+
+  Re-worded.
+
+\item Page 2, chapter 2, line 4: There are two two-byte (or 16 bit
+  integer) sequences, not ``two four-byte sequences'' as mentioned,
+  which form a tag.
+
+  Changed.
+
+\item Page 2, chapter 2, line 7: Please, use ``pixel data'' instead of
+  ``data'' enclosed in quotation marks. Besides that, this tag is not
+  necessarily found (but surely most often) only at the end. There
+  could be e.g. two of them: One with the data itself (at the end) and
+  another one containing a thumbnail and embedded in a sequence
+  (somewhere in the header).
+
+  Changed.
+
+\item Page 2, chapter 2, line 12: The value representation string is
+  only available when explicit encoding is used. Please reword.
+
+  Re-worded.
+
+\item Page 2, chapter 2, line 14 and Table 1: Please use ``Unlimited''
+  or similar instead of ``0''.
+
+  Added text in the table and body to emphasize this point.
+
+\item Page 5, chapter 2.1: The authors should clearly point out here,
+  which kinds of DICOM objects can be accessed. I suppose that only
+  monochrome images with 16 bit depth are supported. But the DICOM
+  standard defines a lot more (RGB-colorized, JPEG- or
+  JPEG2000-packed, .).
+
+  Text has been added.
+
+\item Page 5, chapter 2.1, line 10: DICOM headers are encoded
+  explicitly or implicitly, which is stated in the appropriate
+  transfer syntax in the meta header.  A strategy as ``If the
+  character string in bytes four and five do not correspond .'' sounds
+  to me a little bit too heuristic, but can accepted, if the meta
+  header is not available..
+
+  You make an interesting point, but I am not familiar with the meta
+  header field that signifies ``explicit'' or ``implicit'' encoding.
+  Could you please provide the (group,element) values for this field?
+
+\item Page 8, chapter 2.2, line 9: Typo: Write ``extractHeader''
+  instead of ``extratHeader''.
+
+  Changed.
+
+\item Page 9, chapter 2.2, line 7: Because in MRI slices are not
+  acquired at once, they also cannot have the same repetition time
+  (TR). I suggest to change it to ``. in a single repetition time (TR)
+  frame .''.
+
+  Changed.
+
+\item Page 10, chapter 3, line 4: Analyze 7.5 might be the last known
+  version of this file format, but ``most recent'' sounds like
+  ``actual'', which is not true here: For Mayo Clinics, the developer
+  of the software ANALYZE, it is an obsolete format, superseded by
+  AnalyzeAVW, which is much more flexible. It has survived in the
+  scientific community for practical reasons and by early adoptions by
+  SPM. Please, use another wording here, like ``last available'' or
+  similar.
+
+  Text has been added and modified.
+
+\item Page 12, chapter 3.2, line 1: The voxel offset is already known
+  for Analyze 7.5. It was possible (but only rarely used) to start
+  with image information not from the beginning of the .img-file.
+
+  \textbf{TO DO!}
+
+\item Page 13, chapter 3.2, line 3 and page 14, chapter 3.3, line 8:
+  This is not right. Following the radiological convention the
+  radiologist looks into the brain from below, because the patient or
+  volunteer is usually scanned lying head first and in supine
+  position, and the feet point towards the radiologist. From this
+  point of view, left and right are flipped. The neurological
+  convention instead is oriented on the anatomy ``as is'' and uses
+  therefore not a mirrored visualization.
+
+  Thank-you for pointing this out, it appears that I have reversed my
+  definitions.  This has been corrected.
+
+\item Page 17, chapter 3.5, line 4: What does ``ecode = 6'' mean?
+
+  Text has been added.
+
+\item Page 19, chapter 3.7, line 6 and Figure 7: The center of the
+  crosshair does not point at the thalamus in the proper sense,
+  because the thalamus is a paired structure and the main functional
+  groups are situated left and right from the displayed mid-sagittal
+  position.
+
+  Modified.
+
+\item Page 22, chapter 4.1, line 5: ``list(dcm =, datatype = 4, .'' is
+  truncated after ``DIM =''
+
+  \textbf{TO DO!}
+
+\item Page 27: There is no URL for Mr. Thornton.
+
+  \textbf{TO DO!}
+
+\end{itemize}
+
+%--------------------------------------------------------------------%
+
+\bibliography{dicom_nifti}
+
+%--------------------------------------------------------------------%
+
+\end{document}
