@@ -819,19 +819,19 @@ data, are
 The \pkg{mritc} package provides basic interactive visualization of
 ANALYZE/NIfTI data using a \proglang{Tcl/Tk} interface \citep{mritc}.
 
-\subsection{Examples from the NIfTI-1 DFWG}
+\subsection{fMRI example}% from the NIfTI-1 DFWG}
 
 \subsubsection{Simple Time-series or Multi-volume Image}
 
 This is an example of reading in, and displaying, a four-dimensional
 medical imaging data set in NIfTI format
-\texttt{filtered\_func\_data.nii} obtained from the NIfTI website
-(\url{http://nifti.nimh.nih.gov/nifti-1/}).  Successful execution of
+\texttt{filtered\_func\_data.nii.gz} obtained \textcolor{BrickRed}{
+from the FSL evaluation and example data suite
+(\url{http://www.fmrib.ox.ac.uk/fsl/fsl/feeds.html}).} Successful execution of
 the commands
 
 <<ffd>>=
-fname <- system.file(file.path("nifti", "ffd.nii.gz"), package="oro.nifti")
-(ffd <- readNIfTI(fname))
+(ffd <- readNIfTI("filtered_func_data.nii.gz"))
 @ 
 <<ffd-png,echo=FALSE,results=hide>>=
 png(filename="ffd.png", width=2*480, height=2*480, bg="black")
@@ -861,17 +861,6 @@ dev.off()
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[tbp]
-  \begin{center}
-    \includegraphics*[width=0.65\textwidth]{ffd_orthographic.png}
-    \end{center}
-  \caption{Orthographic display of the first volume from the
-    functional MRI dataset \texttt{filtered\_func\_data}.}
-  \label{fig:ffd-orthographic}
-\end{figure}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 produces a four-dimensional (4D) array of imaging data that may be
 displayed in a $5{\times}5$ grid of images
 (Figure~\ref{fig:ffd+zstat1}a).  The first three dimensions are
@@ -894,35 +883,138 @@ orthographic(ffd,xyz=c(34,29,10))
 dev.off()
 @ 
 
-\subsubsection{Statistical Images}
+\subsubsection{Statistical analysis}
 
-The analysis of medical imaging data typically leads to a resulting
-statistical image, e.g., $Z$-statistics for a voxel-wise hypothesis
-test on activation in fMRI experiments \citep{Friston1994}.  For
-anatomical context, statistical images are displayed as an overlay on
-top of a reference image.  The original NIfTI files,
-\texttt{filtered\_func\_data.nii} and \texttt{zstat1.nii}, were
-obtained from the NIfTI website
-(\url{http://nifti.nimh.nih.gov/nifti-1/}).  Successful execution of
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[tbp]
+  \begin{center}
+    \includegraphics*[width=\textwidth]{ffd_design.png}
+    \end{center}
+  \caption{Visual (30 seconds on/off) and auditory (45 seconds on/off) stimulus 
+    convolved with a Gamma haemodynamic response function, used in the GLM fMRI
+    analysis.}
+  \label{fig:ffd-design}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[tbp]
+  \begin{center}
+    \includegraphics*[width=0.65\textwidth]{ffd_orthographic.png}
+    \end{center}
+  \caption{Orthographic display of the first volume from the
+    functional MRI dataset \texttt{filtered\_func\_data}.}
+  \label{fig:ffd-orthographic}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textcolor{BrickRed}{R provides virtually any statistical method for the 
+analysis of imaging data. 
+For example, fMRI data are typically analysed by fitting a general 
+linear model (GLM) with using the stimuli to construct a design matrix.
+This leads to a resulting statistical image, e.g., $Z$-statistics 
+for a voxel-wise hypothesis test on activation in fMRI experiments
+\citep{Friston1994}.}
+
+\textcolor{BrickRed}{The \texttt{filtered\_func\_data.nii.gz} image was acquired in an 
+experiment with $TR = 3s$ and both visual and 
+auditory stimulus. The visual stimulus was a on/off with an amplitude of
+60 seconds and the auditory stimulus was on/off with an amplitude of 90 
+seconds. We use a Gamma haemodynamic respone function (HRF) with
+mean 6 and standard deviation 3, similar to the default values in FSL.
+Figure~\ref{fig:ffd-orthographic} depicts the convolved visual and auditory stimuli.}
+
+<<ffd-glm-design,echo=TRUE,results=hide>>=
+# visual (30s on/off) and auditory (45s on/off) stimulus
+visual <- rep(c(rep(-.5,30),rep(.5,30)),12)
+auditory <- rep(c(rep(-.5,45),rep(.5,45)),12)
+# haemodynamic response function with mean=6 and sd=3
+hrf <- c(dgamma(1:15,4,scale=1.5))
+# convolve stimuli with hrf
+visual.hrf <- rep(NA,540)
+for (k in 60:599)visual.hrf[k-59] <- sum(visual[k-(1:15)] * hrf) 
+auditory.hrf <-rep(NA,540)
+for (k in 90:629)auditory.hrf[k-89] <- sum(auditory[k-(1:15)] * hrf) 
+# add phase
+visual.hrf <- c(rep(0.5,30),visual.hrf)
+auditory.hrf <- c(rep(0.5,45),auditory.hrf)
+# TR = 3s
+visual.hrf <- visual.hrf[seq(3,540,by=3)]
+auditory.hrf <- auditory.hrf[seq(3,540,by=3)]
+# center
+visual.hrf <- visual.hrf-mean(visual.hrf)
+auditory.hrf <- auditory.hrf-mean(auditory.hrf)
+@ 
+<<ffd-glm-design.png,echo=FALSE,results=hide>>=
+png(filename="ffd_glm_design", width=2*480, height=0.5*480)
+par(mfrow=c(1,2))
+plot(seq(1,540,by=3),visual.hrf,type="l",xlab="time (s)",ylab="visual stimulus")
+plot(seq(1,540,by=3),auditory.hrf,type="l",xlab="time (s)",ylab="auditory stimulus") 
+dev.off()
+@ 
+
+\textcolor{BrickRed}{The design matrix is than used in a voxel-wise GLM  using the the 
+standard \texttt{lm()} \proglang{R} function for (general) linear models. From this,
+for each voxel, e.g., t-statistics and p-values for a hypothesis test on no effect of each
+stimulus along with a F-statistic for a hypothesis test on no effect of any stimuli can
+be computed.}
+
+<<ffd-glm,echo=TRUE,results=hide>>=
+# background threshold: 10% max intensity
+thresh <- 0.1*max(ffd) 
+# general linear model
+local.lm <- function(x)
+{
+# background threshold: 10% max intensity
+  if (max(x)<thresh) return(rep(NA,5))
+# glm
+  model <- lm(x ~ visual.hrf + auditory.hrf)
+# extract t-statistic, p-values
+  sum.model <- summary(model)
+  return(c(as.vector(sum.model$coeff[2:3,3:4]),sum.model$fstatistic[1]))
+}
+# apply local glm to each voxel
+flim <- apply(ffd, 1:3, local.lm)
+@ 
+
+For anatomical context, statistical images are displayed as an overlay on
+top of a reference image. Successful execution of
 the command allows one to display the statistical image (of voxel-wise
 activations) overlayed on the original EPI (echo planar imaging) data
 taken from the functional MRI experiment.
 
-<<zstat1>>=
-fname <- system.file(file.path("nifti", "zstat1.nii.gz"), package="oro.nifti")
-(zstat1 <- readNIfTI(fname))
+<<zstst1>>=
+# t-statistics
+t.visual <- nifti(flim[1,,,])
+t.auditory <- nifti(flim[2,,,])
+# p-values
+p.visual <- nifti(flim[3,,,])
+p.auditoy <- nifti(flim[4,,,])
+# F-statistics
+F <- nifti(flim[5,,,])
+
+# Z-statistic: normalized t-statistic
+Z.visual <- nifti(qnorm(pt(t.visual,179,log.p=TRUE),log.p=TRUE))
+Z.auditory <- nifti(qnorm(pt(t.auditory,179,log.p=TRUE),log.p=TRUE))
 @ 
 <<zstat1-png,echo=FALSE,results=hide>>=
 png("ffd_zstat1.png", width=2*480, height=2*480, bg="black")
 @ 
 <<zstst1-overlay>>=
-overlay(ffd, ifelse(abs(zstat1) > 5, zstat1, NA), zlim.y=range(zstat1))
+overlay(ffd, ifelse(abs(Z.visual) > 5, Z.visual, NA), zlim.x=range(ffd), zlim.y=range(Z.visual,na.rm=TRUE))
 <<zstat1-dev.off,echo=FALSE,results=hide>>=
 dev.off()
 @ 
+<<zstat2-png,echo=FALSE,results=hide>>=
+png("ffd_zstat2.png", width=2*480, height=2*480, bg="black")
+@ 
+<<zstst2-overlay>>=
+overlay(ffd, ifelse(abs(Z.auditory) > 5, Z.auditory, NA), zlim.x=range(ffd), zlim.y=range(Z.auditory,na.rm=TRUE))
+<<zstat2-dev.off,echo=FALSE,results=hide>>=
+dev.off()
+@ 
 
-The four-dimensional array of parameter estimates (essentially
-coefficients from a linear regression performed at each voxel) are
+The four-dimensional array of parameter estimates are
 overlayed on the original data for anatomical reference in
 Figure~\ref{fig:ffd+zstat1}b.  The function \code{overlay} extends the
 capabilities of displaying ``images'' by allowing one to add a
