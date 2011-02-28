@@ -877,7 +877,7 @@ approximately center the crosshair.
 png(filename="ffd_orthographic.png", width=2*480, height=2*480, bg="black")
 @ 
 <<ffd-orthographic>>=
-orthographic(ffd,xyz=c(34,29,10))
+orthographic(ffd, xyz=c(34,29,10))
 @ 
 <<ffd-ortho-dev.off,echo=FALSE,results=hide>>=
 dev.off()
@@ -890,9 +890,9 @@ dev.off()
   \begin{center}
     \includegraphics*[width=\textwidth]{ffd_design.png}
     \end{center}
-  \caption{Visual (30 seconds on/off) and auditory (45 seconds on/off) stimulus 
-    convolved with a Gamma haemodynamic response function, used in the GLM fMRI
-    analysis.}
+  \caption{Visual (30 seconds on/off) and auditory (45 seconds on/off)
+    stimulus convolved with a Gamma haemodynamic response function,
+    used in the GLM fMRI analysis.}
   \label{fig:ffd-design}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -908,21 +908,21 @@ dev.off()
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\textcolor{BrickRed}{R provides virtually any statistical method for the 
-analysis of imaging data. 
-For example, fMRI data are typically analysed by fitting a general 
-linear model (GLM) with using the stimuli to construct a design matrix.
-This leads to a resulting statistical image, e.g., $Z$-statistics 
-for a voxel-wise hypothesis test on activation in fMRI experiments
-\citep{Friston1994}.}
+\textcolor{BrickRed}{R provides virtually any statistical method for
+  the analysis of imaging data.  For example, fMRI data are typically
+  analysed by fitting a general linear model (GLM) with using the
+  stimuli to construct a design matrix.  This leads to a resulting
+  statistical image, e.g., $Z$-statistics for a voxel-wise hypothesis
+  test on activation in fMRI experiments \citep{Friston1994}.}
 
-\textcolor{BrickRed}{The \texttt{filtered\_func\_data.nii.gz} image was acquired in an 
-experiment with $TR = 3s$ and both visual and 
-auditory stimulus. The visual stimulus was a on/off with an amplitude of
-60 seconds and the auditory stimulus was on/off with an amplitude of 90 
-seconds. We use a Gamma haemodynamic respone function (HRF) with
-mean 6 and standard deviation 3, similar to the default values in FSL.
-Figure~\ref{fig:ffd-orthographic} depicts the convolved visual and auditory stimuli.}
+\textcolor{BrickRed}{The \texttt{filtered\_func\_data.nii.gz} image
+  was acquired in an experiment with $TR = 3s$ and both visual and
+  auditory stimulus. The visual stimulus was a on/off with an
+  amplitude of 60 seconds and the auditory stimulus was on/off with an
+  amplitude of 90 seconds. We use a Gamma haemodynamic respone
+  function (HRF) with mean 6 and standard deviation 3, similar to the
+  default values in FSL.  Figure~\ref{fig:ffd-orthographic} depicts
+  the convolved visual and auditory stimuli.}
 
 <<ffd-glm-design,echo=TRUE,results=hide>>=
 # visual (30s on/off) and auditory (45s on/off) stimulus
@@ -953,11 +953,12 @@ plot(seq(1,540,by=3),auditory.hrf,type="l",xlab="time (s)",ylab="auditory stimul
 dev.off()
 @ 
 
-\textcolor{BrickRed}{The design matrix is than used in a voxel-wise GLM  using the the 
-standard \texttt{lm()} \proglang{R} function for (general) linear models. From this,
-for each voxel, e.g., t-statistics and p-values for a hypothesis test on no effect of each
-stimulus along with a F-statistic for a hypothesis test on no effect of any stimuli can
-be computed.}
+\textcolor{BrickRed}{The design matrix is than used in a voxel-wise
+  GLM using the the standard \texttt{lm()} \proglang{R} function for
+  (general) linear models. From this, for each voxel, e.g.,
+  t-statistics and p-values for a hypothesis test on no effect of each
+  stimulus along with a F-statistic for a hypothesis test on no effect
+  of any stimuli can be computed.}
 
 <<ffd-glm,echo=TRUE,results=hide>>=
 # background threshold: 10% max intensity
