@@ -945,8 +945,8 @@ auditory.hrf <- auditory.hrf[seq(3,540,by=3)]
 visual.hrf <- visual.hrf-mean(visual.hrf)
 auditory.hrf <- auditory.hrf-mean(auditory.hrf)
 @ 
-<<ffd-glm-design.png,echo=FALSE,results=hide>>=
-png(filename="ffd_glm_design", width=2*480, height=0.5*480)
+<<ffd-design.png,echo=FALSE,results=hide>>=
+png("ffd_design.png", width=2*480, height=0.5*480)
 par(mfrow=c(1,2))
 plot(seq(1,540,by=3),visual.hrf,type="l",xlab="time (s)",ylab="visual stimulus")
 plot(seq(1,540,by=3),auditory.hrf,type="l",xlab="time (s)",ylab="auditory stimulus") 
