@@ -1,25 +1,30 @@
+@String{HBM = {Human Brain Mapping}}
+
+@String{NI = {NeuroImage}}
+
 @Manual{XML,
-  title =	 {XML: Tools for parsing and generating {XML} within
-                  {R} and {S-Plus}},
+  title =	 {\pkg{XML}: Tools for parsing and generating
+                  \proglang{XML} within \proglang{R} and
+                  \proglang{S-Plus}},
   author =	 {Duncan {Temple Lang}},
   year =	 2010,
-  note =	 {R package version 3.1-0},
+  note =	 {\proglang{R} package version 3.1-0},
   url =		 {http://CRAN.R-project.org/package=XML}
 }
 
 @Book{chambers:2008,
   author =	 {John M Chambers},
-  title =	 {Software for Data Analysis: Programming in R},
+  title =	 {Software for Data Analysis: Programming in \proglang{R}},
   publisher =	 {Springer},
   year =	 2008,
   address =	 {New York}
 }
 
 @Manual{R,
-  title =	 {R: A Language and Environment for Statistical
-                  Computing},
+  title =	 {\proglang{R}: A Language and Environment for
+                  Statistical Computing},
   author =	 {{R Development Core Team}},
-  organization = {R Foundation for Statistical Computing},
+  organization = {\proglang{R} Foundation for Statistical Computing},
   address =	 {Vienna, Austria},
   year =	 2010,
   note =	 {{ISBN} 3-900051-07-0},
@@ -27,25 +32,26 @@
 }
 
 @Manual{mritc,
-  title =	 {mritc: {MRI} tissue classification},
+  title =	 {\pkg{mritc}: {MRI} tissue classification},
   author =	 {Dai Feng and Luke Tierney},
   year =	 2010,
-  note =	 {R package version 0.3-1},
+  note =	 {\proglang{R} package version 0.3-1},
   url =		 {http://CRAN.R-project.org/package=mritc},
 }
 
 @Manual{tractor.base,
-  title =	 {tractor.base: {A} package for reading, manipulating
-                  and visualising magnetic resonance images},
+  title =	 {\pkg{tractor.base}: {A} package for reading,
+                  manipulating and visualising magnetic resonance
+                  images},
   author =	 {Jon Clayden},
   year =	 2010,
-  note =	 {R package version 1.5.0},
+  note =	 {\proglang{R} package version 1.5.0},
   url =		 {http://CRAN.R-project.org/package=tractor.base},
 }
 
 @Article{pol-tab:fmri,
   author =	 {Joerg Polzehl and Karsten Tabelow},
-  title =	 {fmri: {A} package for analyzing {fMRI} data},
+  title =	 {\pkg{fmri}: {A} package for analyzing {fMRI} data},
   journal =	 {RNews},
   year =	 2007,
   volume =	 7,
@@ -55,22 +61,12 @@
 }
 
 @Manual{EBImage,
-  title =	 {EBImage: Image processing toolbox for R},
+  title =	 {\pkg{EBImage}: Image processing toolbox for
+                  \proglang{R}},
   author =	 {Oleg Sklyar and Gregoire Pau and Mike Smith and
                   Wolfgang Huber},
   year =	 2010,
-  note =	 {R package version 3.5.5}
-}
-
-@article{Friston1994,
-  author =	 {Friston, Karl and Holmes, A P and Worsley, K J and
-                  Poline, J P and Frith, C D and Frackowiak, R S J},
-  journal =	 {Human Brain Mapping},
-  pages =	 {189--210},
-  title =	 {{Statistical Parametric Maps in Functional Imaging:
-                  A General Linear Approach}},
-  volume =	 2,
-  year =	 1994
+  note =	 {\proglang{R} package version 3.5.5}
 }
 
 @Article{xmedcon,
@@ -86,28 +82,51 @@
 }
 
 @Manual{dpmixsim,
-  title =	 {dpmixsim: Dirichlet process mixture model simulation
-                  for clustering and image segmentation},
+  title =	 {\pkg{dpmixsim}: Dirichlet process mixture model
+                  simulation for clustering and image segmentation},
   author =	 {Adelino {Ferreira da Silva}},
   year =	 2010,
-  note =	 {R package version 0.0-5},
+  note =	 {\proglang{R} package version 0.0-5},
   url =		 {http://CRAN.R-project.org/package=dpmixsim},
 }
 
 @Manual{cudaBayesreg,
-  title =	 {cudaBayesreg: {CUDA} parallel implementation of a
-                  {Bayesian} multilevel model for {fMRI} data
-                  analysis},
+  title =	 {\pkg{cudaBayesreg}: \proglang{CUDA} parallel
+                  implementation of a {Bayesian} multilevel model for
+                  {fMRI} data analysis},
   author =	 {Adelino {Ferreira da Silva}},
   year =	 2010,
-  note =	 {R package version 0.3-9},
+  note =	 {\proglang{R} package version 0.3-9},
   url =		 {http://CRAN.R-project.org/package=cudaBayesreg},
 }
 
 @Manual{dcemriS4,
-  title =	 {dcemriS4: A package for medical image analysis},
+  title =	 {\pkg{dcemriS4}: A package for medical image analysis},
   author =	 {Brandon Whitcher and Volker J. Schmid},
   year =	 2010,
-  note =	 {R package version 0.41},
+  note =	 {\proglang{R} package version 0.41},
   url =		 {http://CRAN.R-project.org/package=dcemriS4},
 }
+
+@Article{fri-etal:revisited,
+  author =	 {K J Friston and A P Holmes and J-B Poline and P M
+                  Grasby and S C R Williams and R S J Frackowiak and R
+                  Turner},
+  title =	 {Analysis of {fMRI} time series revisited},
+  journal =	 NI,
+  year =	 1995,
+  volume =	 2,
+  pages =	 {45--53}
+}
+
+@Article{fri-etal:spms,
+  author =	 {Friston, K J and Holmes, A P and Worsley, K J and
+                  Poline, J P and Frith, C D and Frackowiak, R S J},
+  title =	 {Statistical Parametric Maps in Functional Imaging: A
+                  General Linear Approach},
+  journal =	 HBM,
+  year =	 1994,
+  volume =	 2,
+  pages =	 {189-210}
+}
+

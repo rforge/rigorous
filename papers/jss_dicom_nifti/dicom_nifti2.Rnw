@@ -32,12 +32,12 @@ structure is used to organize multiple DICOM files.  The \proglang{S}4
 class framework is used to develop basic ANALYZE and NIfTI classes,
 where NIfTI extensions may be used to extend the fixed-byte NIfTI
 header.  One example of this, that has been implemented, is an
-XML-based ``audit trail'' that tracks the history of operations
-applied to a dataset.  The conversion from DICOM to ANALYZE/NIfTI is
-straightforward using the capabilities of both packages.  The
-\proglang{S}4 classes have been developed to provide a user-friendly
-interface to the ANALYZE/NIfTI data formats; allowing easy data input,
-data output, image processing and visualization.
+\proglang{XML}-based ``audit trail'' that tracks the history of
+operations applied to a dataset.  The conversion from DICOM to
+ANALYZE/NIfTI is straightforward using the capabilities of both
+packages.  The \proglang{S}4 classes have been developed to provide a
+user-friendly interface to the ANALYZE/NIfTI data formats; allowing
+easy data input, data output, image processing and visualization.
 
 }
 \Keywords{export, imaging, import, medical, visualization}
@@ -61,7 +61,7 @@ data output, image processing and visualization.
   Hammersmith Hospital\\
   London W12 0HS, United Kingdom\\
   E-mail: \email{bjw34032@users.sourceforge.net}\\
-  URL: \url{http://rigorousanalytics.blogspot.com/}\\
+  URL: \url{http://rigorousanalytics.blogspot.com}\\
   
   Volker J. Schmid\\
   Bioimaging group\\
@@ -431,9 +431,9 @@ matching DICOM header fields with valid strings.  Note, the function
 \code{numeric=FALSE}.
 
 <<DICOM Abdo 03>>=
-extractHeader(abdo$hdr, "Manufacturer", numeric=FALSE) # abdo$hdr$value[abdo$hdr$name == "Manufacturer"]
-extractHeader(abdo$hdr, "RepetitionTime") # abdo$hdr$value[abdo$hdr$name == "RepetitionTime"]
-extractHeader(abdo$hdr, "EchoTime") # abdo$hdr$value[abdo$hdr$name == "EchoTime"]
+extractHeader(abdo$hdr, "Manufacturer", numeric=FALSE)
+extractHeader(abdo$hdr, "RepetitionTime")
+extractHeader(abdo$hdr, "EchoTime")
 @ 
 
 The basic DICOM file structure does not encourage the analysis of
@@ -730,8 +730,9 @@ multi-dimensional array is in agreement with the header values.
 The constructor function \code{nifti} produces valid NIfTI objects,
 including a consistent header, from an arbitrary array.
 <<NIfTI-constructor>>=
-(random.image <- nifti(array(runif(100*100),c(100,100,1)), datatype=16))
-random.image@"dim"
+n <- 100
+(random.image <- nifti(array(runif(n*n), c(n,n,1))))
+random.image@"dim_"
 dim(random.image)
 @ 
 
@@ -744,11 +745,12 @@ cbind(convert.datatype())
 
 The function \code{writeNIfTI} outputs valid NIfTI class files, which
 can be opened in other medical imaging software.  Files can either be
-stored as standard \code{.nii} files or compressed with gnuzip.
+stored as standard \code{.nii} files or compressed with gnuzip
+(default).
 
 <<NIfTI-write>>=
-writeNIfTI(random.image, "random", gzipped=TRUE)
-system("ls random*", intern=TRUE)
+writeNIfTI(random.image, "random")
+list.files(pattern="random")
 @ 
 
 \subsection{Audit Trail}
@@ -762,14 +764,15 @@ casting them as \code{niftiExtension} objects and adding
 \code{niftiExtensionSection} objects to the \code{extensions} slot.
 Third, by default all operations that are performed on a NIfTI object
 will generate what we call an \emph{audit trail} that consists of an
-XML-based log.  Each log entry contains information not only about the
-function applied to the NIfTI object, but also various system-level
-information; e.g., version of \proglang{R}, user name, date, time,
-etc.  When writing NIfTI-class objects to disk, the XML-based NIfTI
-extension is converted into plain text and saved using \code{ecode =
-  6} to denote plain ASCII text only.  The user may control the
-tracking of data manipulation via the audit trail using a global
-option.  For example, please use the command
+\proglang{XML}-based log \cite{XML}.  Each log entry contains
+information not only about the function applied to the NIfTI object,
+but also various system-level information; e.g., version of
+\proglang{R}, user name, date, time, etc.  When writing NIfTI-class
+objects to disk, the \proglang{XML}-based NIfTI extension is converted
+into plain text and saved using \code{ecode = 6} to denote plain ASCII
+text only.  The user may control the tracking of data manipulation via
+the audit trail using a global option.  For example, please use the
+command
 
 <<niftiAuditTrail,eval=FALSE>>=
 options(niftiAuditTrail=FALSE)
@@ -777,12 +780,13 @@ options(niftiAuditTrail=FALSE)
 
 to turn off the ``audit trail'' option in \pkg{oro.nifti}.
 Table~\ref{tab:mniLR} displays output from the accessor function
-\code{audit.trail(mniLR)}, the XML-based audit trail that is stored as
-a NIfTI header extension.
+\code{audit.trail(mniLR)}, the \proglang{XML}-based audit trail that
+is stored as a NIfTI header extension.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{sidewaystable}
-  \caption{XML-based audit trail obtained via \code{audit.trail(mniLR)}.}
+  \caption{\proglang{XML}-based audit trail obtained via
+    \code{audit.trail(mniLR)}.}
   \label{tab:mniLR}
   \vspace{3mm}
   \centering
@@ -819,19 +823,18 @@ data, are
 The \pkg{mritc} package provides basic interactive visualization of
 ANALYZE/NIfTI data using a \proglang{Tcl/Tk} interface \citep{mritc}.
 
-\subsection{fMRI example}% from the NIfTI-1 DFWG}
+\subsection{Functional MRI Example}% from the NIfTI-1 DFWG}
 
-\subsubsection{Simple Time-series or Multi-volume Image}
+\subsubsection{Simple Time-Series or Multi-Volume Image}
 
 This is an example of reading in, and displaying, a four-dimensional
-medical imaging data set in NIfTI format
-\texttt{filtered\_func\_data.nii.gz} obtained \textcolor{BrickRed}{
-from the FSL evaluation and example data suite
-(\url{http://www.fmrib.ox.ac.uk/fsl/fsl/feeds.html}).} Successful execution of
-the commands
+medical imaging data set in NIfTI format \texttt{filtered\_func\_data}
+obtained \textcolor{BrickRed}{from the FSL evaluation and example data
+  suite (\url{http://www.fmrib.ox.ac.uk/fsl/fsl/feeds.html}).}
+Successful execution of the commands
 
 <<ffd>>=
-(ffd <- readNIfTI("filtered_func_data.nii.gz"))
+(ffd <- readNIfTI("filtered_func_data"))
 @ 
 <<ffd-png,echo=FALSE,results=hide>>=
 png(filename="ffd.png", width=2*480, height=2*480, bg="black")
@@ -870,8 +873,8 @@ from the summary of object, there are 21~axial slices of fairly coarse
 resolution ($4{\times}4{\times}6\;\text{mm}$) and reasonable temporal
 resolution ($3\;\text{s}$).  Figure~\ref{fig:ffd-orthographic} depicts
 the orthographic display of the \texttt{filtered\_func\_data} using
-the axial plane containing the left-and-right thalamus to
-approximately center the crosshair.
+the axial plane \textcolor{BrickRed}{containing the left-and-right
+  thalamus to approximately center the crosshair vertically}.
 
 <<ffd-ortho-png,echo=FALSE,results=hide>>=
 png(filename="ffd_orthographic.png", width=2*480, height=2*480, bg="black")
@@ -908,101 +911,114 @@ dev.off()
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\textcolor{BrickRed}{R provides virtually any statistical method for
-  the analysis of imaging data.  For example, fMRI data are typically
-  analysed by fitting a general linear model (GLM) with using the
-  stimuli to construct a design matrix.  This leads to a resulting
-  statistical image, e.g., $Z$-statistics for a voxel-wise hypothesis
-  test on activation in fMRI experiments \citep{Friston1994}.}
+\textcolor{BrickRed}{The \proglang{R} programming environment provides
+  a wide variety of statistical methodology for the quantitative
+  analysis of medical imaging data.  For example, functionl MRI (fMRI)
+  data are typically analysed by applying a multiple linear regression
+  model, commonly referred to in the literature as a general linear
+  model (GLM), that utilizes the stimulus experiment to construct the
+  design matrix.  Estimation of the regression coefficients in the GLM
+  produces a statistical image; e.g., $Z$-statistics for a voxel-wise
+  hypothesis test on activation in fMRI experiments
+  \citep{fri-etal:spms,fri-etal:revisited}.}
 
-\textcolor{BrickRed}{The \texttt{filtered\_func\_data.nii.gz} image
-  was acquired in an experiment with $TR = 3s$ and both visual and
-  auditory stimulus. The visual stimulus was a on/off with an
-  amplitude of 60 seconds and the auditory stimulus was on/off with an
-  amplitude of 90 seconds. We use a Gamma haemodynamic respone
-  function (HRF) with mean 6 and standard deviation 3, similar to the
-  default values in FSL.  Figure~\ref{fig:ffd-orthographic} depicts
-  the convolved visual and auditory stimuli.}
+\textcolor{BrickRed}{The 4D volume of imaging data in
+  \texttt{filtered\_func\_data} was acquired in an experiment with a
+  $TR=3\;\text{s}$, using both visual and auditory stimuli.  The
+  visual stimulus was a on/off with a duration of 60 seconds and the
+  auditory stimulus was on/off with a duration of 90 seconds.  We use
+  a parametric haemodynamic respone function (HRF), with mean 6 and
+  standard deviation 3, similar to the default values in FSL.
+  Figure~\ref{fig:ffd-orthographic} depicts the visual and auditory
+  stimuli convolved with the HRF.}
 
 <<ffd-glm-design,echo=TRUE,results=hide>>=
 # visual (30s on/off) and auditory (45s on/off) stimulus
-visual <- rep(c(rep(-.5,30),rep(.5,30)),12)
-auditory <- rep(c(rep(-.5,45),rep(.5,45)),12)
+visual <- rep(c(rep(-0.5, 30), rep(0.5, 30)), 12)
+auditory <- rep(c(rep(-0.5, 45), rep(0.5, 45)), 12)
 # haemodynamic response function with mean=6 and sd=3
-hrf <- c(dgamma(1:15,4,scale=1.5))
+hrf <- c(dgamma(1:15, 4, scale=1.5))
 # convolve stimuli with hrf
-visual.hrf <- rep(NA,540)
-for (k in 60:599)visual.hrf[k-59] <- sum(visual[k-(1:15)] * hrf) 
-auditory.hrf <-rep(NA,540)
-for (k in 90:629)auditory.hrf[k-89] <- sum(auditory[k-(1:15)] * hrf) 
+visual.hrf <- rep(NA, 540)
+for (k in 60:599) {
+  visual.hrf[k-59] <- sum(visual[k-(1:15)] * hrf) 
+}
+auditory.hrf <- rep(NA, 540)
+for (k in 90:629) {
+  auditory.hrf[k-89] <- sum(auditory[k-(1:15)] * hrf) 
+}
 # add phase
-visual.hrf <- c(rep(0.5,30),visual.hrf)
-auditory.hrf <- c(rep(0.5,45),auditory.hrf)
+visual.hrf <- c(rep(0.5, 30), visual.hrf)
+auditory.hrf <- c(rep(0.5, 45), auditory.hrf)
 # TR = 3s
-visual.hrf <- visual.hrf[seq(3,540,by=3)]
-auditory.hrf <- auditory.hrf[seq(3,540,by=3)]
+index <- seq(3, 540, by=3)
+visual.hrf <- visual.hrf[index]
+auditory.hrf <- auditory.hrf[index]
 # center
-visual.hrf <- visual.hrf-mean(visual.hrf)
-auditory.hrf <- auditory.hrf-mean(auditory.hrf)
+visual.hrf <- visual.hrf - mean(visual.hrf)
+auditory.hrf <- auditory.hrf - mean(auditory.hrf)
 @ 
 <<ffd-design.png,echo=FALSE,results=hide>>=
 png("ffd_design.png", width=2*480, height=0.5*480)
 par(mfrow=c(1,2))
-plot(seq(1,540,by=3),visual.hrf,type="l",xlab="time (s)",ylab="visual stimulus")
-plot(seq(1,540,by=3),auditory.hrf,type="l",xlab="time (s)",ylab="auditory stimulus") 
+plot(index, visual.hrf, type="l", 
+     xlab="Time (seconds)", ylab="Visual Stimulus")
+plot(index, auditory.hrf, type="l",
+     xlab="Time (seconds)", ylab="Auditory Stimulus") 
 dev.off()
 @ 
 
 \textcolor{BrickRed}{The design matrix is than used in a voxel-wise
-  GLM using the the standard \texttt{lm()} \proglang{R} function for
-  (general) linear models. From this, for each voxel, e.g.,
-  t-statistics and p-values for a hypothesis test on no effect of each
-  stimulus along with a F-statistic for a hypothesis test on no effect
-  of any stimuli can be computed.}
+  GLM using the the standard \texttt{lm} function in \proglang{R} for
+  parameter estimation in linear regression.  From this, for each
+  voxel, $t$-statistics and associasted $p$-values for a hypothesis
+  test on no effect of each stimulus along with an $F$-statistic for a
+  hypothesis test on no effect of any stimuli can be computed.}
 
 <<ffd-glm,echo=TRUE,results=hide>>=
-# background threshold: 10% max intensity
-thresh <- 0.1*max(ffd) 
-# general linear model
-local.lm <- function(x)
-{
-# background threshold: 10% max intensity
-  if (max(x)<thresh) return(rep(NA,5))
-# glm
-  model <- lm(x ~ visual.hrf + auditory.hrf)
-# extract t-statistic, p-values
-  sum.model <- summary(model)
-  return(c(as.vector(sum.model$coeff[2:3,3:4]),sum.model$fstatistic[1]))
+## background threshold: 10% max intensity
+T <- 0.1 * max(ffd) 
+local.lm <- function(x, thresh) { # general linear model
+  ## check against background threshold
+  if (max(x) < thresh) {
+    return(rep(NA, 5))
+  }
+  ## glm
+  output <- lm(x ~ visual.hrf + auditory.hrf)
+  ## extract t-statistic, p-values
+  c(as.vector(summary(output)$coeff[2:3,3:4]), 
+    summary(output)$fstatistic[1])
 }
-# apply local glm to each voxel
-flim <- apply(ffd, 1:3, local.lm)
+## apply local glm to each voxel
+flim <- apply(ffd, 1:3, local.lm, thresh=T)
 @ 
 
-For anatomical context, statistical images are displayed as an overlay on
-top of a reference image. Successful execution of
-the command allows one to display the statistical image (of voxel-wise
-activations) overlayed on the original EPI (echo planar imaging) data
-taken from the functional MRI experiment.
+For anatomical context, statistical images are displayed as an overlay
+on top of a reference image.  Successful execution of the command
+allows one to display the statistical image of voxel-wise activations
+overlayed on the original EPI (echo planar imaging) data acquired in
+the fMRI experiment.
 
 <<zstst1>>=
-# t-statistics
+## t-statistics
 t.visual <- nifti(flim[1,,,])
 t.auditory <- nifti(flim[2,,,])
-# p-values
+## p-values
 p.visual <- nifti(flim[3,,,])
 p.auditoy <- nifti(flim[4,,,])
-# F-statistics
+## F-statistics
 F <- nifti(flim[5,,,])
 
 # Z-statistic: normalized t-statistic
-Z.visual <- nifti(qnorm(pt(t.visual,179,log.p=TRUE),log.p=TRUE))
-Z.auditory <- nifti(qnorm(pt(t.auditory,179,log.p=TRUE),log.p=TRUE))
+Z.visual <- nifti(qnorm(pt(t.visual, 179, log.p=TRUE), log.p=TRUE))
+Z.auditory <- nifti(qnorm(pt(t.auditory, 179, log.p=TRUE), log.p=TRUE))
 @ 
 <<zstat1-png,echo=FALSE,results=hide>>=
 png("ffd_zstat1.png", width=2*480, height=2*480, bg="black")
 @ 
 <<zstst1-overlay>>=
-overlay(ffd, ifelse(abs(Z.visual) > 5, Z.visual, NA), zlim.x=range(ffd), zlim.y=range(Z.visual,na.rm=TRUE))
+overlay(ffd, ifelse(abs(Z.visual) > 5, Z.visual, NA), 
+        zlim.x=range(ffd), zlim.y=range(Z.visual, na.rm=TRUE))
 <<zstat1-dev.off,echo=FALSE,results=hide>>=
 dev.off()
 @ 
@@ -1010,16 +1026,17 @@ dev.off()
 png("ffd_zstat2.png", width=2*480, height=2*480, bg="black")
 @ 
 <<zstst2-overlay>>=
-overlay(ffd, ifelse(abs(Z.auditory) > 5, Z.auditory, NA), zlim.x=range(ffd), zlim.y=range(Z.auditory,na.rm=TRUE))
+overlay(ffd, ifelse(abs(Z.auditory) > 5, Z.auditory, NA), 
+        zlim.x=range(ffd), zlim.y=range(Z.auditory, na.rm=TRUE))
 <<zstat2-dev.off,echo=FALSE,results=hide>>=
 dev.off()
 @ 
 
-The four-dimensional array of parameter estimates are
-overlayed on the original data for anatomical reference in
-Figure~\ref{fig:ffd+zstat1}b.  The function \code{overlay} extends the
-capabilities of displaying ``images'' by allowing one to add a
-statistical image to a structural image of the same dimension.
+The 4D array of parameter estimates are overlayed on the original data
+for anatomical reference in Figure~\ref{fig:ffd+zstat1}b.  The
+function \code{overlay} extends the capabilities of displaying
+``images'' by allowing one to add a statistical image to a reference
+image of the same dimension.
 
 \section{Converting DICOM to NIfTI}
 \label{sec:dicom2nifti}
