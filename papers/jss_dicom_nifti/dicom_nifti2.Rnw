@@ -109,7 +109,7 @@ Medical imaging is well established in both the clinical and research
 areas with numerous equipment manufacturers supplying a wide variety
 of modalities.  The DICOM (Digital Imaging and Communications in
 Medicine; \url{http://medical.nema.org}) standard was developed from
-earlier standards and released in 1993. It is the data format for
+earlier standards and released in 1993.  It is the data format for
 clinical imaging equipment and a variety of other devices whose
 complete specification is beyond the scope of this paper.  All major
 manufacturers of medical imaging equipment (e.g., GE, Siemens,
@@ -1048,6 +1048,25 @@ overlay(ffd, ifelse(Z.auditory > 5, Z.auditory, NA),
 dev.off()
 @ 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[tbp]
+  \begin{center}
+    \begin{tabular}{c}
+      \includegraphics*[width=0.6\textwidth]{ffd_zstat1.png}\\
+      \textbf{(a)}\\
+      \includegraphics*[width=0.6\textwidth]{ffd_zstat2.png}\\
+      \textbf{(b)}
+    \end{tabular}
+  \end{center}
+  \caption{\textbf{(a)} Axial slices of the functional MRI data with
+    the statistical image from the visual stimulus overlayed.
+    \textbf{(b)} Axial slices of the functional MRI data with the
+    statistical image from the auditory stimulus overlayed.  Both sets
+    of test statistics were thresholded at $Z\geq{5}$ for all voxel.}
+  \label{fig:zstat1+zstat2}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \textcolor{BrickRed}{Statistical images in neuroimaging are commonly
   displayed as an overlay on top of a reference image (one of the
   dynamic acquisitions) in order to provide anatomical context.  The
@@ -1065,25 +1084,6 @@ dev.off()
 % The function \code{overlay} extends the capabilities of displaying
 % two-dimensional images by allowing one to add a statistical image to
 % a reference image of the same dimension.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[p]
-  \begin{center}
-    \begin{tabular}{c}
-      \includegraphics*[width=0.6\textwidth]{ffd_zstat1.png}\\
-      \textbf{(a)}\\
-      \includegraphics*[width=0.6\textwidth]{ffd_zstat2.png}\\
-      \textbf{(b)}
-    \end{tabular}
-  \end{center}
-  \caption{\textbf{(a)} Axial slices of the functional MRI data with
-    the statistical image from the visual stimulus overlayed.
-    \textbf{(b)} Axial slices of the functional MRI data with the
-    statistical image from the auditory stimulus overlayed.  Both sets
-    of test statistics were thresholded at $Z\geq{5}$ for all voxel.}
-  \label{fig:zstat1+zstat2}
-\end{figure}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Converting DICOM to NIfTI}
 \label{sec:dicom2nifti}
@@ -1116,7 +1116,7 @@ for DICOM conversion.  In addition there are several other
 \subsection{An example using a single-series data set}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[p]
+\begin{figure}[tbp]
   \begin{center}
     \begin{tabular}{c}
     \includegraphics*[width=0.6\textwidth]{hk40n_image.png}\\
@@ -1185,14 +1185,13 @@ The National Biomedical Imaging Archive (NBIA) is a searchable,
 national repository integrating \emph{in vivo} cancer images with
 clinical and genomic data.  The NBIA provides the scientific community
 with public access to DICOM images, image markup, annotations, and
-rich metadata.\footnote{\url{http://cabig.nci.nih.gov/tools/NCIA}} The
+rich metadata at \url{http://cabig.nci.nih.gov/tools/NCIA}.  The
 multiple MRI sequences processed here were downloaded from the
-``RIDER~Neuro~MRI''
-collection.\footnote{\url{http://wiki.nci.nih.gov/display/CIP/RIDER}}
-A small \code{for} loop has been written to operate on a subset of the
-DICOM directory structure, where the \code{SeriesInstanceUID} DICOM
-header field is assumed to be 100\% accurate in series
-differentiation.
+``RIDER~Neuro~MRI'' collection at
+\url{http://wiki.nci.nih.gov/display/CIP/RIDER}.  A small \code{for}
+loop has been written to operate on a subset of the DICOM directory
+structure, where the \code{SeriesInstanceUID} DICOM header field is
+assumed to be 100\% accurate in series differentiation.
 
 <<RIDER Neuro MRI>>=
 subject <- "1086100996"

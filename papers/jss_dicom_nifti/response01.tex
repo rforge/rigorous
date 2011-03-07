@@ -14,9 +14,45 @@
 
 \bigskip
 
-March~1, 2011
+March~8, 2011
 
 \end{center}
+
+\section*{Associate Editor}
+
+\subsection*{General Comments}
+
+\begin{itemize}
+  
+\item Generating the pdf document from Sweave includes information on
+  different machines (where the creation has been done). Thus the
+  \texttt{audit.trail} in Fig.10 should be edit slightly in the final
+  version (working directory).
+  
+  We're happy to do this on the final version of the manuscript.
+  
+\end{itemize}
+
+\subsection*{Specific Comments}
+
+\begin{itemize}
+  
+\item Can the grey scale contrast be enhanced in the images?
+
+  \textbf{TO DO!}  
+
+\end{itemize}
+
+\subsection*{JSS-specific Formatting}
+
+\begin{itemize}
+  
+\item \texttt{section} and \texttt{subsection} should be formatted in
+  sentence style.
+  
+  Changed.
+
+\end{itemize}
 
 \section*{Reviewer \#1}
 
@@ -32,14 +68,20 @@ suggestions.
   you describe the users that are going the use the packages? And how
   did you implement their specific needs?  
 
+  \textbf{TO DO!}
+
 \item For example 1: Suppose I am a practical researcher, which
   acquires imaging data to support a research question.  Which
   functions would mostly provide in my needs?
+
+  \textbf{TO DO!}
 
 \item For example 2: Suppose I am a statistician that wants to use
   your package to enhance the statistical data analysis of imaging
   data.  What are the main functionalities of header manipulation that
   I can use?
+
+  \textbf{TO DO!}
 
 \item Above questions are more or less addressed in the paper, but I
   think it should be better specified what the specific purposes of
@@ -47,6 +89,8 @@ suggestions.
   intended users in the introduction of the paper.  Additionally, some
   clear examples that are specifically intended for the described
   users would be highly beneficial for the clearness of the paper.
+
+  \textbf{TO DO!}
 
 \end{itemize}
 
@@ -57,10 +101,18 @@ suggestions.
 \item section 2, 1st paragraph: DICOM abbreviation is already defined
   in the introduction
 
+  This text has been removed.
+
 \item section2, 2nd paragraph: At the end you say that the fourth
   column of the DICOM format is not implemented. Why is this the case?
 
+  The table of information was taken directly from the DICOM
+  documentation.  To the best of our knowledge there is nothing of
+  value in the fourth column of Table~1.
+
 \item subsection 2.2: last sentence: extractHeader
+
+  Changed.
 
 \end{itemize}
 
@@ -83,6 +135,10 @@ suggestions.
   the library, when these things can be done outside of R more
   fluidly?
 
+  The purpose of the \textbf{oro.dicom} and \textbf{oro.nifti}
+  packages is to manipulate data formats and convert DICOM to NIfTI.
+  \textbf{TO DO!}
+
 \item I therefore strongly suggest adding at least a (real world)
   statistical example with image data, where R can show its
   outstanding performance in its field.  This could convince the
@@ -90,6 +146,8 @@ suggestions.
   R.  The increased space requirements for that can then be saved at
   the expense of the detailed description of some (binary) internals
   of DICOM and ANALYZE/NIfTI.
+
+  A functional MRI example has been added in Section~3.7.
 
 \end{itemize}
 
