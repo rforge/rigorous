@@ -141,16 +141,28 @@ The material presented here provides users with a method of
 interacting with DICOM, ANALYZE and NIfTI files in \proglang{R}
 \citep{R}.  Real-world datasets, that are publicly available, are used
 to illustrate the basic functionality of the two packages:
-\pkg{oro.dicom} and \pkg{oro.nifti}.  Major features include data
-input/output, visualization and conversion from DICOM to
-ANALYZE/NIfTI.  \textcolor{BrickRed}{These packages should appeal not
-  only to other \proglang{R} package developers, but also to
-  scientists who want to manipulate medical imaging data using
-  \proglang{R} without writing and validating basic data input/output
-  functionality.  Packages already available on CRAN that utilize
-  \pkg{oro.dicom} and \pkg{oro.nifti} include \pkg{cudaBayesreg}
-  \citep{cudaBayesreg}, \pkg{dcemriS4} \citep{dcemriS4} and
-  \pkg{dpmixsim} \citep{dpmixsim}.}
+\pkg{oro.dicom} and \pkg{oro.nifti}.
+\textcolor{BrickRed}{Both packages include data input and output.
+S4 classes \texttt{nifti} and \texttt{anlz} are provided for further 
+statistical analysis in \proglang{R} without loosing information 
+from the images. Images in the metadata-rich DICOM format can 
+be converted to NIfTI semi-automatically using as much 
+information from the DICOM files as possible. Basic visualization 
+functions similar to standards in the medical imaging community 
+are provided for \texttt{nifti} and \texttt{anlz} objects.
+Additionally, \pkg{oro.nifti} allows to track every operation on a
+\texttt{nifti} object in an audit trail.}
+
+\textcolor{BrickRed}{These packages should appeal not
+only to other \proglang{R} package developers, but also to
+scientists who want to manipulate and analyze medical imaging data using
+\proglang{R} without writing and validating basic data input/output
+functionality. An example of facilitating \proglang{R} for the analysis
+of functional Magnetic Resonance Imaging (fMRI) is given in section \ref{fmri_example}.
+Packages already available on CRAN that utilize
+\pkg{oro.dicom} and \pkg{oro.nifti} include \pkg{cudaBayesreg}
+\citep{cudaBayesreg}, \pkg{dcemriS4} \citep{dcemriS4},
+\pkg{dpmixsim} \citep{dpmixsim}, and \pkg{RNiftyReg} \citep{RNiftyReg}.}
 
 \section[oro.dicom: DICOM data input/output in R]{\pkg{oro.dicom}: DICOM data input/output in \proglang{R}}
 
@@ -827,7 +839,8 @@ The \pkg{mritc} package provides basic interactive visualization of
 ANALYZE/NIfTI data using a \proglang{Tcl/Tk} interface \citep{mritc}.
 
 \subsection{An example using functional MRI data} % from the NIfTI-1 DFWG}
-
+\label{fmri_example}
+  
 %\subsubsection{Simple time-series or multi-volume images}
 
 This is an example of reading in, and displaying, a four-dimensional
@@ -950,6 +963,7 @@ dev.off()
 #visual.hrf2 <- visual.hrf[index] - mean(visual.hrf[index]) # center
 #auditory.hrf2 <- auditory.hrf[index] - mean(auditory.hrf[index]) # center
 ## visual (30s on/off)
+
 visual <- rep(c(-0.5,0.5), each=30, times=9)
 ## auditory (45s on/off) stimulus
 auditory <- rep(c(-0.5,0.5), each=45, times=6)
