@@ -247,10 +247,13 @@ as.nifti <- function(from, value=NULL, verbose=FALSE) {
     ## So what kind of thing do we keep?
     slots <- c("dim_", "datatype", "bitpix", "pixdim", "descrip",
                "aux_file", ".Data")
-    sapply(slots, function(x) { slot(value, x) <<- slot(from, x); NULL })
+    for (s in 1:length(slots)) {
+      slot(value, slots[s]) <- slot(from, slots[s])
+    }
+    ## sapply(slots, function(x) { slot(value, x) <<- slot(from, x); NULL })
     calset <- !(from@"cal_max" == 0 && from@"cal_min" == 0)
-    value@"cal_max" <- ifelse(calset, from@"cal_min", from@"glmax")
-    value@"cal_min" <- ifelse(calset, from@"cal_max", from@"glmin")
+    slot(value, "cal_max") <- ifelse(calset, from@"cal_min", from@"glmax")
+    slot(value, "cal_min") <- ifelse(calset, from@"cal_max", from@"glmin")
     return(value)
     ## The below code should apply the orient code as per 
     ## http://eeg.sourceforge.net/ANALYZE75.pdf and 
@@ -309,7 +312,7 @@ as.nifti <- function(from, value=NULL, verbose=FALSE) {
     nim <- value
   }
   if (is(from, "anlz")) {
-    nim <- anlz.as.nifti(from, value)
+    nim <- anlz.as.nifti(from)
   } else {
     if (is.array(from)) {
       ## Determine a sensible datatype
