@@ -2,6 +2,7 @@
 
 \usepackage{amsmath,rotating}
 \usepackage{color}
+\usepackage{thumbpdf}
 \definecolor{BrickRed}{rgb}{1,0,0}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -32,8 +33,8 @@ structure is used to organize multiple DICOM files.  The \proglang{S}4
 class framework is used to develop basic ANALYZE and NIfTI classes,
 where NIfTI extensions may be used to extend the fixed-byte NIfTI
 header.  One example of this, that has been implemented, is an
-\proglang{XML}-based ``audit trail'' that tracks the history of
-operations applied to a dataset.  The conversion from DICOM to
+\proglang{XML}-based ``audit trail'' tracking the history of
+operations applied to a data set.  The conversion from DICOM to
 ANALYZE/NIfTI is straightforward using the capabilities of both
 packages.  The \proglang{S}4 classes have been developed to provide a
 user-friendly interface to the ANALYZE/NIfTI data formats; allowing
@@ -76,7 +77,7 @@ easy data input, data output, image processing and visualization.
   Heath Park\\
   Cardiff CF14 4XN, United Kingdom\\
   E-mail: \email{art27@cantab.net}\\
-  URL: \url{http://}\\
+  %% URL: \url{http://}\\
 }
 %% It is also possible to add a telephone and fax number
 %% before the e-mail in the following format:
@@ -134,35 +135,77 @@ The NIfTI format was developed in the early 2000s by the DFWG (Data
 Format Working Group) in an effort to improve upon the ANALYZE format.
 The resulting NIfTI-1 format adheres to the basic header/image
 combination from the ANALYZE format, but allows the pair of files to
-be combined into a single file and re-defines the header fields.
-In addition, NIfTI extension allow to store any additional information.
+be combined into a single file and re-defines the header fields.  In
+addition, NIfTI extensions allow one to store additional information
+(e.g., key acquisition parameters, experimental design) inside a NIfTI
+file.
 
 The material presented here provides users with a method of
 interacting with DICOM, ANALYZE and NIfTI files in \proglang{R}
-\citep{R}.  Real-world datasets, that are publicly available, are used
-to illustrate the basic functionality of the two packages:
-\pkg{oro.dicom} and \pkg{oro.nifti}.
-\textcolor{BrickRed}{Both packages include data input and output.
-S4 classes \texttt{nifti} and \texttt{anlz} are provided for further 
-statistical analysis in \proglang{R} without loosing information 
-from the images. Images in the metadata-rich DICOM format can 
-be converted to NIfTI semi-automatically using as much 
-information from the DICOM files as possible. Basic visualization 
-functions similar to standards in the medical imaging community 
-are provided for \texttt{nifti} and \texttt{anlz} objects.
-Additionally, \pkg{oro.nifti} allows to track every operation on a
-\texttt{nifti} object in an audit trail.}
+\citep{R}.  Real-world data sets, that are publicly available, are
+used to illustrate the basic functionality of the two packages:
+\pkg{oro.dicom} and \pkg{oro.nifti}.  \textcolor{BrickRed}{It should
+  be noted that both packages focus on functions for data input/output
+  and visualization.  \proglang{S}4 classes \texttt{nifti} and
+  \texttt{anlz} are provided for further statistical analysis in
+  \proglang{R} without losing contextual information from the original
+  ANALYZE or NIfTI files.  Images in the metadata-rich DICOM format
+  may be converted to NIfTI semi-automatically using as much
+  information from the DICOM files as possible.  Basic visualization
+  functions, similar to those commonly used in the medical imaging
+  community, are provided for \texttt{nifti} and \texttt{anlz}
+  objects.  Additionally, the \pkg{oro.nifti} package allows one to
+  track every operation on a \texttt{nifti} object in an
+  \proglang{XML}-based audit trail.}
 
-\textcolor{BrickRed}{These packages should appeal not
-only to other \proglang{R} package developers, but also to
-scientists who want to manipulate and analyze medical imaging data using
-\proglang{R} without writing and validating basic data input/output
-functionality. An example of facilitating \proglang{R} for the analysis
-of functional Magnetic Resonance Imaging (fMRI) is given in section \ref{fmri_example}.
-Packages already available on CRAN that utilize
-\pkg{oro.dicom} and \pkg{oro.nifti} include \pkg{cudaBayesreg}
-\citep{cudaBayesreg}, \pkg{dcemriS4} \citep{dcemriS4},
-\pkg{dpmixsim} \citep{dpmixsim}, and \pkg{RNiftyReg} \citep{RNiftyReg}.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[tbp]
+  \begin{center}
+    \begin{tabular}{p{0.525\textwidth}p{0.475\textwidth}}
+      \hline
+      \multicolumn{2}{c}{\pkg{oro.dicom}}\\
+      \hline
+      \code{create3D}, \code{create4D} & Create multi-dimensional arrays from DICOM header/image lists.\\
+      \code{dicom2analyze}, \code{dicom2nifti} & Convert DICOM objects to ANALYZE or NIfTI objects.\\
+      \code{dicomInfo}, \code{dicomSeparate} & Read single or multiple DICOM files into \proglang{R}.\\
+      \code{dicomTable}, \code{writeHeader} & Construct data frame from DICOM header list and write to a CSV file.\\
+      \code{extractHeader}, \code{header2matrix}, \code{matchHeader} & Extract information from DICOM headers.\\
+      \code{str2date}, \code{str2time} & Convert DICOM date or time entry into an \proglang{R} object.\\
+      \hline
+      \multicolumn{2}{c}{\pkg{oro.nifti}}\\
+      \hline
+      \code{anlz}, \code{nifti} & Class constructors for ANALYZE and NIfTI objects.\\
+      \code{as(<obj>, "nifti")} & Coerce object into class \code{nifti}.\\
+      \code{audit.trail}, \code{aux.file}, \code{descrip} & Extract or replace slots in specific header fields.\\
+      \code{fmri2oro}, \code{oro2fmri} & Convert between \code{fmridata} (\pkg{fmri}) and \code{nifti} objects.\\
+      \code{hotmetal}, \code{tim.colors} & Useful color tables for visualization.\\
+      \code{image}, \code{orthographic}, \code{overlay} & Two-dimensional visualization methods.\\
+      \code{is.afni}, \code{is.anlz}, \code{is.nifti} & Logical checks.\\
+      \code{readAFNI}, \code{readANALYZE}, \code{readNIfTI} & Data input.\\
+      \code{writeAFNI}, \code{writeANALYZE}, \code{writeNIfTI} & Data otuput.\\
+      \hline
+      \end{tabular}
+  \end{center}
+  \caption{List of functions available in \pkg{oro.dicom} and
+    \pkg{oro.nifti}.}
+  \label{tab:functions}
+\end{table}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textcolor{BrickRed}{The \pkg{oro.dicom} and \pkg{oro.nifti} packages
+  should appeal not only to \proglang{R} package developers, but also
+  to scientists and researchers who want to interrogate medical
+  imaging data using the statistical capabilities of \proglang{R}
+  without writing and validating their own basic data input/output
+  functionality.  Table~\ref{tab:functions} lists the key functions
+  for both packages and groups them according to common functionality.
+  An example of using statistical methodology in \proglang{R} for the
+  analysis of functional magnetic resonance imaging (fMRI) data is
+  given in section~\ref{fmri_example}.  Packages already available on
+  CRAN that utilize \pkg{oro.dicom} and \pkg{oro.nifti} include
+  \pkg{cudaBayesreg} \citep{cudaBayesreg}, \pkg{dcemriS4}
+  \citep{dcemriS4}, \pkg{dpmixsim} \citep{dpmixsim}, and
+  \pkg{RNiftyReg} \citep{RNiftyReg}.}
 
 \section[oro.dicom: DICOM data input/output in R]{\pkg{oro.dicom}: DICOM data input/output in \proglang{R}}
 
@@ -180,69 +223,27 @@ DICOM header.  The final (group,element) tag should be the ``pixel
 data'' tag (7FE0,0010), such that all subsequent information is
 related to the image(s).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{table}[tpb]
-  \begin{center}
-    \begin{tabular}{llrr}
-      \hline
-      \textbf{Code} & \textbf{Name} & \textbf{Bytes} & \textbf{Fixed}\\
-      \hline\\
-      AE & ApplicationEntity & 16 & 0\\
-      AS & AgeString & 4 & 1\\
-      AT & AttributeTag & 4 & 1\\
-      CS & CodeString & 16 & 0\\
-      DA & Date & 8 & 1\\
-      DS & DecimalString & 16 & 0\\
-      DT & DateTime & 26 & 0\\
-      FL & FloatingPointSingle & 4 & 1\\
-      FD & FloatingPointDouble & 8 & 1\\
-      IS & IntegerString & 12 & 0\\
-      LO & LongStrong & 64 & 0\\
-      LT & LongText & 10240 & 0\\
-      OB & OtherByteString & 0 & 0\\
-      OW & OtherWordString & 0 & 0\\
-      PN & PersonName & 64 & 0\\
-      SH & ShortString & 16 & 0\\
-      SL & SignedLong & 4 & 1\\
-      SQ & SequenceOfItems & 0 & 0\\
-      SS & SignedShort & 2 & 1\\
-      ST & ShortText & 1024 & 0\\
-      TM & Time & 16 & 0\\
-      UI & UniqueIdentifierUID & 64 & 0\\
-      UL & UnsignedLong & 4 & 1\\
-      UN & Unknown & 0 & 0\\
-      US & UnsignedShort & 2 & 1\\
-      UT & UnlimitedText & 0 & 0\\
-      \hline
-    \end{tabular}
-  \end{center}
-  \caption{Value representations in the DICOM standard.
-    \textcolor{BrickRed}{A value of zero bytes may be interpreted as
-      having an unknown or unlimited number of bytes associated with
-      the VR.}}
-  \label{tab:VR}
-\end{table}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 All attributes in the DICOM standard require different data types for
 correct representation.  These are known as value representations
 (VRs) in DICOM, \textcolor{BrickRed}{which may be encoded explicitly
   or implicitly.  There are 27 explicit VRs defined in the DICOM
-  standard, and provided in Table~\ref{tab:VR}}.  Detailed
-explanations of these data types are provided in the Section~6.2
-(part~5) of the DICOM standard (\url{http://medical.nema.org}).  The
-first column provides the two-character string that is present in each
-entry of the header field and the second column provides a descriptive
-name for the abbreviated code.  The third column provides the maximum
-length of the data associated with the VR (in bytes), where a length
-of zero bytes may be interpreted as having an unknown or unlimited
-number of bytes associated with the VR.  The fourth column is not used
-in the current implementation of the \pkg{oro.dicom} package.
-Internal functions have been written to manipulate each of the value
-representations and are beyond the scope of this article.  The
-functions \code{str2date} and \code{str2time} are useful for
-converting from the DICOM \code{Datetime} and \code{Time} value
-representations to \proglang{R} date and time objects, respectively.
+  standard}.
+%, and provided in Table~\ref{tab:VR}}.  
+Detailed explanations of these data types are provided in the
+Section~6.2 (part~5) of the DICOM standard
+(\url{http://medical.nema.org}).  The first column provides the
+two-character string that is present in each entry of the header field
+and the second column provides a descriptive name for the abbreviated
+code.  The third column provides the maximum length of the data
+associated with the VR (in bytes), where a length of zero bytes may be
+interpreted as having an unknown or unlimited number of bytes
+associated with the VR.  The fourth column is not used in the current
+implementation of the \pkg{oro.dicom} package.  Internal functions
+have been written to manipulate each of the value representations and
+are beyond the scope of this article.  The functions \code{str2date}
+and \code{str2time} are useful for converting from the DICOM
+\code{Datetime} and \code{Time} value representations to \proglang{R}
+date and time objects, respectively.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[tbp]
@@ -341,8 +342,8 @@ data frame may be interrogated in \proglang{R} in order to extract
 relevant information from the DICOM header; e.g.,
 \code{"BitsAllocated"} as above.  The \code{sequence} column is used
 to keep track of tags that are embedded in a fixed-length
-SequenceItems tag or between a SequenceItem-SequenceDelimitationItem
-pair.
+\code{SequenceItems} tag or between a
+\code{SequenceItem}-\code{SequenceDelimitationItem} pair.
 
 When multiple DICOM files are located in a single directory, or spread
 across multiple directories, one may use the function
@@ -403,9 +404,10 @@ image.  A notable exception is the Siemens MOSAIC format (addressed in
 Section~\ref{sec:mosaic}).  \textcolor{BrickRed}{The \pkg{oro.dicom}
   package assumes the image is stored as a flat file of two-byte
   integers without compression.  A variety of additional image formats
-  are possible within the DICOM standard; for example, RGB-colorized,
-  JPEG, JPEG Lossless, JPEG 2000 and run-length encoding (RLE)}.
-Going back to the \code{Abdo.dcm} example, the image is accessed via
+  are possible within the DICOM standard; e.g., RGB-colorized, JPEG,
+  JPEG Lossless, JPEG 2000 and run-length encoding (RLE).  None of
+  these formats are currently available in \pkg{oro.dicom}.}  Going
+back to the \code{Abdo.dcm} example, the image is accessed via
 
 <<abdo-png,echo=FALSE,results=hide>>=
 png(filename="dicom_abdo.png", width=2*480, height=2*480, bg="black")
@@ -452,8 +454,8 @@ The basic DICOM file structure does not encourage the analysis of
 multi-dimensional imaging data (e.g., 3D or~4D) commonly acquired on
 clinical scanners.  Hence, the \pkg{oro.dicom} package has been
 developed to access DICOM files and facilitate their conversion to the
-NIfTI or ANALYZE formats.  The conversion process requires the
-\pkg{oro.nifti} package and will be outlined in
+NIfTI or ANALYZE formats in \proglang{R}.  The conversion process
+requires the \pkg{oro.nifti} package and will be outlined in
 Section~\ref{sec:dicom2nifti}.
 
 \subsubsection{Siemens MOSAIC format}
@@ -480,10 +482,11 @@ dim(dcmImage)
 <<DICOM Siemens 02,echo=FALSE,results=hide>>=
 dcmNifti <- dicom2nifti(dcm, mosaic=TRUE)
 png(filename="dcmImage.png", width=2*480, height=2*480, bg="black")
-image(t(dcm$img), col=grey(0:64/64), axes=FALSE, xlab="", ylab="")
+image(t(dcm$img), col=grey(0:64/64), zlim=c(16, 1024), axes=FALSE, 
+      xlab="", ylab="")
 dev.off()
 png(filename="dcmNifti.png", width=2*480, height=2*480, bg="black")
-image(dcmNifti)
+image(dcmNifti, zlim=c(16, 1024))
 dev.off()
 @ 
 
@@ -577,8 +580,11 @@ Image information begins at the byte position determined by the
   "n+1\textbackslash{}0"}), this is by default after the first 352
 bytes.  Header extensions extend the size of the header and come
 before the image information leading to a consequent increase of
-\code{voxoffset} for single NIfTI files.  Split NIfTI files do not
-have this problem and \code{voxoffset} is set at 0.
+\code{voxoffset} for single NIfTI files.  \textcolor{BrickRed}{The
+  split NIfTI (\code{magic = "ni1\textbackslash{}0"}) and ANALYZE
+  formats contain pairs of files, where the header and image
+  information are separated, and do not have this problem.  In this
+  case \code{voxoffset} is set to 0.}
 
 The \code{image} function has been overloaded so that it behaves
 differently when dealing with medical image objects (\code{nifti} and
@@ -600,7 +606,7 @@ NIfTI axes, and is displayed on a $10{\times}10$ grid of images
 medical image \proglang{S}4 objects is an attempt to balance minimal
 user input with enough flexibility to customize the display when
 necessary.  For example, single slices may be viewed by using the
-option \code{plot.type="single"} in conjuction with the option
+option \code{plot.type="single"} in conjunction with the option
 \code{z=} to specify the slice.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -642,12 +648,13 @@ dev.off()
 
 produces a three-dimensional array of the MNI~brain that is displayed
 in a $10{\times}10$ grid of images (Figure~\ref{fig:mniLR+mniRL}b).
-The two sets of data in Figure~\ref{fig:mniLR+mniRL} are stored in two
-different orientations, commonly referred to as the
-\emph{radiological} and \emph{neurological} conventions.  The
-neurological convention is where ``right is right'' and one is
-essentially looking through the subject.  The radiological convention
-is where ``right is left'' and one is looking at the subject.
+\textcolor{BrickRed}{The two sets of data in
+  Figure~\ref{fig:mniLR+mniRL} are stored in two different
+  orientations, commonly referred to as the \emph{radiological} and
+  \emph{neurological} conventions.  The neurological convention is
+  where ``right is right'' and one is essentially looking through the
+  subject.  The radiological convention is where ``right is left'' and
+  one is looking at the subject.}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -656,7 +663,7 @@ is where ``right is left'' and one is looking at the subject.
     \includegraphics*[width=0.65\textwidth]{mniRL_orthographic.png}
     \end{center}
   \caption{Orthographic display of the MNI volume \code{mniRL\_nifti}.
-    By default the mid-axial, mid-saggital and mid-coronal planes are
+    By default the mid-axial, mid-sagittal and mid-coronal planes are
     chosen.}
   \label{fig:mniRL-orthographic}
 \end{figure}
@@ -677,7 +684,7 @@ dev.off()
 @ 
 
 As seen in Figure~\ref{fig:mniRL-orthographic} the mid-axial,
-mid-saggital and mid-coronal planes are displayed by default.  The
+mid-sagittal and mid-coronal planes are displayed by default.  The
 slices used may be set using \code{xyz = c(I,J,K)}, where $(I,J,K)$
 are appropriate indices, and the crosshairs will provide a spatial
 reference in each plane relative to the other two.
@@ -751,12 +758,12 @@ random.image@"dim_"
 dim(random.image)
 @ 
 
-Data types used for NIfTI formats can be achieved from the
-\code{convert.datatype} function.
-
-<<NIfTI-datatypes>>=
-cbind(convert.datatype())
-@ 
+% Data types used for NIfTI formats can be achieved from the
+% \code{convert.datatype} function.
+%
+% <<NIfTI-datatypes>>=
+% cbind(convert.datatype())
+% @ 
 
 The function \code{writeNIfTI} outputs valid NIfTI class files, which
 can be opened in other medical imaging software.  Files can either be
@@ -794,23 +801,22 @@ options(niftiAuditTrail=FALSE)
 @
 
 to turn off the ``audit trail'' option in \pkg{oro.nifti}.
-Table~\ref{tab:mniLR} displays output from the accessor function
-\code{audit.trail(mniLR)}, the \proglang{XML}-based audit trail that
-is stored as a NIfTI header extension.
+Figure~\ref{fig:mniLR-audit-trail} displays output from the accessor
+function \code{audit.trail(mniLR)}, the \proglang{XML}-based audit
+trail that is stored as a NIfTI header extension.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{sidewaystable}
-  \caption{\proglang{XML}-based audit trail obtained via
-    \code{audit.trail(mniLR)}.}
-  \label{tab:mniLR}
-  \vspace{3mm}
+\begin{sidewaysfigure}
   \centering
   \begin{tabular}{p{22cm}}
 <<NIfTI audit.trail 01>>=
 audit.trail(mniLR)
 @
   \end{tabular}
-\end{sidewaystable}
+  \caption{\proglang{XML}-based audit trail obtained via
+    \code{audit.trail(mniLR)}.}
+  \label{fig:mniLR-audit-trail}
+\end{sidewaysfigure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Interactive visualization}
@@ -819,7 +825,7 @@ Basic visualization of \code{nifti} and \code{anlz} class images can
 be achieved with any visualization for arrays in \proglang{R}.  For
 example, the \pkg{EBImage} package provides functions \code{display}
 and \code{animate} for visualization \citep{EBImage}.  Please note
-that functions in \pkg{EBImage} expect greyscale values in the range
+that functions in \pkg{EBImage} expect grey-scale values in the range
 $[0,1]$, hence the display of \code{nifti} data may be performed using
 
 <<EBImage01,eval=FALSE>>=
@@ -843,25 +849,6 @@ ANALYZE/NIfTI data using a \proglang{Tcl/Tk} interface \citep{mritc}.
   
 %\subsubsection{Simple time-series or multi-volume images}
 
-This is an example of reading in, and displaying, a four-dimensional
-medical imaging data set in NIfTI format \texttt{filtered\_func\_data}
-obtained \textcolor{BrickRed}{from the FSL evaluation and example data
-  suite (\url{http://www.fmrib.ox.ac.uk/fsl/fsl/feeds.html}).}
-Successful execution of the commands
-
-<<ffd>>=
-(ffd <- readNIfTI("filtered_func_data"))
-@ 
-<<ffd-png,echo=FALSE,results=hide>>=
-png(filename="ffd.png", width=2*480, height=2*480, bg="black")
-@ 
-<<ffd-image>>=
-image(ffd, zlim=range(ffd))
-@ 
-<<ffd-dev.off,echo=FALSE,results=hide>>=
-dev.off()
-@ 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[tbp]
   \begin{center}
@@ -880,6 +867,25 @@ dev.off()
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+This is an example of reading in, and displaying, a four-dimensional
+medical imaging data set in NIfTI format \texttt{filtered\_func\_data}
+obtained \textcolor{BrickRed}{from the FSL evaluation and example data
+  suite (\url{http://www.fmrib.ox.ac.uk/fsl/fsl/feeds.html}).}
+Successful execution of the commands
+
+<<ffd>>=
+(ffd <- readNIfTI("filtered_func_data"))
+@ 
+<<ffd-png,echo=FALSE,results=hide>>=
+png(filename="ffd.png", width=2*480, height=2*480, bg="black")
+@ 
+<<ffd-image>>=
+image(ffd, zlim=range(ffd)*0.85)
+@ 
+<<ffd-dev.off,echo=FALSE,results=hide>>=
+dev.off()
+@ 
+
 produces a four-dimensional (4D) array of imaging data that may be
 displayed in a $5{\times}5$ grid of images
 (Figure~\ref{fig:ffd+orthographic}a).  The first three dimensions are
@@ -897,7 +903,7 @@ using the axial plane \textcolor{BrickRed}{containing the
 png(filename="ffd_orthographic.png", width=2*480, height=2*480, bg="black")
 @ 
 <<ffd-orthographic>>=
-orthographic(ffd, xyz=c(34,29,10))
+orthographic(ffd, xyz=c(34,29,10), zlim=range(ffd)*0.85)
 @ 
 <<ffd-ortho-dev.off,echo=FALSE,results=hide>>=
 dev.off()
@@ -907,8 +913,8 @@ dev.off()
 
 \textcolor{BrickRed}{The \proglang{R} programming environment provides
   a wide variety of statistical methodology for the quantitative
-  analysis of medical imaging data.  For example, functionl MRI (fMRI)
-  data are typically analysed by applying a multiple linear regression
+  analysis of medical imaging data.  For example, functional MRI (fMRI)
+  data are typically analyzed by applying a multiple linear regression
   model, commonly referred to in the literature as a general linear
   model (GLM), that utilizes the stimulus experiment to construct the
   design matrix.  Estimation of the regression coefficients in the GLM
@@ -934,7 +940,7 @@ dev.off()
   auditory stimuli.  The visual stimulus was applied using an on/off
   pattern for a duration of 60~seconds and the auditory stimulus was
   applied using an on/off pattern for a duration of 90~seconds.  A
-  parametric haemodynamic respone function (HRF), with mean $\mu=6$
+  parametric haemodynamic response function (HRF), with mean $\mu=6$
   and standard deviation $\sigma=3$, is utilized here which is similar
   to the default values in FSL \citep{smi-etal:FSL}.  We construct the
   experimental design and HRF in seconds, perform the convolution and
@@ -1020,6 +1026,25 @@ voxel.lsfit <- function(x, thresh) { # general linear model
 ffd.glm <- apply(ffd, 1:3, voxel.lsfit, thresh=0.1 * max(ffd))
 @ 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[tbp]
+  \begin{center}
+    \begin{tabular}{c}
+      \includegraphics*[width=0.6\textwidth]{ffd_zstat1.png}\\
+      \textbf{(a)}\\
+      \includegraphics*[width=0.6\textwidth]{ffd_zstat2.png}\\
+      \textbf{(b)}
+    \end{tabular}
+  \end{center}
+  \caption{\textbf{(a)} Axial slices of the functional MRI data with
+    the statistical image from the visual stimulus overlayed.
+    \textbf{(b)} Axial slices of the functional MRI data with the
+    statistical image from the auditory stimulus overlayed.  Both sets
+    of test statistics were thresholded at $Z\geq{5}$ for all voxel.}
+  \label{fig:zstat1+zstat2}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \textcolor{BrickRed}{Given the multidimensional array of output from
   the GLM fitting procedure, the $t$-statistics are separated and
   converted into $Z$-statistics to follow the convention used in FSL.
@@ -1048,7 +1073,7 @@ png("ffd_zstat1.png", width=2*480, height=2*480, bg="black")
 @ 
 <<zstat1-overlay>>=
 overlay(ffd, ifelse(Z.visual > 5, Z.visual, NA), 
-        zlim.x=range(ffd), zlim.y=range(Z.visual, na.rm=TRUE))
+        zlim.x=range(ffd)*0.85, zlim.y=range(Z.visual, na.rm=TRUE))
 <<zstat1-dev.off,echo=FALSE,results=hide>>=
 dev.off()
 @ 
@@ -1057,29 +1082,10 @@ png("ffd_zstat2.png", width=2*480, height=2*480, bg="black")
 @ 
 <<zstst2-overlay>>=
 overlay(ffd, ifelse(Z.auditory > 5, Z.auditory, NA), 
-        zlim.x=range(ffd), zlim.y=range(Z.auditory, na.rm=TRUE))
+        zlim.x=range(ffd)*0.85, zlim.y=range(Z.auditory, na.rm=TRUE))
 <<zstat2-dev.off,echo=FALSE,results=hide>>=
 dev.off()
 @ 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[tbp]
-  \begin{center}
-    \begin{tabular}{c}
-      \includegraphics*[width=0.6\textwidth]{ffd_zstat1.png}\\
-      \textbf{(a)}\\
-      \includegraphics*[width=0.6\textwidth]{ffd_zstat2.png}\\
-      \textbf{(b)}
-    \end{tabular}
-  \end{center}
-  \caption{\textbf{(a)} Axial slices of the functional MRI data with
-    the statistical image from the visual stimulus overlayed.
-    \textbf{(b)} Axial slices of the functional MRI data with the
-    statistical image from the auditory stimulus overlayed.  Both sets
-    of test statistics were thresholded at $Z\geq{5}$ for all voxel.}
-  \label{fig:zstat1+zstat2}
-\end{figure}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \textcolor{BrickRed}{Statistical images in neuroimaging are commonly
   displayed as an overlay on top of a reference image (one of the
@@ -1091,7 +1097,7 @@ dev.off()
   auditory tasks are overlayed on the original data for ``anatomical''
   reference in Figure~\ref{fig:zstat1+zstat2}.  The $Z$-statistics
   that exceed the threshold appear to match know neuroanatomy, where
-  the visual cortex in the occipital lobe shows activiation under the
+  the visual cortex in the occipital lobe shows activation under the
   visual stimulus (Figure~\ref{fig:zstat1+zstat2}a) and the primary
   auditory cortex in the temporal lobe shows activation under the
   auditory stimulus (Figure~\ref{fig:zstat1+zstat2}b).}
@@ -1162,14 +1168,14 @@ orthographic(hk40n)
 @ 
 <<DICOM2NIFTI HK40 03,echo=FALSE,results=hide>>=
 png("hk40n_image.png", width=2*480, height=2*480, bg="black")
-image(hk40n)
+image(hk40n, zlim=c(0,1024))
 dev.off()
 png("hk40n_orthographic.png", width=2*480, height=2*480, bg="black")
-orthographic(hk40n)
+orthographic(hk40n, zlim=c(0,1024))
 dev.off()
 @ 
 
-At default \code{dicom2nifti} takes all image data from the DICOM list
+By default \code{dicom2nifti} takes all image data from the DICOM list
 and creates a 3D image.  Four-dimensional image volumes (three in
 space plus one in time) are also converted automatically by specifying
 \code{DIM=4}, where slice positions are taken from the
@@ -1195,12 +1201,12 @@ have to be chosen before conversion, using \code{dicomTable},
 
 \subsection{An example using a multiple-volume data set}
 
-The National Biomedical Imaging Archive (NBIA) is a searchable,
-national repository integrating \emph{in vivo} cancer images with
-clinical and genomic data.  The NBIA provides the scientific community
-with public access to DICOM images, image markup, annotations, and
-rich metadata at \url{http://cabig.nci.nih.gov/tools/NCIA}.  The
-multiple MRI sequences processed here were downloaded from the
+The National Biomedical Imaging Archive (NBIA;
+\url{http://cabig.nci.nih.gov/tools/NCIA}) is a searchable, national
+repository integrating \emph{in vivo} cancer images with clinical and
+genomic data.  The NBIA provides the scientific community with public
+access to DICOM images, image markup, annotations, and rich metadata.
+The multiple MRI sequences processed here were downloaded from the
 ``RIDER~Neuro~MRI'' collection at
 \url{http://wiki.nci.nih.gov/display/CIP/RIDER}.  A small \code{for}
 loop has been written to operate on a subset of the DICOM directory
@@ -1270,3 +1276,48 @@ Complex Systems.
 \bibliography{dicom_nifti}
 
 \end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[tpb]
+  \begin{center}
+    \begin{tabular}{llrr}
+      \hline
+      \textbf{Code} & \textbf{Name} & \textbf{Bytes} & \textbf{Fixed}\\
+      \hline\\
+      AE & ApplicationEntity & 16 & 0\\
+      AS & AgeString & 4 & 1\\
+      AT & AttributeTag & 4 & 1\\
+      CS & CodeString & 16 & 0\\
+      DA & Date & 8 & 1\\
+      DS & DecimalString & 16 & 0\\
+      DT & DateTime & 26 & 0\\
+      FL & FloatingPointSingle & 4 & 1\\
+      FD & FloatingPointDouble & 8 & 1\\
+      IS & IntegerString & 12 & 0\\
+      LO & LongStrong & 64 & 0\\
+      LT & LongText & 10240 & 0\\
+      OB & OtherByteString & 0 & 0\\
+      OW & OtherWordString & 0 & 0\\
+      PN & PersonName & 64 & 0\\
+      SH & ShortString & 16 & 0\\
+      SL & SignedLong & 4 & 1\\
+      SQ & SequenceOfItems & 0 & 0\\
+      SS & SignedShort & 2 & 1\\
+      ST & ShortText & 1024 & 0\\
+      TM & Time & 16 & 0\\
+      UI & UniqueIdentifierUID & 64 & 0\\
+      UL & UnsignedLong & 4 & 1\\
+      UN & Unknown & 0 & 0\\
+      US & UnsignedShort & 2 & 1\\
+      UT & UnlimitedText & 0 & 0\\
+      \hline
+    \end{tabular}
+  \end{center}
+  \caption{Value representations in the DICOM standard.
+    \textcolor{BrickRed}{A value of zero bytes may be interpreted as
+      having an unknown or unlimited number of bytes associated with
+      the VR.}}
+  \label{tab:VR}
+\end{table}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
