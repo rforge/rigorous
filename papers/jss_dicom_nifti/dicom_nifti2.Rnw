@@ -61,8 +61,8 @@ easy data input, data output, image processing and visualization.
   GlaxoSmithKline Clinical Imaging Centre\\
   Hammersmith Hospital\\
   London W12 0HS, United Kingdom\\
-  E-mail: \email{bjw34032@users.sourceforge.net}\\
-  URL: \url{http://rigorousanalytics.blogspot.com}\\
+  E-mail: \email{b.whitcher@imperial.ac.uk}\\
+  URL: \url{http://www2.imperial.ac.uk/~bwhitche}, \url{http://rigorousanalytics.blogspot.com}\\
   
   Volker J. Schmid\\
   Bioimaging group\\
@@ -231,19 +231,20 @@ correct representation.  These are known as value representations
 %, and provided in Table~\ref{tab:VR}}.  
 Detailed explanations of these data types are provided in the
 Section~6.2 (part~5) of the DICOM standard
-(\url{http://medical.nema.org}).  The first column provides the
-two-character string that is present in each entry of the header field
-and the second column provides a descriptive name for the abbreviated
-code.  The third column provides the maximum length of the data
-associated with the VR (in bytes), where a length of zero bytes may be
-interpreted as having an unknown or unlimited number of bytes
-associated with the VR.  The fourth column is not used in the current
-implementation of the \pkg{oro.dicom} package.  Internal functions
-have been written to manipulate each of the value representations and
-are beyond the scope of this article.  The functions \code{str2date}
-and \code{str2time} are useful for converting from the DICOM
-\code{Datetime} and \code{Time} value representations to \proglang{R}
-date and time objects, respectively.
+(\url{http://medical.nema.org}).  
+% The first column provides the two-character string that is present
+% in each entry of the header field and the second column provides a
+% descriptive name for the abbreviated code.  The third column
+% provides the maximum length of the data associated with the VR (in
+% bytes), where a length of zero bytes may be interpreted as having an
+% unknown or unlimited number of bytes associated with the VR.  The
+% fourth column is not used in the current implementation of the
+% \pkg{oro.dicom} package.
+Internal functions have been written to manipulate each of the value
+representations and are beyond the scope of this article.  The
+functions \code{str2date} and \code{str2time} are useful for
+converting from the DICOM \code{Datetime} and \code{Time} value
+representations to \proglang{R} date and time objects, respectively.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[tbp]
