@@ -18,22 +18,27 @@
   \code{afni} objects.
 }
 \usage{
-\S4method{orthographic}{nifti}(x, xyz = NULL, crosshairs = TRUE,
-             col.crosshairs = "red", w = 1, zlim = NULL,
-             col = gray(0:64/64), xlab = "", ylab = "", axes = FALSE,
+\S4method{orthographic}{nifti}(x, y = NULL, xyz = NULL, w = 1, 
+             col = gray(0:64/64), col.y = hotmetal(), zlim = NULL,
+             zlim.y = NULL, crosshairs = TRUE, col.crosshairs = "red",
+             xlab = "", ylab = "", axes = FALSE,
              oma=rep(0,4), mar=rep(0,4), bg="black", text=NULL,
              text.color="white", ...)
 }
 \arguments{
   \item{x}{is an object of class \code{nifti} or similar.}
+  \item{y}{is an object of class \code{nifti} or similar for the overlay.}
   \item{xyz}{is the coordinate for the center of the crosshairs.}
+  \item{w}{is the time point to be displayed (4D arrays only).}
+  \item{col}{is grayscale (by default).}
+  \item{col.y}{is hotmetal (by default).}
+  \item{zlim}{is the minimum and maximum \sQuote{z} values passed into
+    \code{image}.}
+  \item{zlim.y}{is the minimum and maximum \sQuote{z} values passed into
+    \code{image} for the overlay.}
   \item{crosshairs}{is a logical value for the presence of crosshairs in
     all three orthogonal planes (default = TRUE).}
   \item{col.crosshairs}{is the color of the crosshairs (default = red).}
-  \item{w}{is the time point to be displayed (4D arrays only).}
-  \item{zlim}{is the minimum and maximum \sQuote{z} values passed into
-    \code{image}.}
-  \item{col}{is grayscale (by default).}
   \item{xlab}{is set to "" since all margins are set to zero.}
   \item{ylab}{is set to "" since all margins are set to zero.}
   \item{axes}{is set to \code{FALSE} since all margins are set to zero.}

@@ -1,6 +1,6 @@
 ##
 ##
-## Copyright (c) 2009, 2010, Brandon Whitcher and Volker Schmid
+## Copyright (c) 2009-2011, Brandon Whitcher and Volker Schmid
 ## All rights reserved.
 ## 
 ## Redistribution and use in source and binary forms, with or without
@@ -154,8 +154,9 @@ overlay.nifti <- function(x, y, z=1, w=1, col.x=gray(0:64/64),
     index <- z
   }
   lz <- length(index)
-  if (z < 1 || z > Z)
+  if (z < 1 || z > Z) {
     stop("slice \"z\" out of range")
+  }
   oldpar <- par(no.readonly=TRUE)
   par(mfrow=ceiling(rep(sqrt(lz),2)), oma=oma, mar=mar, bg=bg)
   if (is.na(W)) { # three-dimensional array
@@ -165,8 +166,9 @@ overlay.nifti <- function(x, y, z=1, w=1, col.x=gray(0:64/64),
       graphics::image(1:X, 1:Y, y[,,z], col=col.y, zlim=zlim.y, add=TRUE)
     }
   } else { # four-dimensional array
-    if (w < 1 || w > W)
+    if (w < 1 || w > W) {
       stop("volume \"w\" out of range")
+    }
     for (z in index) {
       graphics::image(1:X, 1:Y, x[,,z,w], col=col.x, breaks=breaks.x,
                       zlim=zlim.x, axes=axes, xlab=xlab, ylab=ylab, ...)
@@ -203,72 +205,113 @@ setMethod("overlay", signature(x="afni", y="array"),
 ## orthographic() for class="nifti"
 #############################################################################
 
-orthographic.nifti <- function(x, xyz=NULL, crosshairs=TRUE,
-                               col.crosshairs="red", w=1, zlim=NULL,
-                               col=gray(0:64/64), xlab="", ylab="",
-                               axes=FALSE, oma=rep(0,4), mar=rep(0,4),
-                               bg="black", text=NULL, text.color="white",
-                               ...) {
+orthographic.nifti <- function(x, y=NULL, xyz=NULL, w=1, col=gray(0:64/64),
+                               col.y=hotmetal(), zlim=NULL, zlim.y=NULL,
+                               crosshairs=TRUE, col.crosshairs="red", 
+                               xlab="", ylab="", axes=FALSE,
+                               oma=rep(0,4), mar=rep(0,4), bg="black",
+                               text=NULL, text.color="white", ...) {
+  if (! is.null(y)) {
+    ## both volumes must have the same dimension
+    if (! all(dim(x)[1:3] == dim(y)[1:3])) {
+      stop("dimensions of \"x\" and \"y\" must be equal")
+    }
+  }
   X <- nrow(x)
   Y <- ncol(x)
   Z <- nsli(x)
   W <- ntim(x)
   ## Center crosshairs if not specified
-  if (is.null(xyz))
+  if (is.null(xyz)) {
     xyz <- ceiling(c(X,Y,Z)/2)
+  }
   ## check dimensions
-  if (X == 0 || Y == 0 || Z == 0)
+  if (X == 0 || Y == 0 || Z == 0) {
     stop("size of NIfTI volume is zero, nothing to plot")
+  }
   ## check for z-limits in x; use internal by default
   if (is.null(zlim)) {
     zlim <- c(x@"cal_min", x@"cal_max")
-    if (diff(zlim) == 0)
+    if (diff(zlim) == 0) {
       zlim <- c(x@"glmin", x@"glmax")
-    if (diff(zlim) == 0)
+    }
+    if (diff(zlim) == 0) {
       zlim <- range(x, na.rm=TRUE)
+    }
   }
   breaks <- c(min(x, zlim, na.rm=TRUE),
               seq(min(zlim, na.rm=TRUE), max(zlim, na.rm=TRUE),
                   length=length(col)-1),
               max(x, zlim, na.rm=TRUE))
+  if (! is.null(y) && is.null(zlim.y)) {
+    zlim.y <- c(y@"cal_min", y@"cal_max")
+    if (max(zlim.y) == 0) {
+      zlim.y <- c(x@"glmin", x@"glmax")
+    }
+  }
   oldpar <- par(no.readonly=TRUE)
   par(mfrow=c(2,2), oma=oma, mar=mar, bg=bg)
   if (is.na(W)) {
     ## Three-dimensional array
-    graphics::image(1:X, 1:Z, x[,xyz[2],], col=col, breaks=breaks,
+    graphics::image(1:X, 1:Z, x[,xyz[2],], col=col, zlim=zlim, breaks=breaks,
                     asp=x@pixdim[4]/x@pixdim[2],
                     xlab=ylab, ylab=xlab, axes=axes, ...)
-    if (crosshairs)
+    if (! is.null(y)) {
+      graphics::image(1:X, 1:Z, y[,xyz[2],], col=col.y, zlim=zlim.y, add=TRUE)
+    }
+    if (crosshairs) {
       abline(h=xyz[3], v=xyz[1], col=col.crosshairs)
+    }
     graphics::image(1:Y, 1:Z, x[xyz[1],,], col=col, breaks=breaks,
                     asp=x@pixdim[4]/x@pixdim[3],
                     xlab=xlab, ylab=ylab, axes=axes, ...)
-    if (crosshairs)
+    if (! is.null(y)) {
+      graphics::image(1:Y, 1:Z, y[xyz[1],,], col=col.y, zlim=zlim.y, add=TRUE)
+    }
+    if (crosshairs) {
       abline(h=xyz[3], v=xyz[2], col=col.crosshairs)
+    }
     graphics::image(1:X, 1:Y, x[,,xyz[3]], col=col, breaks=breaks,
                     asp=x@pixdim[3]/x@pixdim[2],
                     xlab=xlab, ylab=ylab, axes=axes, ...)
-    if (crosshairs)
+    if (! is.null(y)) {
+      graphics::image(1:X, 1:Y, y[,,xyz[3]], col=col.y, zlim=zlim.y, add=TRUE)
+    }
+    if (crosshairs) {
       abline(h=xyz[2], v=xyz[1], col=col.crosshairs)
+    }
   } else {
     ## Four-dimensional array    
-    if (w < 1 || w > W)
+    if (w < 1 || w > W) {
       stop("volume \"w\" out of range")
+    }
     graphics::image(1:X, 1:Z, x[,xyz[2],,w], col=col, breaks=breaks,
                     asp=x@pixdim[4]/x@pixdim[2],
                     xlab=ylab, ylab=xlab, axes=axes, ...)
-    if (crosshairs)
+    if (! is.null(y)) {
+      graphics::image(1:X, 1:Z, y[,xyz[2],], col=col.y, zlim=zlim.y, add=TRUE)
+    }
+    if (crosshairs) {
       abline(h=xyz[3], v=xyz[1], col=col.crosshairs)
+    }
     graphics::image(1:Y, 1:Z, x[xyz[1],,,w], col=col, breaks=breaks,
                     asp=x@pixdim[4]/x@pixdim[3],
                     xlab=xlab, ylab=ylab, axes=axes, ...)
-    if (crosshairs)
+    if (! is.null(y)) {
+      graphics::image(1:Y, 1:Z, y[xyz[1],,], col=col.y, zlim=zlim.y, add=TRUE)
+    }
+    if (crosshairs) {
       abline(h=xyz[3], v=xyz[2], col=col.crosshairs)
+    }
     graphics::image(1:X, 1:Y, x[,,xyz[3],w], col=col, breaks=breaks,
                     asp=x@pixdim[3]/x@pixdim[2],
                     xlab=xlab, ylab=ylab, axes=axes, ...)
-    if (crosshairs)
+    if (! is.null(y)) {
+      graphics::image(1:X, 1:Y, y[,,xyz[3]], col=col.y, zlim=zlim.y, add=TRUE)
+    }
+    if (crosshairs) {
       abline(h=xyz[2], v=xyz[1], col=col.crosshairs)
+    }
   }
   if (! is.null(text)) {
     ## Add user-supplied text to the "fourth" plot
