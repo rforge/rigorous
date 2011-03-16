@@ -29,14 +29,14 @@ conform to the DICOM standard or ANALYZE/NIfTI formats.  DICOM data,
 from a single file or single directory or directory tree, may be
 uploaded into \proglang{R} using basic data structures: a data frame
 for the header information and a matrix for the image data.  A list
-structure is used to organize multiple DICOM files.  The \proglang{S4}
+structure is used to organize multiple DICOM files.  The \proglang{S}4
 class framework is used to develop basic ANALYZE and NIfTI classes,
 where NIfTI extensions may be used to extend the fixed-byte NIfTI
 header.  One example of this, that has been implemented, is an
 \proglang{XML}-based ``audit trail'' tracking the history of
 operations applied to a data set.  The conversion from DICOM to
 ANALYZE/NIfTI is straightforward using the capabilities of both
-packages.  The \proglang{S4} classes have been developed to provide a
+packages.  The \proglang{S}4 classes have been developed to provide a
 user-friendly interface to the ANALYZE/NIfTI data formats; allowing
 easy data input, data output, image processing and visualization.
 
@@ -169,7 +169,10 @@ file.
       \end{tabular}
   \end{center}
   \caption{List of functions available in \pkg{oro.dicom} and
-    \pkg{oro.nifti}.}
+    \pkg{oro.nifti}.  Functionality around the AFNI data format was
+    recently added to the \pkg{oro.nifti} package.  Please visit
+    \url{http://afni.nimh.nih.gov/afni} for more information about the
+    AFNI data format.}
   \label{tab:functions}
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -181,7 +184,7 @@ interacting with DICOM, ANALYZE and NIfTI files in \proglang{R}
 used to illustrate the basic functionality of the two packages:
 \pkg{oro.dicom} and \pkg{oro.nifti}.  \textcolor{BrickRed}{It should
   be noted that both packages focus on functions for data input/output
-  and visualization.  \proglang{S4} classes \texttt{nifti} and
+  and visualization.  \proglang{S}4 classes \texttt{nifti} and
   \texttt{anlz} are provided for further statistical analysis in
   \proglang{R} without losing contextual information from the original
   ANALYZE or NIfTI files.  Images in the metadata-rich DICOM format
@@ -567,7 +570,7 @@ aux.file(mniLR)
 descrip(mniLR)
 @ 
 
-produces an \proglang{S4} \code{"nifti"} object (or
+produces an \proglang{S}4 \code{"nifti"} object (or
 \code{"niftiAuditTrail"} if the audit trail option is set).  Two
 accessor functions are also provided: \code{aux.file} and
 \code{descrip}.  The former is used to access the original name of the
@@ -605,7 +608,7 @@ dev.off()
 produces a three-dimensional array of the MNI~brain, with the default
 NIfTI axes, and is displayed on a $10{\times}10$ grid of images
 (Figure~\ref{fig:mniLR+mniRL}a).  The \code{image} function for
-medical image \proglang{S4} objects is an attempt to balance minimal
+medical image \proglang{S}4 objects is an attempt to balance minimal
 user input with enough flexibility to customize the display when
 necessary.  For example, single slices may be viewed by using the
 option \code{plot.type="single"} in conjunction with the option
@@ -711,11 +714,11 @@ transformations and provide functionality to display the $(x,y,z)$
 axes on orthographic plots.
 
 
-\subsection[NIfTI and ANALYZE data in S4]{NIfTI and ANALYZE data in \proglang{S$}}
+\subsection[NIfTI and ANALYZE data in S4]{NIfTI and ANALYZE data in \proglang{S}4}
 
 A major improvement in the \pkg{oro.nifti} package is the fact that
 standard medical imaging formats are stored in unique classes under
-the \proglang{S4} system \citep{chambers:2008}.  Essentially, NIfTI
+the \proglang{S}4 system \citep{chambers:2008}.  Essentially, NIfTI
 and ANALYZE data are stored as multi-dimensional arrays with extra
 slots created that capture the format-specific header information;
 e.g., for a \code{nifti} object
@@ -779,7 +782,7 @@ list.files(pattern="random")
 
 \subsection{The audit trail}
 
-Following on from the \proglang{S4} implementation of both the NIfTI
+Following on from the \proglang{S}4 implementation of both the NIfTI
 and ANALYZE data formats, the ability to extend the NIfTI data format
 header is utilized in the \pkg{oro.nifti} package.  First, extensions
 are properly handled when reading and writing NIfTI data.  Second,
@@ -1061,7 +1064,7 @@ ffd.glm <- apply(ffd, 1:3, voxel.lsfit, thresh=0.1 * max(ffd))
 ##t.auditory <- nifti(ffd.glm[2,,,], datatype=16)
 ## p-values
 #p.visual <- nifti(ffd.glm[3,,,], datatype=16)
-#p.auditoy <- nifti(ffd.glm[4,,,], datatype=16)
+#p.auditory <- nifti(ffd.glm[4,,,], datatype=16)
 ## F-statistics
 #F <- nifti(ffd.glm[5,,,], datatype=16)
 # Z-statistic: normalized t-statistic
@@ -1083,7 +1086,7 @@ dev.off()
 <<zstat2-png,echo=FALSE,results=hide>>=
 png("ffd_zstat2.png", width=2*480, height=2*480, bg="black")
 @ 
-<<zstst2-overlay>>=
+<<zstat2-overlay>>=
 overlay(ffd, ifelse(Z.auditory > 5, Z.auditory, NA), 
         zlim.x=range(ffd)*0.85, zlim.y=range(Z.auditory, na.rm=TRUE))
 <<zstat2-dev.off,echo=FALSE,results=hide>>=
@@ -1272,9 +1275,10 @@ end user.
 The authors would like to thank the National Biomedical Imaging
 Archive (NBIA), the National Cancer Institute (NCI), the National
 Institute of Health (NIH) and all institutions that have contributed
-medical imaging data to the public domain.  VS is supported
-by the LMU innovative project BioMed-S: Analysis and Modelling of
-Complex Systems.
+medical imaging data to the public domain.  The authors would also
+like to thank K.~Tabelow for providing functionality around the AFNI
+data format.  VS is supported by the LMU innovative project BioMed-S:
+Analysis and Modelling of Complex Systems.
 
 \bibliography{dicom_nifti}
 
