@@ -1,5 +1,5 @@
 ##
-## Copyright (c) 2009,2010 Brandon Whitcher and Volker Schmid
+## Copyright (c) 2009-2011 Brandon Whitcher and Volker Schmid
 ## All rights reserved.
 ## 
 ## Redistribution and use in source and binary forms, with or without
@@ -373,20 +373,36 @@ is.nifti <- function(x) {
   if (!is(x, "nifti")) {
     return(FALSE)
   } else {
-    return (TRUE)
+    return(TRUE)
   }
 }
 
 #############################################################################
-## descrip() accessor function to @descrip
+## pixdim() accessor function to @"pixdim"
+#############################################################################
+
+setGeneric("pixdim", function(object) { standardGeneric("pixdim") })
+setMethod("pixdim", "nifti", function(object) { object@"pixdim" })
+setGeneric("pixdim<-", function(x, value) { standardGeneric("pixdim<-") })
+setReplaceMethod("descrip", "nifti",
+                 function(x, value) { 
+		   x@"pixdim" <- value 
+		   audit.trail(x) <-
+                     niftiAuditTrailEvent(x, "modification", match.call(),
+                                          paste("pixdim <-", value))
+		   return(x)
+		 })
+
+#############################################################################
+## descrip() accessor function to @"descrip"
 #############################################################################
 
 setGeneric("descrip", function(object) { standardGeneric("descrip") })
-setMethod("descrip", "nifti", function(object) { object@descrip })
+setMethod("descrip", "nifti", function(object) { object@"descrip" })
 setGeneric("descrip<-", function(x, value) { standardGeneric("descrip<-") })
 setReplaceMethod("descrip", "nifti",
                  function(x, value) { 
-		   x@descrip <- value 
+		   x@"descrip" <- value 
 		   audit.trail(x) <-
                      niftiAuditTrailEvent(x, "modification", match.call(),
                                           paste("descrip <-", value))
@@ -403,7 +419,9 @@ setGeneric("aux.file<-", function(x, value) { standardGeneric("aux.file<-") })
 setReplaceMethod("aux.file", "nifti",
                  function(x, value) {
 		   x@"aux_file" <- value
-		   audit.trail(x) <- niftiAuditTrailEvent(x, "modification", match.call(), paste("aux.file <-", value))
+		   audit.trail(x) <-
+                     niftiAuditTrailEvent(x, "modification", match.call(),
+                                          paste("aux.file <-", value))
 		   return(x)
 		 })
 
