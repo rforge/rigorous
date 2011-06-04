@@ -313,8 +313,8 @@ parameters.
 fname <- system.file(file.path("dcm", "Abdo.dcm"), package="oro.dicom")
 abdo <- dicomInfo(fname)
 names(abdo)
-abdo$hdr[1:5,]
-abdo$hdr[nrow(abdo$hdr)-4:0,]
+head(abdo$hdr)
+tail(abdo$hdr) # [nrow(abdo$hdr)-4:0,]
 @ 
 
 The ordering of the rows is identical to the ordering in the original
