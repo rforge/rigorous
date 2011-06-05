@@ -528,6 +528,29 @@ setReplaceMethod("[",
 
 
 #############################################################################
+## sform() accessor function to srow_*
+#############################################################################
+
+setGeneric("sform", function(object) { standardGeneric("sform") })
+setMethod("sform", "nifti",
+          function(object) {
+            matrix(c(object@"srow_x", object@"srow_y", object@"srow_z"),
+                   ncol=4, byrow=TRUE)
+          })
+
+#############################################################################
+## qform() accessor function to quatern_*, qoffset_*
+#############################################################################
+
+setGeneric("qform", function(object) { standardGeneric("qform") })
+setMethod("qform", "nifti",
+          function(object) {
+            cbind(quaternion2rotation(object@"quatern_b",
+                                      object@"quatern_c",
+                                      object@"quatern_d"))
+          })
+
+#############################################################################
 ## quaternion2rotation()
 #############################################################################
 
