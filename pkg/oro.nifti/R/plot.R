@@ -232,10 +232,10 @@ orthographic.nifti <- function(x, y=NULL, xyz=NULL, w=1, col=gray(0:64/64),
   ## check for z-limits in x; use internal by default
   if (is.null(zlim)) {
     zlim <- c(x@"cal_min", x@"cal_max")
-    if (diff(zlim) == 0) {
+    if (any(!is.finite(zlim)) || diff(zlim) == 0) {
       zlim <- c(x@"glmin", x@"glmax")
     }
-    if (diff(zlim) == 0) {
+    if (any(!is.finite(zlim)) || diff(zlim) == 0) {
       zlim <- range(x, na.rm=TRUE)
     }
   }
