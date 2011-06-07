@@ -1281,8 +1281,8 @@ Archive (NBIA), the National Cancer Institute (NCI), the National
 Institute of Health (NIH) and all institutions that have contributed
 medical imaging data to the public domain.  The authors would also
 like to thank K.~Tabelow for providing functionality around the AFNI
-data format.  VS is supported by the LMU innovative project BioMed-S:
-Analysis and Modelling of Complex Systems.
+data format.  VS is supported by the German Research Council (DFG 
+SCHM 2747/1-1).
 
 \bibliography{dicom_nifti}
 
