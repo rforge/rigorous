@@ -205,8 +205,8 @@ anlz <- function(img=array(0, dim=rep(1,4)), dim, datatype=2, ...) {
   x <- c(length(dim), dim[1], dim[2], dim[3],
          ifelse(is.na(dim[4]), 1, dim[4]), rep(1,3))
   y <- c(0.0, rep(1.0, length(dim)), rep(0.0, 7 - length(dim)))
-  cal.max <- max(img, na.rm=TRUE) # quantile(img, probs=0.95, na.rm=TRUE)
-  cal.min <- min(img, na.rm=TRUE) # quantile(img, probs=0.05, na.rm=TRUE)
+  cal.max <- max(img, na.rm=TRUE)
+  cal.min <- min(img, na.rm=TRUE)
   ## Set datatype
   switch(as.character(datatype),
          "1" = bitpix <- 1,

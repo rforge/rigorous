@@ -25,7 +25,7 @@ Type 'q()' to quit R.
 Creating a new generic function for "image" in "oro.nifti"
 Loading required package: XML
 
-oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.2.6)
+oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.2.7)
 
 > 
 > assign(".oldSearch", search(), pos = 'CheckExEnv')
@@ -155,7 +155,7 @@ Class "anlz" [package "oro.nifti"]
 
 Slots:
                                                                             
-Name:          .Data    sizeof_hdr       db_type       db_name       extents
+Name:          .Data    sizeof_hdr     data_type       db_name       extents
 Class:         array       numeric     character     character       numeric
                                                                             
 Name:  session_error       regular      hkey_un0          dim_     vox_units
@@ -170,8 +170,8 @@ Class:        vector       numeric       numeric       numeric       numeric
 Name:        cal_max       cal_min    compressed      verified         glmax
 Class:       numeric       numeric       numeric       numeric       numeric
                                                                             
-Name:          glmin       descrip      aux_file        orient    originator
-Class:       numeric     character     character     character     character
+Name:          glmin       descrip      aux_file        orient        origin
+Class:       numeric     character     character     character       numeric
                                                                             
 Name:      generated       scannum    patient_id      exp_date      exp_time
 Class:     character     character     character     character     character
@@ -1086,19 +1086,17 @@ QForm_code = 1 : Orientation by Method 2.
 > writeNIfTI(img.nifti, "test-nifti-image-uint8", verbose=TRUE)
   niftiExtension detected!
   niftiAuditTrail detected!
-  vox_offset = 1296
+  vox_offset = 1280
   writing niftiExtension(s) at byte = 352
-  writing data at byte = 1296
+  writing data at byte = 1280
 > ## These files should be viewable in, for example, FSLview
 > ## Make sure you adjust the min/max values for proper visualization
 > data <- readNIfTI("test-nifti-image-uint8", verbose=TRUE)
   fname = test-nifti-image-uint8
   files = test-nifti-image-uint8.nii.gz
   nii   = test-nifti-image-uint8.nii.gz
-  vox_offset = 1296
-  niftiExtension detected!
-  seek(fid) = 352
-  seek(fid) = 1296
+  vox_offset = 1280
+  seek(fid) = 348
 > image(img.nifti, oma=rep(2,4), bg="white")
 > image(data, oma=rep(2,4), bg="white")
 > abs.err <- abs(data - img.nifti)
@@ -1126,7 +1124,7 @@ QForm_code = 1 : Orientation by Method 2.
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  7.076 0.118 7.212 0 0 
+Time elapsed:  9.84 0.18 20.113 0 0 
 > grDevices::dev.off()
 null device 
           1 
