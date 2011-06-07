@@ -22,7 +22,7 @@ is.nifti(x)
   \item{img}{is a multidimensional array of data.}
   \item{dim}{is the dimension of the data (default = \code{missing}).}
   \item{datatype}{is an integer that denotes the type of data contained
-    in each voxel.  See \code{\link{convert.datatype}} or the NIfTI
+    in each voxel.  See \code{convert.datatype} or the NIfTI
     documentation for more details.}
   \item{cal.min}{allows user-specified minimum value in the array
     (visualization purposes only).}
@@ -44,7 +44,8 @@ is.nifti(x)
   Brandon Whitcher \email{bjw34032@users.sourceforge.net}
 }
 \seealso{
-  \code{\linkS4class{nifti}}, \code{\link{anlz}}
+  \code{\linkS4class{nifti}}, \code{\link{anlz}},
+  \code{\link{convert.datatype}}
 }
 \examples{
 nim <- nifti() # default

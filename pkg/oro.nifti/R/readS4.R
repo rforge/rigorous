@@ -57,37 +57,57 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
   ## Strip any extensions
   fname <- sub(".gz", "", fname)
   fname <- sub(".nii", "", fname)
+  fname <- sub(".hdr", "", fname)
+  fname <- sub(".img", "", fname)
 
-  if (! (file.exists(paste(fname, "nii", sep=".")) ||
-         file.exists(paste(fname, "nii.gz", sep=".")))) {
-    stop("File(s) not found!")
-  }
-  if (file.exists(paste(fname, "nii", sep=".")) &&
-      file.exists(paste(fname, "nii.gz", sep="."))) {
-    stop("Both compressed and uncompressed files exist!")
+  nii <- paste(fname, "nii", sep=".")
+  niigz <- paste(fname, "nii.gz", sep=".")
+  hdr <- paste(fname, "hdr", sep=".")
+  hdrgz <- paste(fname, "hdr.gz", sep=".")
+  img <- paste(fname, "img", sep=".")
+  imggz <- paste(fname, "img.gz", sep=".")
+
+  if (file.exists(niigz)) {
+    ## If compressed file exists, then upload!
+    if (verbose) {
+      cat(paste("  files =", niigz), fill=TRUE)
+    }
+    nim <- .read.nifti.content(fname, gzipped=TRUE, verbose=verbose,
+                               warn=warn, reorient=reorient, call=call)
   } else {
-    ## If uncompressed files exist, then upload!
-    if (file.exists(paste(fname, "nii", sep="."))) {      
+    if (file.exists(nii)) {
+      ## If uncompressed file exists, then upload!
       if (verbose) {
-        cat(paste("  files = ", fname, ".nii", sep=""), fill=TRUE)
+        cat(paste("  files =", nii), fill=TRUE)
       }
       nim <- .read.nifti.content(fname, gzipped=FALSE, verbose=verbose,
                                  warn=warn, reorient=reorient, call=call)
-      options(warn=oldwarn)
-      return(nim)
-    }
-    ## If compressed files exist, then upload!
-    if (file.exists(paste(fname, "nii.gz", sep="."))) {
-      if (verbose) {
-        cat(paste("  files = ", fname, ".nii.gz", sep=""), fill=TRUE)
+    } else {
+      if (file.exists(hdrgz) && file.exists(imggz)) {
+        ## If compressed files exist, then upload!
+        if (verbose) {
+          cat(paste("  files =", hdrgz, "and", imggz), fill=TRUE)
+        }
+        nim <- .read.nifti.content(fname, onefile=FALSE, gzipped=TRUE,
+                                   verbose=verbose, warn=warn,
+                                   reorient=reorient, call=call)
+      } else {
+        ## If uncompressed files exist, then upload!
+        if (file.exists(hdr) && file.exists(img)) {
+          if (verbose) {
+            cat(paste("  files =", hdr, "and", img), fill=TRUE)
+          }
+        nim <- .read.nifti.content(fname, onefile=FALSE, gzipped=FALSE,
+                                   verbose=verbose, warn=warn,
+                                   reorient=reorient, call=call)
+        } else {
+          stop("File(s) not found!")
+        }
       }
-      nim <- .read.nifti.content(fname, gzipped=TRUE, verbose=verbose,
-                                 warn=warn, reorient=reorient, call=call)
-      options(warn=oldwarn)
-      return(nim)
     }
   }
-  invisible()
+  options(warn=oldwarn)
+  return(nim)
 }
 
 ############################################################################
@@ -102,13 +122,16 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
     suffix <- ifelse(onefile, "nii.gz", "hdr.gz")
     fname <- paste(fname, suffix, sep=".")
     fid <- gzfile(fname, "rb")
+    if (verbose) {
+      cat("  nii   =", fname, fill=TRUE)
+    }
   } else {
     suffix <- ifelse(onefile, "nii", "hdr")
     fname <- paste(fname, suffix, sep=".")
     fid <- file(fname, "rb")
-  }
-  if (verbose) {
-    cat("  nii   =", fname, fill=TRUE)
+    if (verbose) {
+      cat("  hdr   =", fname, fill=TRUE)
+    }
   }
   ## Warnings?
   oldwarn <- getOption("warn")
@@ -187,39 +210,36 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
   ## start of the file, but trying to avoid clobbering widely-used
   ## ANALYZE 7.5 fields led to putting this marker last.  However,
   ## recall that "the last shall be first" (Matthew 20:16).
-  if (!(nim@"magic" %in% c("n+1","ni1"))) {
-    stop(" -- Unrecognized \"magic\" field! --")
-  }
-  nim@"extender" <- readBin(fid, integer(), 4, size=1, signed=FALSE,
-                            endian=endian)
-  ## If extension[0] is nonzero, it indicates that extended header
-  ## information is present in the bytes following the extension
-  ## array.  In a .nii file, this extended header data is before the
-  ## image data (and vox_offset must be set correctly to allow for
-  ## this).  In a .hdr file, this extended data follows extension and
-  ## proceeds (potentially) to the end of the file.
-  ##
-  ## FIXME This doesn't account for two-file
-  ##
-  if (nim@"extender"[1] > 0 || nim@"vox_offset" > 352) {
-    if (verbose) {
-      cat("  niftiExtension detected!", fill=TRUE)
-    }
-    if (!is(nim, "niftiExtension")) {
-      nim <- as(nim, "niftiExtension")
-    }
-    while (seek(fid) < nim@"vox_offset") {
+  if (nim@"sizeof_hdr" == 352) {  
+    nim@"extender" <- readBin(fid, integer(), 4, size=1, signed=FALSE,
+                              endian=endian)
+    ## If extension[0] is nonzero, it indicates that extended header
+    ## information is present in the bytes following the extension
+    ## array.  In a .nii file, this extended header data is before the
+    ## image data (and vox_offset must be set correctly to allow for
+    ## this).  In a .hdr file, this extended data follows extension and
+    ## proceeds (potentially) to the end of the file.
+    ##
+    if (nim@"extender"[1] > 0 || nim@"vox_offset" > 352) {
       if (verbose) {
-        cat("  seek(fid) =", seek(fid), fill=TRUE)
+        cat("  niftiExtension detected!", fill=TRUE)
       }
-      nimextsec <- new("niftiExtensionSection")
-      nimextsec@esize <- readBin(fid, integer(), size=4, endian=endian)
-      nimextsec@ecode <- readBin(fid, integer(), size=4, endian=endian)
-      nimextsec@edata <- .readCharWithEmbeddedNuls(fid, n=nimextsec@esize-8)
-      nim@extensions <- append(nim@extensions, nimextsec)
-    }
-    if (seek(fid) > nim@"vox_offset") {
-      stop("-- extension size (esize) has overshot voxel offset --")
+      if (!is(nim, "niftiExtension")) {
+        nim <- as(nim, "niftiExtension")
+      }
+      while (seek(fid) < nim@"vox_offset") {
+        if (verbose) {
+          cat("  seek(fid) =", seek(fid), fill=TRUE)
+        }
+        nimextsec <- new("niftiExtensionSection")
+        nimextsec@esize <- readBin(fid, integer(), size=4, endian=endian)
+        nimextsec@ecode <- readBin(fid, integer(), size=4, endian=endian)
+        nimextsec@edata <- .readCharWithEmbeddedNuls(fid, n=nimextsec@esize-8)
+        nim@extensions <- append(nim@extensions, nimextsec)
+      }
+      if (seek(fid) > nim@"vox_offset") {
+        stop("-- extension size (esize) has overshot voxel offset --")
+      }
     }
   }
 
@@ -227,7 +247,7 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
     cat("  seek(fid) =", seek(fid), fill=TRUE)
   }
   n <- prod(nim@"dim_"[2:5])
-  if (!onefile) {
+  if (! onefile) {
     close(fid)
     fname <- sub(".hdr", ".img", fname)
     if (gzipped) {

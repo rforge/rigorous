@@ -190,7 +190,7 @@ setValidity("anlz", function(object) {
 ## anlz()
 #############################################################################
 
-anlz <- function(img=array(0, dim=rep(1,4)), dim, ...) {
+anlz <- function(img=array(0, dim=rep(1,4)), dim, datatype=2, ...) {
   if (missing(dim)) {
     if (is.array(img)) {
       dim <- base::dim(img)
@@ -208,7 +208,8 @@ anlz <- function(img=array(0, dim=rep(1,4)), dim, ...) {
   cal.max <- max(img, na.rm=TRUE) # quantile(img, probs=0.95, na.rm=TRUE)
   cal.min <- min(img, na.rm=TRUE) # quantile(img, probs=0.05, na.rm=TRUE)
   obj <- new("anlz", .Data=array(img, dim=dim), "dim_"=x, "pixdim"=y,
-             "cal_max"=cal.max, "cal_min"=cal.min, ...)
+             "cal_max"=cal.max, "cal_min"=cal.min, "datatype"=datatype,
+             ...)
   validANALYZE <- getValidity(getClassDef("anlz"))
   validANALYZE(obj)
   return(obj)
@@ -237,10 +238,10 @@ if (!isGeneric("descrip")) {
     setGeneric("descrip", function(object) { standardGeneric("descrip") })
   }
 }
-setMethod("descrip", "anlz", function(object) { object@descrip })
+setMethod("descrip", "anlz", function(object) { object@"descrip" })
 setGeneric("descrip<-", function(x, value) { standardGeneric("descrip<-") })
 setReplaceMethod("descrip", "anlz",
-                 function(x, value) { x@descrip <- value ; x })
+                 function(x, value) { x@"descrip" <- value ; x })
 
 #############################################################################
 ## aux.file() and aux.file<-()
@@ -253,7 +254,7 @@ if (!isGeneric("aux.file")) {
     setGeneric("aux.file", function(object) { standardGeneric("aux.file") })
   }
 }
-setMethod("aux.file", "anlz", function(object) { object@aux_file })
+setMethod("aux.file", "anlz", function(object) { object@"aux_file" })
 setGeneric("aux.file<-", function(x, value) { standardGeneric("aux.file<-") })
 setReplaceMethod("aux.file", "anlz",
                  function(x, value) { x@"aux_file" <- value ; x })

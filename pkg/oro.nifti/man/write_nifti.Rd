@@ -16,17 +16,20 @@
   NIfTI format.
 }
 \usage{
-\S4method{writeNIfTI}{nifti}(nim, filename, gzipped = TRUE, verbose = FALSE,
-            warn = -1)
-\S4method{writeNIfTI}{anlz}(nim, filename, gzipped = TRUE, verbose = FALSE,
-            warn = -1)
-\S4method{writeNIfTI}{array}(nim, filename, gzipped = TRUE, verbose = FALSE,
-            warn = -1)
+\S4method{writeNIfTI}{nifti}(nim, filename, onefile = TRUE, gzipped = TRUE,
+            verbose = FALSE, warn = -1)
+\S4method{writeNIfTI}{anlz}(nim, filename, onefile = TRUE, gzipped = TRUE,
+            verbose = FALSE, warn = -1)
+\S4method{writeNIfTI}{array}(nim, filename, onefile = TRUE, gzipped = TRUE,
+            verbose = FALSE, warn = -1)
 }
 \arguments{
   \item{nim}{is an object of class \code{nifti} or \code{anlz}.}
   \item{filename}{is the path and file name to save the NIfTI file
     (.nii) \bold{without} the suffix.}
+  \item{onefile}{is a logical value that allows the scanning of
+    single-file (.nii) or dual-file format (.hdr and .img) NIfTI files
+    (default = \code{TRUE}).} 
   \item{gzipped}{is a character string that enables exportation of
     compressed (.gz) files (default = \code{TRUE}).}
   \item{verbose}{is a logical variable (default = \code{FALSE}) that

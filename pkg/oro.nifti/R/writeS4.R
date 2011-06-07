@@ -1,6 +1,6 @@
 ##
 ##
-## Copyright (c) 2009, Brandon Whitcher and Volker Schmid
+## Copyright (c) 2009-2011 Brandon Whitcher and Volker Schmid
 ## All rights reserved.
 ## 
 ## Redistribution and use in source and binary forms, with or without
@@ -34,19 +34,23 @@
 
 setGeneric("writeNIfTI", function(nim,  ...) standardGeneric("writeNIfTI"))
 setMethod("writeNIfTI", signature(nim="nifti"), 
-	  function(nim, filename, gzipped=TRUE, verbose=FALSE, warn=-1) {
+	  function(nim, filename, onefile=TRUE, gzipped=TRUE, verbose=FALSE,
+                   warn=-1) {
             .writeNIfTI(nim, filename, gzipped, verbose, warn)
           })
 setMethod("writeNIfTI", signature(nim="anlz"), 
-	  function(nim, filename, gzipped=TRUE, verbose=FALSE, warn=-1) {
+	  function(nim, filename, onefile=TRUE, gzipped=TRUE, verbose=FALSE,
+                   warn=-1) {
             .writeNIfTI(as(nim, "nifti"), filename, gzipped, verbose, warn)
           })
 setMethod("writeNIfTI", signature(nim="array"), 
-	  function(nim, filename, gzipped=TRUE, verbose=FALSE, warn=-1) {
-            .writeNIfTI(as(nim, "nifti"), filename, gzipped, verbose, warn)
+	  function(nim, filename, onefile=TRUE, gzipped=TRUE, verbose=FALSE,
+                   warn=-1) {
+            .writeNIfTI(as(nim, "nifti"), filename, onefile, gzipped,
+                        verbose, warn)
           })
-.writeNIfTI <- function(nim, filename, gzipped=TRUE, verbose=FALSE,
-                        warn=-1) {
+.writeNIfTI <- function(nim, filename, onefile=TRUE, gzipped=TRUE,
+                        verbose=FALSE, warn=-1) {
   ## Warnings?
   oldwarn <- getOption("warn")
   options(warn=warn)
