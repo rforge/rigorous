@@ -393,7 +393,7 @@ readANALYZE <- function(fname, verbose=FALSE, warn=-1) {
   ## Construct S4 object
   aim <- new("anlz")
   aim@"sizeof_hdr" <- sizeof.hdr
-  aim@"db_type" <- .readCharWithEmbeddedNuls(fid, 10)
+  aim@"data_type" <- .readCharWithEmbeddedNuls(fid, 10)
   aim@"db_name" <- .readCharWithEmbeddedNuls(fid, n=18)
   aim@"extents" <- readBin(fid, integer(), size=4, endian=endian)
   aim@"session_error" <- readBin(fid, integer(), size=2, endian=endian)
@@ -420,7 +420,7 @@ readANALYZE <- function(fname, verbose=FALSE, warn=-1) {
   aim@"descrip" <- .readCharWithEmbeddedNuls(fid, n=80)
   aim@"aux_file" <- .readCharWithEmbeddedNuls(fid, n=24)
   aim@"orient" <- .readCharWithEmbeddedNuls(fid, n=1)
-  aim@"originator" <- .readCharWithEmbeddedNuls(fid, 10)
+  aim@"origin" <- .readCharWithEmbeddedNuls(fid, 10)
   aim@"generated" <- .readCharWithEmbeddedNuls(fid, 10)
   aim@"scannum" <- .readCharWithEmbeddedNuls(fid, 10)
   aim@"patient_id" <- .readCharWithEmbeddedNuls(fid, 10)

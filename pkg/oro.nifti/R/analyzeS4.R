@@ -1,6 +1,6 @@
 ##
 ##
-## Copyright (c) 2009, Brandon Whitcher and Volker Schmid
+## Copyright (c) 2009-2011, Brandon Whitcher and Volker Schmid
 ## All rights reserved.
 ## 
 ## Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,7 @@
 
 setClass("anlz",
          representation("sizeof_hdr" = "numeric",
-                        "db_type" = "character",
+                        "data_type" = "character",
                         "db_name" = "character",
                         "extents" = "numeric",
                         "session_error" = "numeric",
@@ -65,7 +65,7 @@ setClass("anlz",
                         "descrip" = "character",
                         "aux_file" = "character",
                         "orient" = "character",
-                        "originator" = "character",
+                        "origin" = "character",
                         "generated" = "character",
                         "scannum" = "character",
                         "patient_id" = "character",
@@ -81,7 +81,7 @@ setClass("anlz",
                         "smax" = "numeric",
                         "smin" = "numeric"),
          prototype("sizeof_hdr" = 348,
-                   "db_type" = "",
+                   "data_type" = "",
                    "db_name" = "",
                    "extents" = numeric(1),
                    "session_error" = numeric(1),
@@ -108,7 +108,7 @@ setClass("anlz",
                    "descrip" = "",
                    "aux_file" = "",
                    "orient" = "0",
-                   "originator" = "",
+                   "origin" = "",
                    "generated" = "",
                    "scannum" = "",
                    "patient_id" = "",
