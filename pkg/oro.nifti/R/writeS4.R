@@ -208,50 +208,55 @@ setMethod("writeANALYZE", signature(aim="anlz"),
   } else {
     fid <- file(paste(filename, ".hdr", sep=""), "wb")
   }
-  
-  writeBin(as.integer(aim@"sizeof_hdr"), fid, size=4)
-  writeChar(aim@"data_type", fid, nchar=10, eos=NULL)
-  writeChar(aim@"db_name", fid, nchar=18, eos=NULL)
-  writeBin(as.integer(aim@"extents"), fid, size=4)
-  writeBin(as.integer(aim@"session_error"), fid, size=2)
-  writeChar(aim@"regular", fid, nchar=1, eos=NULL)
-  writeChar(aim@"hkey_un0", fid, nchar=1, eos=NULL)
-  writeBin(as.integer(aim@"dim_"), fid, size=2)
-  writeChar(aim@"vox_units", fid, nchar=4, eos=NULL)
-  writeChar(aim@"cal_units", fid, nchar=8, eos=NULL)
-  writeBin(as.integer(aim@"unused1"), fid, size=2)
-  writeBin(as.integer(aim@"datatype"), fid, size=2)
-  writeBin(as.integer(aim@"bitpix"), fid, size=2)
-  writeBin(as.integer(aim@"dim_un0"), fid, size=2)
-  writeBin(aim@"pixdim", fid, size=4)
-  writeBin(aim@"vox_offset", fid, size=4)
-  writeBin(aim@"funused1", fid, size=4)
-  writeBin(aim@"funused2", fid, size=4)
-  writeBin(aim@"funused3", fid, size=4)
-  writeBin(aim@"cal_max", fid, size=4)
-  writeBin(aim@"cal_min", fid, size=4)
-  writeBin(as.integer(aim@"compressed"), fid, size=4)
-  writeBin(as.integer(aim@"verified"), fid, size=4)
-  writeBin(as.integer(aim@"glmax"), fid, size=4)
-  writeBin(as.integer(aim@"glmin"), fid, size=4)
-  writeChar(aim@"descrip", fid, nchar=80, eos=NULL)
-  writeChar(aim@"aux_file", fid, nchar=24, eos=NULL)
-  writeChar(aim@"orient", fid, nchar=1, eos=NULL)
-  writeChar(aim@"origin", fid, nchar=10, eos=NULL)
-  writeChar(aim@"generated", fid, nchar=10, eos=NULL)
-  writeChar(aim@"scannum", fid, nchar=10, eos=NULL)
-  writeChar(aim@"patient_id", fid, nchar=10, eos=NULL)
-  writeChar(aim@"exp_date", fid, nchar=10, eos=NULL)
-  writeChar(aim@"exp_time", fid, nchar=10, eos=NULL)
-  writeChar(aim@"hist_un0", fid, nchar=3, eos=NULL)
-  writeBin(as.integer(aim@"views"), fid, size=4)
-  writeBin(as.integer(aim@"vols_added"), fid, size=4)
-  writeBin(as.integer(aim@"start_field"), fid, size=4)
-  writeBin(as.integer(aim@"field_skip"), fid, size=4)
-  writeBin(as.integer(aim@"omax"), fid, size=4)
-  writeBin(as.integer(aim@"omin"), fid, size=4)
-  writeBin(as.integer(aim@"smax"), fid, size=4)
-  writeBin(as.integer(aim@"smin"), fid, size=4)
+  ## header_key
+  writeBin(as.integer(aim@"sizeof_hdr"), fid, size=4) #  0 + 4
+  writeChar(aim@"data_type", fid, nchar=10, eos=NULL) #  4 + 10
+  writeChar(aim@"db_name", fid, nchar=18, eos=NULL)   #  14 + 18
+  writeBin(as.integer(aim@"extents"), fid, size=4)    #  32 + 4
+  writeBin(as.integer(aim@"session_error"), fid, size=2) # 36 + 2
+  writeChar(aim@"regular", fid, nchar=1, eos=NULL)    # 38 + 1
+  writeChar(aim@"hkey_un0", fid, nchar=1, eos=NULL)   # 39 + 1
+  ##                                                  40 bytes
+  ## image_dimension
+  writeBin(as.integer(aim@"dim_"), fid, size=2)       # 0 + (2 x 8)
+  writeChar(aim@"vox_units", fid, nchar=4, eos=NULL)  # 16 + 4
+  writeChar(aim@"cal_units", fid, nchar=8, eos=NULL)  # 20 + 8
+  writeBin(as.integer(aim@"unused1"), fid, size=2)    # 28 + 2
+  writeBin(as.integer(aim@"datatype"), fid, size=2)   # 30 + 2
+  writeBin(as.integer(aim@"bitpix"), fid, size=2)     # 32 + 2
+  writeBin(as.integer(aim@"dim_un0"), fid, size=2)    # 34 + 2
+  writeBin(aim@"pixdim", fid, size=4)                 # 36 + (4 x 8)
+  writeBin(aim@"vox_offset", fid, size=4)             # 68 + 4
+  writeBin(aim@"funused1", fid, size=4)               # 72 + 4
+  writeBin(aim@"funused2", fid, size=4)               # 76 + 4
+  writeBin(aim@"funused3", fid, size=4)               # 80 + 4
+  writeBin(aim@"cal_max", fid, size=4)                # 84 + 4
+  writeBin(aim@"cal_min", fid, size=4)                # 88 + 4
+  writeBin(as.integer(aim@"compressed"), fid, size=4) # 92 + 4
+  writeBin(as.integer(aim@"verified"), fid, size=4)   # 96 + 4
+  writeBin(as.integer(aim@"glmax"), fid, size=4)      # 100 + 4
+  writeBin(as.integer(aim@"glmin"), fid, size=4)      # 104 + 4
+  ##                                                  108 bytes
+  ## data_history
+  writeChar(aim@"descrip", fid, nchar=80, eos=NULL)   # 0 + 80
+  writeChar(aim@"aux_file", fid, nchar=24, eos=NULL)  # 80 + 24
+  writeChar(aim@"orient", fid, nchar=1, eos=NULL)     # 104 + 1
+  writeBin(as.integer(aim@"origin"), fid, size=2)    # 105 + (2 x 5)
+  writeChar(aim@"generated", fid, nchar=10, eos=NULL) # 115 + 10
+  writeChar(aim@"scannum", fid, nchar=10, eos=NULL)   # 125 + 10
+  writeChar(aim@"patient_id", fid, nchar=10, eos=NULL) # 135 + 10
+  writeChar(aim@"exp_date", fid, nchar=10, eos=NULL)  # 145 + 10
+  writeChar(aim@"exp_time", fid, nchar=10, eos=NULL)  # 155 + 10
+  writeChar(aim@"hist_un0", fid, nchar=3, eos=NULL)   # 165 + 3
+  writeBin(as.integer(aim@"views"), fid, size=4)      # 168 + 4
+  writeBin(as.integer(aim@"vols_added"), fid, size=4) # 172 + 4
+  writeBin(as.integer(aim@"start_field"), fid, size=4) # 176 + 4
+  writeBin(as.integer(aim@"field_skip"), fid, size=4) # 180 + 4
+  writeBin(as.integer(aim@"omax"), fid, size=4)       # 184 + 4
+  writeBin(as.integer(aim@"omin"), fid, size=4)       # 188 + 4
+  writeBin(as.integer(aim@"smax"), fid, size=4)       # 192 + 4
+  writeBin(as.integer(aim@"smin"), fid, size=4)       # 196 + 4
+  ##                                                  200 bytes
   close(fid)
   ## Write image file...
   if (gzipped) {

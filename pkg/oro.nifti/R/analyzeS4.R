@@ -65,7 +65,7 @@ setClass("anlz",
                         "descrip" = "character",
                         "aux_file" = "character",
                         "orient" = "character",
-                        "origin" = "character",
+                        "origin" = "numeric",
                         "generated" = "character",
                         "scannum" = "character",
                         "patient_id" = "character",
@@ -108,7 +108,7 @@ setClass("anlz",
                    "descrip" = "",
                    "aux_file" = "",
                    "orient" = "0",
-                   "origin" = "",
+                   "origin" = numeric(5),
                    "generated" = "",
                    "scannum" = "",
                    "patient_id" = "",
@@ -157,7 +157,7 @@ setValidity("anlz", function(object) {
     retval <- c(retval, "sizeof_hdr != 348")
   }
   ## datatype needed to specify type of image data
-  if (!object@"datatype" %in% c(0,2^(0:7), 255)) {
+  if (!object@"datatype" %in% c(0, 2^(0:7), 255)) {
     retval <- c(retval, "datatype not recognized")
   }
   ## bitpix should correspond correctly to datatype
@@ -204,19 +204,31 @@ anlz <- function(img=array(0, dim=rep(1,4)), dim, datatype=2, ...) {
   }
   x <- c(length(dim), dim[1], dim[2], dim[3],
          ifelse(is.na(dim[4]), 1, dim[4]), rep(1,3))
-  y <- c(0.0, rep(1.0,length(dim)), rep(0.0,3))
+  y <- c(0.0, rep(1.0, length(dim)), rep(0.0, 7 - length(dim)))
   cal.max <- max(img, na.rm=TRUE) # quantile(img, probs=0.95, na.rm=TRUE)
   cal.min <- min(img, na.rm=TRUE) # quantile(img, probs=0.05, na.rm=TRUE)
+  ## Set datatype
+  switch(as.character(datatype),
+         "1" = bitpix <- 1,
+         "2" = bitpix <- 8,
+         "4" = bitpix <- 16,
+         "8" = bitpix <- 32,
+         "16" = bitpix <- 32,
+         "32" = bitpix <- 64,
+         "64" = bitpix <- 64,
+         "512" = bitpix <- 16,
+         stop(paste("Data type", datatype, "unsupported."))
+         )
   obj <- new("anlz", .Data=array(img, dim=dim), "dim_"=x, "pixdim"=y,
              "cal_max"=cal.max, "cal_min"=cal.min, "datatype"=datatype,
-             ...)
+             "bitpix"=bitpix, ...)
   validANALYZE <- getValidity(getClassDef("anlz"))
   validANALYZE(obj)
   return(obj)
 }
 
 #############################################################################
-## anlz()
+## is.anlz()
 #############################################################################
 
 is.anlz <- function(x) {

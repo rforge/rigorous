@@ -1,6 +1,6 @@
 ##
 ##
-## Copyright (c) 2009,2010 Brandon Whitcher and Volker Schmid
+## Copyright (c) 2009-2011 Brandon Whitcher and Volker Schmid
 ## All rights reserved.
 ## 
 ## Redistribution and use in source and binary forms, with or without
@@ -420,7 +420,7 @@ readANALYZE <- function(fname, verbose=FALSE, warn=-1) {
   aim@"descrip" <- .readCharWithEmbeddedNuls(fid, n=80)
   aim@"aux_file" <- .readCharWithEmbeddedNuls(fid, n=24)
   aim@"orient" <- .readCharWithEmbeddedNuls(fid, n=1)
-  aim@"origin" <- .readCharWithEmbeddedNuls(fid, 10)
+  aim@"origin" <- readBin(fid, integer(), 5, size=2, endian=endian) # .readCharWithEmbeddedNuls(fid, 10)
   aim@"generated" <- .readCharWithEmbeddedNuls(fid, 10)
   aim@"scannum" <- .readCharWithEmbeddedNuls(fid, 10)
   aim@"patient_id" <- .readCharWithEmbeddedNuls(fid, 10)

@@ -21,7 +21,7 @@
       imaging data}
     \item{\code{sizeof_hdr}:}{Object of class \code{"numeric"} contains
       the size of the header (= 348)}
-    \item{\code{db_type}:}{Object of class \code{"character"}}
+    \item{\code{data_type}:}{Object of class \code{"character"}}
     \item{\code{db_name}:}{Object of class \code{"character"}}
     \item{\code{extents}:}{Object of class \code{"numeric"}}
     \item{\code{session_error}:}{Object of class \code{"numeric"}}
@@ -53,7 +53,7 @@
     \item{\code{descrip}:}{Object of class \code{"character"}}
     \item{\code{aux_file}:}{Object of class \code{"character"}}
     \item{\code{orient}:}{Object of class \code{"character"}}
-    \item{\code{originator}:}{Object of class \code{"character"}}
+    \item{\code{origin}:}{Object of class \code{"numeric"}}
     \item{\code{generated}:}{Object of class \code{"character"}}
     \item{\code{scannum}:}{Object of class \code{"character"}}
     \item{\code{patient_id}:}{Object of class \code{"character"}}
