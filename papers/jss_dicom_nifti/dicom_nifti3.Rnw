@@ -11,7 +11,7 @@
 
 %% almost as usual
 \author{Brandon Whitcher\\Mango~Solutions \And 
-        Volker J. Schmid\\Ludwig-Maximilians Universit\"at M\"unchen \AND
+        Volker J.~Schmid\\Ludwig-Maximilians Universit\"at M\"unchen \AND
         Andrew Thornton\\Cardiff University}
 \title{Working with the {DICOM} and {NIfTI} Data Standards in \proglang{R}}
 
@@ -66,7 +66,7 @@ easy data input, data output, image processing and visualization.
   E-mail: \email{bwhitcher@mango-solutions.com}\\
   URL: \url{http://www2.imperial.ac.uk/~bwhitche}, \url{http://rigorousanalytics.blogspot.com}\\
   
-  Volker J. Schmid\\
+  Volker J.~Schmid\\
   Bioimaging group\\
   Department of Statistics\\
   Ludwig-Maximilians-Universit\"at M\"unchen\\
@@ -1204,7 +1204,7 @@ The functions \code{dicom2nifti} and \code{dicom2analyze} will fail
 when the dimensions of the individual images in the DICOM list do not
 match.  However, they do not check for different series numbers or
 patient~IDs so caution should be exercised when scripting automated
-workflows for DICOM-to-NIfTI conversion.  In cases where a DICOM file
+work flows for DICOM-to-NIfTI conversion.  In cases where a DICOM file
 includes images from more than one series, the corresponding slices
 have to be chosen before conversion, using \code{dicomTable},
 \code{extractHeader}, and \code{matchHeader}.
