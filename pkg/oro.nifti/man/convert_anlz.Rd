@@ -1,9 +1,10 @@
 % Part of the dcemri package for R
-% Distributed under the BSD license: see dcemri/COPYING
+% Distributed under the BSD license: see oro.nifti/COPYING
 %
-% $Id: convert_anlz.Rd 332 2010-01-29 16:54:07Z bjw34032 $
+% $Id: $
 
 \name{Convert ANALYZE Codes}
+\alias{convert.bitpix.anlz}
 \alias{convert.datatype.anlz}
 \alias{convert.orient.anlz}
 \title{Convert NIfTI Codes}
@@ -12,11 +13,13 @@
   chartacter strings.
 }
 \usage{
-convert.datatype.anlz(datatype)
+convert.bitpix.anlz(bitpix)
+convert.datatype.anlz(datatype.code)
 convert.orient.anlz(orientation)
 }
 \arguments{
-  \item{datatype}{defines data type.}
+  \item{bitpix}{is the bit-per-pixel code.}
+  \item{datatype.code}{defines data type.}
   \item{orientation}{defines the orientation.}
 }
 \details{

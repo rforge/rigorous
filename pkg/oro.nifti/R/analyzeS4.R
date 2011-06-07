@@ -270,3 +270,19 @@ setMethod("aux.file", "anlz", function(object) { object@"aux_file" })
 setGeneric("aux.file<-", function(x, value) { standardGeneric("aux.file<-") })
 setReplaceMethod("aux.file", "anlz",
                  function(x, value) { x@"aux_file" <- value ; x })
+
+############################################################################
+## as("array", "anlz")
+############################################################################
+
+setAs("array", "anlz",
+      function(from) { as.anlz(from) },
+      function(from, value) { as.anlz(from, value) } )
+
+############################################################################
+## as("list", "anlz")
+############################################################################
+
+setAs("list", "anlz",
+      function(from) { as.anlz(from) },
+      function(from, value) { as.anlz(from, value) } )

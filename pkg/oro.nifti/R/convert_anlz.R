@@ -32,18 +32,41 @@
 ## $Id: convert_anlz.R 332 2010-01-29 16:54:07Z bjw34032 $
 ##
 
-convert.datatype.anlz <- function(datatype) {
-  switch(as.character(datatype),
-         "0" = "UNKNOWN",
-         "1" = "BINARY",
-         "2" = "UNSIGNED_CHAR",
-         "4" = "SIGNED_SHORT",
-         "8" = "SIGNED_INT",
-         "16" = "FLOAT",
-         "32" = "COMPLEX",
-         "64" = "DOUBLE",
-         "128" = "RGB",
-         "255" = "ALL")
+convert.bitpix.anlz <- function(bitpix=NULL) {
+  anlz.bitpix <- list("NONE" = 0,
+                      "UNKNOWN" = 0,
+                      "BINARY" = 1,
+                      "UNSIGNED_CHAR" = 2,
+                      "SIGNED_SHORT" = 4,
+                      "SIGNED_INT" = 8,
+                      "FLOAT" = 16,
+                      "COMPLEX" = 32,
+                      "DOUBLE" = 64,
+                      "RGB" = 128,
+                      "ALL" = 255)
+  if (is.null(bitpix)) {
+    anlz.bitpix
+  } else {
+    names(which(anlz.bitpix == bitpix))
+  }
+}
+
+convert.datatype.anlz <- function(datatype.code=NULL) {
+  anlz.datatype <- list("UNKNOWN" = 0,
+                        "BINARY" = 1,
+                        "UNSIGNED_CHAR" = 2,
+                        "SIGNED_SHORT" = 4,
+                        "SIGNED_INT" = 8,
+                        "FLOAT" = 16,
+                        "COMPLEX" = 32,
+                        "DOUBLE" = 64,
+                        "RGB" = 128,
+                        "ALL" = 255)
+  if (is.null(datatype.code)) {
+    anlz.datatype
+  } else {
+    names(which(anlz.datatype == as.numeric(datatype.code)))
+  }
 }
 
 convert.orient.anlz <- function(orientation) {
@@ -55,6 +78,67 @@ convert.orient.anlz <- function(orientation) {
          "4" = "coronal flipped",
          "5" = "sagittal flipped",
          "unknown")
+}
+
+############################################################################
+## as.anlz()
+############################################################################
+
+as.anlz <- function(from, value=NULL, verbose=FALSE) {
+  integertype <- function(from) {
+    integer.ranges <- list("SIGNED_SHORT" = c(-2^7, 2^7-1),
+                           "SIGNED_INT" = c(-2^15, 2^15-1))
+    fromRange <- range(from)
+    for (i in 1:length(integer.ranges)) {
+      if (fromRange[1] >= integer.ranges[[i]][1] &&
+	  fromRange[2] <= integer.ranges[[i]][2]) {
+	return(names(integer.ranges)[i])
+      }
+    }
+    warning("Range too large to be kept as integer, forcing float")
+    floattype(from)
+  }
+  
+  floattype <- function(from) {
+    return("FLOAT")
+  }
+
+  if (is.null(value)) {
+    aim <- anlz()
+  } else {
+    aim <- value
+  }
+
+  if (is.array(from)) {
+    ## Determine a sensible datatype
+    dataClass <- class(from[1])
+    datatypeString <- switch(dataClass,
+                             logical = integertype(from),
+                             integer = integertype(from),
+                             numeric = floattype(from),
+                             stop("Can't transform data in from: ",
+                                  class(from[1])))
+    aim@"data_type" <- datatypeString
+    aim@"datatype" <- convert.datatype.anlz()[[datatypeString]]
+    aim@"bitpix" <- convert.bitpix.anlz()[[datatypeString]]
+    aim@"cal_min" <- min(from, na.rm=TRUE)
+    aim@"cal_max" <- max(from, na.rm=TRUE)
+    aim@"dim_" <- c(length(dim(from)), dim(from))
+    if (length(aim@"dim_") < 8) {
+      aim@"dim_" <- c(aim@"dim_", rep(1, 8 - length(aim@"dim_")))
+    }
+    aim@.Data <- from
+  } else {
+    if (is.list(from)) {
+      aim <- lapply(from, function(x) as.anlz(x, value))
+    } else {
+      if (verbose) {
+        warning("Cannot convert class =", class(from), "to anlz object")
+      }
+      aim <- from
+    }
+  }
+  return(aim)
 }
 
 
