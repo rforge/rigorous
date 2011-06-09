@@ -1,6 +1,6 @@
 ##
 ##
-## Copyright (c) 2009, Brandon Whitcher and Volker Schmid
+## Copyright (c) 2009-2011, Brandon Whitcher and Volker Schmid
 ## All rights reserved.
 ## 
 ## Redistribution and use in source and binary forms, with or without
@@ -36,14 +36,14 @@ convert.bitpix.anlz <- function(bitpix=NULL) {
   anlz.bitpix <- list("NONE" = 0,
                       "UNKNOWN" = 0,
                       "BINARY" = 1,
-                      "UNSIGNED_CHAR" = 2,
-                      "SIGNED_SHORT" = 4,
-                      "SIGNED_INT" = 8,
-                      "FLOAT" = 16,
-                      "COMPLEX" = 32,
+                      "UNSIGNED_CHAR" = 8,
+                      "SIGNED_SHORT" = 16,
+                      "SIGNED_INT" = 32,
+                      "FLOAT" = 32,
+                      "COMPLEX" = 64,
                       "DOUBLE" = 64,
-                      "RGB" = 128,
-                      "ALL" = 255)
+                      "RGB" = 24,
+                      "ALL" = 0)
   if (is.null(bitpix)) {
     anlz.bitpix
   } else {
@@ -52,7 +52,8 @@ convert.bitpix.anlz <- function(bitpix=NULL) {
 }
 
 convert.datatype.anlz <- function(datatype.code=NULL) {
-  anlz.datatype <- list("UNKNOWN" = 0,
+  anlz.datatype <- list("NONE" = 0,
+                        "UNKNOWN" = 0,
                         "BINARY" = 1,
                         "UNSIGNED_CHAR" = 2,
                         "SIGNED_SHORT" = 4,
@@ -86,12 +87,12 @@ convert.orient.anlz <- function(orientation) {
 
 as.anlz <- function(from, value=NULL, verbose=FALSE) {
   integertype <- function(from) {
-    integer.ranges <- list("SIGNED_SHORT" = c(-2^7, 2^7-1),
-                           "SIGNED_INT" = c(-2^15, 2^15-1))
+    integer.ranges <- list("SIGNED_SHORT" = c(0, 2^15-1),
+                           "SIGNED_INT" = c(0, 2^31-1))
     fromRange <- range(from)
     for (i in 1:length(integer.ranges)) {
-      if (fromRange[1] >= integer.ranges[[i]][1] &&
-	  fromRange[2] <= integer.ranges[[i]][2]) {
+      if (fromRange[1] >= min(integer.ranges[[i]]) &&
+	  fromRange[2] <= max(integer.ranges[[i]])) {
 	return(names(integer.ranges)[i])
       }
     }
