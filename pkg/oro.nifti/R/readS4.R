@@ -210,7 +210,7 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
   ## start of the file, but trying to avoid clobbering widely-used
   ## ANALYZE 7.5 fields led to putting this marker last.  However,
   ## recall that "the last shall be first" (Matthew 20:16).
-  if (nim@"sizeof_hdr" == 352) {  
+  if (onefile) {  
     nim@"extender" <- readBin(fid, integer(), 4, size=1, signed=FALSE,
                               endian=endian)
     ## If extension[0] is nonzero, it indicates that extended header
