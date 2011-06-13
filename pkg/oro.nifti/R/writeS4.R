@@ -33,6 +33,7 @@
 ##
 
 setGeneric("writeNIfTI", function(nim,  ...) standardGeneric("writeNIfTI"))
+
 setMethod("writeNIfTI", signature(nim="nifti"), 
 	  function(nim, filename, onefile=TRUE, gzipped=TRUE, verbose=FALSE,
                    warn=-1) {
@@ -50,6 +51,7 @@ setMethod("writeNIfTI", signature(nim="array"),
             .writeNIfTI(as(nim, "nifti"), filename, onefile, gzipped,
                         verbose, warn)
           })
+
 .writeNIfTI <- function(nim, filename, onefile=TRUE, gzipped=TRUE,
                         verbose=FALSE, warn=-1) {
   ## Warnings?
