@@ -1,4 +1,4 @@
 mniRL <- readNIfTI(file.path(system.file("nifti", package="oro.nifti"),
-                             "mniRL_nifti"))
+                             "mniRL"))
 image(mniRL)
 orthographic(mniRL)

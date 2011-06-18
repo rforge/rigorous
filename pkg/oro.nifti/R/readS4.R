@@ -291,7 +291,7 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
   ## qform_code (Method 2) and sform_code (Method 3).
   dims <- 2:(1+nim@"dim_"[1])
   if (reorient) {
-    nim@.Data <- reorient(nim, data, verbose)
+    nim@.Data <- reorient(nim, data, verbose=verbose)
     nim@"reoriented" <- TRUE
   } else {
     nim@.Data <- array(data, nim@"dim_"[dims])

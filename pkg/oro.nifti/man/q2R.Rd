@@ -5,15 +5,20 @@
 
 \name{quaternion2rotation}
 \alias{quaternion2rotation}
+\alias{quaternion2mat44}
 \title{Convert Quaternion into a Rotation Matrix}
 \description{
-  The rotation matrix \eqn{R} is calculated from the quaternion
+  The affine/rotation matrix \eqn{R} is calculated from the quaternion
   parameters.
 }
 \usage{
+quaternion2mat44(nim, tol = 1e-7)
 quaternion2rotation(b, c, d)
 }
 \arguments{
+  \item{nim}{is an object of class \code{nifti}.}
+  \item{tol}{is a very small value used to judge if a number is
+    essentially zero.}
   \item{b}{is the quaternion \eqn{b} parameter.}
   \item{c}{is the quaternion \eqn{c} parameter.}
   \item{d}{is the quaternion \eqn{d} parameter.}
@@ -30,7 +35,8 @@ quaternion2rotation(b, c, d)
   (\code{quatern_b}, \code{quatern_c}, \code{quatern_d}) fields.
 }
 \value{
-  The (proper) \eqn{3{\times}3}{3x3} rotation matrix.
+  The (proper) \eqn{3{\times}3}{3x3} rotation matrix or
+  \eqn{4{\times}4}{4x4} affine matrix.
 }
 \references{
   NIfTI-1\cr

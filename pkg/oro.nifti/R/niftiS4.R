@@ -171,7 +171,7 @@ setMethod("show", "nifti", function(object) {
       paste(object@"dim_"[2:(1+object@"dim_"[1])], collapse=" x "),
       fill=TRUE)
   cat("  Pixel Dimension :",
-      paste(round(object@pixdim[2:(1+object@"dim_"[1])],2), collapse=" x "),
+      paste(round(pixdim(object)[2:(1+object@"dim_"[1])],2), collapse=" x "),
       fill=TRUE)
   cat("  Voxel Units     :",
       convert.units(xyzt2space(object@"xyzt_units")),
@@ -214,11 +214,11 @@ setValidity("nifti", function(object) {
     retval <- c(retval, "range(img) != c(cal_min,cal_max)")
   }
   ## pixdim[0] is required when qform_code != 0
-  if (object@"qform_code" != 0 && object@pixdim[1] == 0) {
+  if (object@"qform_code" != 0 && pixdim(object)[1] == 0) {
     retval <- c(retval, "pixdim[1] is required")
   }
   ## pixdim[n] required when dim[n] is required
-  if (! all(object@"dim_"[indices] > 0 & object@"pixdim"[indices] > 0)) {
+  if (! all(object@"dim_"[indices] > 0 & pixdim(object)[indices] > 0)) {
     retval <- c(retval, "dim/pixdim mismatch")
   }
   ## data dimensions should match dim 
@@ -320,10 +320,6 @@ nifti <- function(img=array(0, dim=rep(1,4)), dim, datatype=2,
     }
   }
   ld <- length(dim)
-  ## if (ld < 3) {
-  ##   stop(sprintf("length(dim) must be at least 3 and is %d.", ld))
-  ## }
-
   ## Create "dim" and "pixdim" slots
   x <- rep(1, 8)
   x[1] <- length(dim)
@@ -543,12 +539,7 @@ setMethod("sform", "nifti",
 #############################################################################
 
 setGeneric("qform", function(object) { standardGeneric("qform") })
-setMethod("qform", "nifti",
-          function(object) {
-            cbind(quaternion2rotation(object@"quatern_b",
-                                      object@"quatern_c",
-                                      object@"quatern_d"))
-          })
+setMethod("qform", "nifti", function(object) { quaternion2mat44(object) })
 
 #############################################################################
 ## quaternion2rotation()
@@ -560,6 +551,62 @@ quaternion2rotation <- function(b, c, d) {
                 2*b*c-2*a*d, a*a+c*c-b*b-d*d, 2*c*d+2*a*b,  # column 2
                 2*b*d+2*a*c, 2*c*d-2*a*b, a*a+d*d-c*c-b*b), # column 3
               3, 3)
+  return(R)
+}
+
+#############################################################################
+## quaternion2mat44()
+#############################################################################
+
+quaternion2mat44 <- function(nim, tol=1e-7) {
+  qb <- nim@"quatern_b"
+  qc <- nim@"quatern_c"
+  qd <- nim@"quatern_d"
+  qx <- nim@"qoffset_x"
+  qy <- nim@"qoffset_y"
+  qz <- nim@"qoffset_z"
+  dx <- pixdim(nim)[2]
+  dy <- pixdim(nim)[3]
+  dz <- pixdim(nim)[4]
+  qfac <- pixdim(nim)[1]
+  R <- matrix(0, nrow=4, ncol=4)
+  b <- qb
+  c <- qc
+  d <- qd
+  ## last row is always [ 0 0 0 1 ]
+  R[4,1] <- R[4,2] <- R[4,3] <- 0.0
+  R[4,4] <- 1.0
+  ## compute a parameter from b,c,d
+  a <- 1 - (b*b + c*c + d*d)
+  if (a < tol) {                      # special case
+    a <- 1 / sqrt(b*b + c*c +d*d)
+    b <- a * b
+    c <- a * c
+    d <- a * d                        # normalize (b,c,d) vector
+    a <- 0                            # a = 0 ==> 180 degree rotation
+   } else {
+     a <- sqrt(a)                     # angle = 2*arccos(a)
+   }
+  ## load rotation matrix, including scaling factors for voxel sizes
+  xd <- ifelse(dx > 0, dx, 1)         # make sure are positive
+  yd <- ifelse(dy > 0, dy, 1)
+  zd <- ifelse(dz > 0, dz, 1)
+  if (qfac < 0) {
+    zd <- -zd                         # left handedness?
+  }
+  R[1,1] <- (a*a + b*b - c*c - d*d) * xd
+  R[1,2] <- 2 * (b*c - a*d) * yd
+  R[1,3] <- 2 * (b*d + a*c) * zd
+  R[2,1] <- 2 * (b*c + a*d) * xd
+  R[2,2] <- (a*a + c*c - b*b - d*d) * yd
+  R[2,3] <- 2 * (c*d - a*b) * zd
+  R[3,1] <- 2 * (b*d - a*c) * xd
+  R[3,2] <- 2 * (c*d + a*b) * yd
+  R[3,3] <- (a*a + d*d - c*c - b*b) * zd
+  ## load offsets
+  R[1,4] <- qx
+  R[2,4] <- qy
+  R[3,4] <- qz
   return(R)
 }
 

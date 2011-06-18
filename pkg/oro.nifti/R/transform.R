@@ -1,6 +1,6 @@
 ##
 ##
-## Copyright (c) 2009,2010 Brandon Whitcher and Volker Schmid
+## Copyright (c) 2009-2011 Brandon Whitcher and Volker Schmid
 ## All rights reserved.
 ## 
 ## Redistribution and use in source and binary forms, with or without
@@ -48,6 +48,15 @@ performPermutation <- function(T, real.dimensions, data, verbose=FALSE) {
                   }
                   )(real.dimensions) # An anonymous function
 
+  if (verbose) {
+    cat(" ## performPermutation", fill=TRUE)
+    cat("  trans =", fill=TRUE)
+    print(T)
+    cat("  sum(T != 0) =", sum(T != 0), fill=TRUE)
+    cat("       det(T) =", det(T), fill=TRUE)
+    cat("  sum(T != 0) == 3 && det(T) != 0 is",
+        (sum(T != 0) == 3 && det(T) != 0), fill=TRUE)
+  }
   if (sum(T != 0) == 3 && det(T) != 0) {
     ## Now ensure T is descaled and work out the permutation
     trans <- sign(T)
@@ -59,6 +68,9 @@ performPermutation <- function(T, real.dimensions, data, verbose=FALSE) {
                      rep(FALSE, length(workingdims)-3))
     if (any(reverselist[2:length(reverselist)]) || 
 	any(perms != 1:length(perms))) {
+      if (verbose) {
+        cat(" ## if(any(reverselist[2...", fill=TRUE)
+      }
       if (verbose) {
         cat("need to permute", fill=TRUE)
       }
@@ -78,54 +90,67 @@ performPermutation <- function(T, real.dimensions, data, verbose=FALSE) {
               )(reverselist, workingdims) # An anonymous function
       translatedData <- translatedData[prs(1), prs(2), prs(3), prs(4), prs(5),
                                        drop=FALSE]
-      return(array(aperm(translatedData, perms), dim=real.dimensions))
+      out <- array(aperm(translatedData, perms), real.dimensions)
     } else {
       if (reverselist[1]) {
+        if (verbose) {
+          cat(" ## if(reverselist[1]) {", fill=TRUE)
+        }
         ## We just need to reverse the first index.
-        return(array(array(data, dim=workingdims)[workingdims[1]:1,,,,],
-                     dim=real.dimensions))
+        out <- array(array(data, workingdims)[workingdims[1]:1,,,,],
+                     real.dimensions)
       } else {
-        return(array(data, dim=real.dimensions))
+        if (verbose) {
+          cat(" ## else {", fill=TRUE)
+          cat(" ## real.dimensions =", real.dimensions, fill=TRUE)
+        }
+        out <- array(data, real.dimensions)
+        if (verbose) {
+          cat(" ## dim(out) =", dim(out), fill=TRUE)
+        }
       }
     }
   } else {
     stop("Transformation is not simple, cannot reorient!")
   }
+  return(out)
 }
 
 ############################################################################
 ## reorient
 ############################################################################
 
-reorient <- function(nim, data, verbose=FALSE, invert=FALSE) {
+reorient <- function(nim, data, verbose=FALSE, invert=FALSE, tol=1e-7) {
   ## from nifti1.h there are three different methods of orienting the
   ## i,j,k data into x,y,z space.
 
   ## Method 1 is the default for ANALYZE 7.5 files, and will be dealt
   ## with last
-
+  ##
   ## This function will try to reorient the data into an i, j, k space
   ## where increasing (+) (i,j,k) is correlated with
   ## (LEFT,ANTERIOR,SUPERIOR)
   real.dimensions <- nim@"dim_"[2:(1+nim@"dim_"[1])]
 
   if (nim@"qform_code" > 0) {
-    ## Method 2. 
+    if (verbose) {
+      cat(" ## reorient = Method 2", fill=TRUE)
+    }
     ## This method determines [x] coordinates by the pixdim[] scales
     ## (the values of which we don't care about just the signs):
-    S <- diag(nim@"pixdim"[2:4])
+    S <- diag(pixdim(nim)[2:4])
     ## A scaling factor, (because quaternions have to have det(R)=1):
-    scalingFactor <- nim@"pixdim"[1]
+    qfac <- pixdim(nim)[1]
     ## which is either = 1 or -1
-    if (abs(scalingFactor) != 1) { 
+    if (abs(qfac) != 1) { 
       if (verbose) {
-	cat("ScalingFactor (nim@\"pixdim\"[1]) =", scalingFactor,
+	cat("ScalingFactor pixdim(nim)[1] =", qfac,
 	    "!= -1 or 1. Defaulting to 1", fill=TRUE)
       }
-      scalingFactor <- 1 
+      qfac <- 1 
     }
     ## and applied to S[3,3]
-    S[3,3] <- S[3,3] * scalingFactor
+    S[3,3] <- S[3,3] * qfac
     ## a quaternion rotation matrix, R:
     R <- quaternion2rotation(nim@"quatern_b", nim@"quatern_c", nim@"quatern_d")
     ## And a shift, which we'll have to update if we do any reversals
@@ -135,49 +160,58 @@ reorient <- function(nim, data, verbose=FALSE, invert=FALSE) {
     ## the I axes i.e. there are only 3 non-zero values in the matrix RS 
     RS <- R %*% S
     ## Now descale RS and work out the permutation
-    trans <- sign(round(RS))
+    if (verbose) {
+      cat("  RS =", fill=TRUE)
+      print(RS)
+      cat("  sum(RS != 0) =", sum(RS != 0), fill=TRUE)
+      cat("       det(RS) =", det(RS), fill=TRUE)
+      cat("  sum(RS != 0) == 3 && det(RS) != 0 is",
+          (sum(RS != 0) == 3 && det(RS) != 0), fill=TRUE)
+    }
+    trans <- sign(ifelse(abs(RS) < tol, 0, RS)) # sign(ceiling(zapsmall(RS)))
     ## We will need to do something with the trans later...
     trans[1,1] <- -1 * trans[1,1]
-    if (invert) {
-      trans <- qr.solve(trans)
+  } else {
+    if (nim@"sform_code" > 0) {
+      if (verbose) {
+        cat(" # reorient = Method 3", fill=TRUE)
+      }
+      ## [x] is given by a general affine transformation from [i]
+      ##
+      ## [x] <- A%*%(i-1) + shift
+      ## 
+      ## where A <- nim@srow_[x,y,z][1:3] and shift <- srow_x,y,z[4]
+      S <- array(dim=c(3,4))
+      S[1,] <- nim@"srow_x"
+      S[2,] <- nim@"srow_y"
+      S[3,] <- nim@"srow_z"
+      shift <- S[,4]
+      A <- S[,1:3]
+      trans <- sign(zapsmall(A))
+      trans[1,1] <- -1 * trans[1,1]
+    } else {
+      if (verbose) {
+        cat(" # reorient = Method 1", fill=TRUE)
+      }
+      scaling <- diag(pixdim(nim)[2:4])
+      trans <- sign(zapsmall(scaling))
+      ## Method 1 by default has +x going LEFT so no sign-change for trans[1,1]
     }
-    return(performPermutation(trans, real.dimensions, data))
-  } 
-  if (nim@"sform_code" > 0) {
-    ## [x] is given by a general affine transformation from [i]
-    ##
-    ## [x] <- A%*%(i-1) + shift
-    ## 
-    ## where A <- nim@srow_[x,y,z][1:3] and shift <- srow_x,y,z[4]
-    S <- array(dim=c(3,4))
-    S[1,] <- nim@"srow_x"
-    S[2,] <- nim@"srow_y"
-    S[3,] <- nim@"srow_z"
-    shift <- S[,4]
-    A <- S[,1:3]
-    trans <- sign(round(A))
-    trans[1,1] <- -1 * trans[1,1]
-    if (invert) {
-      trans <- qr.solve(trans)
-    }
-    return(performPermutation(trans, real.dimensions, data))
   }
-  ## Finally Method 1.
-  scaling <- diag(nim@"pixdim"[2:4])
-  trans <- sign(scaling)
-  ## Method 1 by default has +x going LEFT so no sign-change for trans[1,1]
   if (invert) {
     trans <- qr.solve(trans)
   }
-  return(performPermutation(trans, real.dimensions, data))
+  pp <- performPermutation(trans, real.dimensions, data, verbose)
+  return(pp)
 }
 
 ############################################################################
 ## inverseReorient
 ############################################################################
 
-inverseReorient <- function(nim, verbose=FALSE)
+inverseReorient <- function(nim, verbose=FALSE) {
   reorient(nim, nim@.Data, verbose=verbose, invert=TRUE)
+}
 
 ############################################################################
 ## integerTranslation
@@ -223,10 +257,11 @@ integerTranslation <- function(nim, data, verbose=FALSE) {
       if (verbose) {
         cat("  NIfTI-1: qform_code > 0", fill=TRUE)
       }
-      qfac <- nim@"pixdim"[1]
+      qfac <- pixdim(nim)[1]
       R <- quaternion2rotation(nim@"quatern_b", nim@"quatern_c", nim@"quatern_d")
       ## HACK!!! To ensure matrix is integer-valued
-      R <- round(R)
+      R <- ceiling(R)
+      ##
       qoffset <- c(nim@"qoffset_x", nim@"qoffset_y", nim@"qoffset_z")
       if (qfac < 0) {
         R[3,3] <- -R[3,3]
@@ -235,7 +270,7 @@ integerTranslation <- function(nim, data, verbose=FALSE) {
         ## HACK!!! Multiply x-dimension for proper orientation in R
         R[1,] <- -R[1,]
         xyz <-
-          t(sweep(R %*% t(sweep(ijk, 2, as.array(nim@"pixdim"[2:4]), "*")),
+          t(sweep(R %*% t(sweep(ijk, 2, as.array(pixdim(nim)[2:4]), "*")),
                   1, as.array(qoffset), "+"))
         index.xyz <- (xyz[,1] +
                       xyz[,2] * nim@"dim_"[2] +
@@ -269,6 +304,7 @@ integerTranslation <- function(nim, data, verbose=FALSE) {
       return(array(data[order(index.xyz)], nim@"dim_"[dims]))
     }
   }
+  invisible()
 }
 
 ## write commands
@@ -306,7 +342,7 @@ invertIntegerTranslation <- function(nim, verbose=FALSE) {
         cat("  NIfTI-1: qform_code > 0", fill=TRUE)
         cat("  dims =", nim@"dim_"[dims], fill=TRUE)
       }
-      qfac <- nim@"pixdim"[1]
+      qfac <- pixdim(nim)[1]
       R <- quaternion2rotation(nim@"quatern_b", nim@"quatern_c", nim@"quatern_d")
       qoffset <- c(nim@"qoffset_x", nim@"qoffset_y", nim@"qoffset_z")
       if (qfac < 0) {
@@ -316,7 +352,7 @@ invertIntegerTranslation <- function(nim, verbose=FALSE) {
         ## HACK!!! Multiply x-dimension for proper orientation in R
         R[1,] <- -R[1,]
         xyz <-
-          t(sweep(R %*% t(sweep(ijk, 2, as.array(nim@"pixdim"[2:4]), "*")),
+          t(sweep(R %*% t(sweep(ijk, 2, as.array(pixdim(nim)[2:4]), "*")),
                   1, as.array(qoffset), "+"))
         index.xyz <- (xyz[,1] +
                       xyz[,2] * nim@"dim_"[2] +
@@ -351,6 +387,7 @@ invertIntegerTranslation <- function(nim, verbose=FALSE) {
       return(nim@.Data[order(index.xyz)])
     }
   }
+  invisible()
 }
 
 ############################################################################
@@ -407,11 +444,11 @@ translateCoordinate <- function(i, nim, verbose=FALSE) {
 	fill=TRUE)
     }
     ## The [x] coordinates are given by the pixdim[] scales:
-    scaling <- diag(nim@"pixdim"[2:4])
+    scaling <- diag(pixdim(nim)[2:4])
     ##  a quaternion rotation matrix, R:
     R <- quaternion2rotation(nim@"quatern_b", nim@"quatern_c", nim@"quatern_d")
     ## A scaling factor, (because quaternions have to have det(R)=1):
-    scalingFactor <- nim@"pixdim"[1]
+    qfac <- pixdim(nim)[1]
     ## and a shift 
     shift <- c(nim@"qoffset_x", nim@"qoffset_y", nim@"qoffset_z")
     ## This method is intended to represent "scanner-anatomical"
@@ -428,15 +465,15 @@ translateCoordinate <- function(i, nim, verbose=FALSE) {
     ##
     ## Where scaling[3] = scaling[3]*scalingFactor
     
-    ## first enforce scalingFactor = 1 or -1
-    if (scalingFactor != 1 && scalingFactor != -1) { 
+    ## first enforce qfac = 1 or -1
+    if (qfac != 1 && qfac != -1) { 
       if (verbose) {
-	cat("ScalingFactor (nim@\"pixdim\"[1]) =", scalingFactor,
+	cat("ScalingFactor pixdim(nim)[1]) =", qfac,
 	    "!= -1 or 1. Defaulting to 1", fill=TRUE)
       }
-      scalingFactor <- 1 
+      qfac <- 1 
     }
-    scaling[3,3] <- scaling[3,3] * scalingFactor
+    scaling[3,3] <- scaling[3,3] * qfac
     ## Now we can reorient the data only if the X axes are aligned with the I
     ## axes i.e. there are only 3 non-zero values in the matrix RS 
     RS <- R %*% scaling
@@ -470,7 +507,7 @@ translateCoordinate <- function(i, nim, verbose=FALSE) {
     cat("QForm_code and SForm_code unset: Orientation by Method 1.", fill=TRUE)
   }
   ## nifti1.h pixdim[1] <- ourpixdim[2]
-  scaling <- diag(nim@"pixdim"[2:4])
+  scaling <- diag(pixdim(nim)[2:4])
   ## Remember i. <- i - 1
   return(scaling %*% (i - 1))
 }

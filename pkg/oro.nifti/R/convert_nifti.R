@@ -332,6 +332,7 @@ as.nifti <- function(from, value=NULL, verbose=FALSE) {
       if (length(nim@"dim_") < 8) {
         nim@"dim_" <- c(nim@"dim_", rep(1, 8 - length(nim@"dim_")))
       }
+      
       nim@.Data <- from
       if (getOption("niftiAuditTrail") && is(nim, "niftiAuditTrail")) {
         audit.trail(nim) <-

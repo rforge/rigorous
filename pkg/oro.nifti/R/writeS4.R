@@ -59,8 +59,8 @@ setMethod("writeNIfTI", signature(nim="array"),
   options(warn=warn)
   ## Basic error checking
   validNIfTI <- getValidity(getClassDef("nifti"))
-  if (is.character(validNIfTI(nim))) {
-    stop("-- aborting writeNIfTI --")
+  if (is.character(vnim <- validNIfTI(nim))) {
+    stop(vnim)
   }
   ## Write header file...
   if (gzipped) {
