@@ -23,7 +23,7 @@
 %% an abstract and keywords
 \Abstract{
 
-Two packages (\pkg{oro.dicom} and \pkg{oro.nifti}) are provided for
+Two packages, \pkg{oro.dicom} and \pkg{oro.nifti}, are provided for
 the interaction with and manipulation of medical imaging data that
 conform to the DICOM standard or ANALYZE/NIfTI formats.  DICOM data,
 from a single file or single directory or directory tree, may be
@@ -59,10 +59,9 @@ easy data input, data output, image processing and visualization.
 \Address{
   Brandon Whitcher\\
   Mango Solutions\\
-  Unit 2 Greenways Business Park\\
-  Bellinger Close\\
-  Chippenham SN15 1BN\\
-  United Kingdom\\
+  Office 202, Second Floor\\
+  14 Greville Street\\
+  London EC1N 8SB, United Kingdom\\
   E-mail: \email{bwhitcher@mango-solutions.com}\\
   URL: \url{http://www2.imperial.ac.uk/~bwhitche}, \url{http://rigorousanalytics.blogspot.com}\\
   
@@ -397,7 +396,7 @@ head(extractHeader(hk40$hdr, "SliceLocation"))
 modality <- extractHeader(hk40$hdr, "Modality", numeric=FALSE)
 head(matchHeader(modality, "mr"))
 (seriesTime <- extractHeader(hk40$hdr, "SeriesTime", numeric=FALSE))
-head(str2time(seriesTime))
+str2time(seriesTime)
 @ 
 
 \subsection{The DICOM image}
@@ -1174,14 +1173,14 @@ dput(formals(dicom2nifti))
 @ 
 <<DICOM2NIFTI HK40 02,eval=FALSE>>=
 image(hk40n)
-orthographic(hk40n)
+orthographic(hk40n, col.crosshairs="green")
 @ 
 <<DICOM2NIFTI HK40 03,echo=FALSE,results=hide>>=
 png("hk40n_image.png", width=2*480, height=2*480, bg="black")
 image(hk40n, zlim=c(0,1024))
 dev.off()
 png("hk40n_orthographic.png", width=2*480, height=2*480, bg="black")
-orthographic(hk40n, zlim=c(0,1024))
+orthographic(hk40n, zlim=c(0,1024), col.crosshairs="green")
 dev.off()
 @ 
 

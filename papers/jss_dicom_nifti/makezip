@@ -1,4 +1,4 @@
 #! /bin/bash
 
-zip -r dicom_nifti_v2 dicom_nifti2.pdf dicom_nifti2.Rnw dicom_nifti.bib \
-    jsslogo.jpg 1086100996 filtered_func_data.nii.gz response01.pdf
+zip -r dicom_nifti_v3 dicom_nifti3.pdf dicom_nifti3.Rnw dicom_nifti.bib \
+    jsslogo.jpg 1086100996 filtered_func_data.nii.gz
