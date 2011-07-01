@@ -187,14 +187,22 @@ reorient <- function(nim, data, verbose=FALSE, invert=FALSE, tol=1e-7) {
       S[3,] <- nim@"srow_z"
       shift <- S[,4]
       A <- S[,1:3]
-      trans <- sign(zapsmall(A))
+      if (verbose) {
+        cat("  A =", fill=TRUE)
+        print(A)
+        cat("  sum(A != 0) =", sum(A != 0), fill=TRUE)
+        cat("       det(A) =", det(A), fill=TRUE)
+        cat("  sum(A != 0) == 3 && det(A) != 0 is",
+            (sum(A != 0) == 3 && det(A) != 0), fill=TRUE)
+      }
+      trans <- sign(ifelse(abs(A) < tol, 0, A))
       trans[1,1] <- -1 * trans[1,1]
     } else {
       if (verbose) {
         cat(" # reorient = Method 1", fill=TRUE)
       }
       scaling <- diag(pixdim(nim)[2:4])
-      trans <- sign(zapsmall(scaling))
+      trans <- sign(ifelse(abs(scaling) < tol, 0, scaling))
       ## Method 1 by default has +x going LEFT so no sign-change for trans[1,1]
     }
   }

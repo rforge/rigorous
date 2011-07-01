@@ -12,8 +12,8 @@
   these transforms are applied.
 }
 \usage{
-reorient(nim, data, verbose=FALSE, invert=FALSE)
-inverseReorient(nim, verbose=FALSE)
+reorient(nim, data, verbose = FALSE, invert = FALSE, tol = 1e-07)
+inverseReorient(nim, verbose = FALSE)
 }
 \arguments{
   \item{nim}{is an object of class \code{nifti}.}
@@ -32,5 +32,5 @@ inverseReorient(nim, verbose=FALSE)
   \code{\link{performPermutation}}
 }
 %\examples{}
-\author{ Andrew Thornton \email{zeripath@users.sourceforge.net} }
+\author{Andrew Thornton \email{zeripath@users.sourceforge.net}}
 %\keyword{}

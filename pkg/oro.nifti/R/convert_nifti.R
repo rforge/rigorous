@@ -1,6 +1,6 @@
 ##
 ##
-## Copyright (c) 2009,2010 Brandon Whitcher and Volker Schmid
+## Copyright (c) 2009-2011 Brandon Whitcher and Volker Schmid
 ## All rights reserved.
 ## 
 ## Redistribution and use in source and binary forms, with or without
