@@ -14,6 +14,6 @@ Imports: splines
 Enhances: fmri
 License: BSD
 URL: http://rigorousanalytics.blogspot.com, http://rig.oro.us.com
-LazyLoad: no
+LazyLoad: yes
 LazyData: no
 ZipData: no
