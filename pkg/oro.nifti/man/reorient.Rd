@@ -21,6 +21,8 @@ inverseReorient(nim, verbose = FALSE)
   \item{verbose}{is a logical variable (default = \code{FALSE}) that
     allows text-based feedback during execution of the function.}
   \item{invert}{stores the inverse transform.}
+  \item{tol}{is a very small value used to judge if a number is
+    essentially zero.}
 }
 \details{
   This function utilizes the \code{performPermutation} function
@@ -32,5 +34,6 @@ inverseReorient(nim, verbose = FALSE)
   \code{\link{performPermutation}}
 }
 %\examples{}
-\author{Andrew Thornton \email{zeripath@users.sourceforge.net}}
+\author{Andrew Thornton \email{zeripath@users.sourceforge.net} and
+  Brandon Whitcher \email{bjw34032@users.sourceforge.net}}
 %\keyword{}
