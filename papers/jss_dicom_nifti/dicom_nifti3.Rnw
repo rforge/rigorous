@@ -880,7 +880,7 @@ ANALYZE/NIfTI data using a \proglang{Tcl}/\proglang{Tk} interface
 
 This is an example of reading in, and displaying, a four-dimensional
 medical imaging data set in NIfTI format \texttt{filtered\_func\_data}
-obtained from the FSL evaluation and example data suite
+obtained from the \pkg{FSL} evaluation and example data suite
 (\url{http://www.fmrib.ox.ac.uk/fsl/fsl/feeds.html}).  Successful
 execution of the commands
 
@@ -952,7 +952,7 @@ visual stimulus was applied using an on/off pattern for a duration of
 pattern for a duration of 90~seconds.  A parametric haemodynamic
 response function (HRF), with mean $\mu=6$ and standard deviation
 $\sigma=3$, is utilized here which is similar to the default values in
-FSL \citep{smi-etal:FSL}.  We construct the experimental design and
+\pkg{FSL} \citep{smi-etal:FSL}.  We construct the experimental design and
 HRF in seconds, perform the convolution and then downsample by a
 factor of three in order to obtain columns of the design matrix that
 match the acquisition of the MRI data.
@@ -1056,8 +1056,8 @@ ffd.glm <- apply(ffd, 1:3, voxel.lsfit, thresh=0.1 * max(ffd))
 
 Given the multidimensional array of output from the GLM fitting
 procedure, the $t$-statistics are separated and converted into
-$Z$-statistics to follow the convention used in FSL.  For the purposes
-of this example we have not applied any multiple comparisons
+$Z$-statistics to follow the convention used in \pkg{FSL}.  For the
+purposes of this example we have not applied any multiple comparisons
 correction procedure and, instead, use a relatively large threshold of
 $Z>5$ for visualization.
 
