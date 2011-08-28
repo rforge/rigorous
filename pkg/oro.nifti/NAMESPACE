@@ -22,5 +22,6 @@ exportMethods("audit.trail<-",
               "orthographic",
               "overlay",
               "pixdim",
+              "pixdim<-",
               "show",
               "writeNIfTI")
