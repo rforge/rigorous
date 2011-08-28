@@ -22,7 +22,6 @@ Type 'q()' to quit R.
 > source(file.path(R.home("share"), "R", "examples-header.R"))
 > options(warn = 1)
 > library('oro.nifti')
-Creating a new generic function for "image" in "oro.nifti"
 Loading required package: XML
 
 oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.2.7)
@@ -354,7 +353,7 @@ ANALYZE 7.5 format
 > 
 > ### Name: Convert ANALYZE Codes
 > ### Title: Convert NIfTI Codes
-> ### Aliases: convert.datatype.anlz convert.orient.anlz
+> ### Aliases: convert.bitpix.anlz convert.datatype.anlz convert.orient.anlz
 > 
 > ### ** Examples
 > 
@@ -774,7 +773,7 @@ Class:   numeric   numeric character
 > 
 > ### Name: quaternion2rotation
 > ### Title: Convert Quaternion into a Rotation Matrix
-> ### Aliases: quaternion2rotation
+> ### Aliases: quaternion2rotation quaternion2mat44
 > 
 > ### ** Examples
 > 
@@ -1086,17 +1085,32 @@ QForm_code = 1 : Orientation by Method 2.
 > writeNIfTI(img.nifti, "test-nifti-image-uint8", verbose=TRUE)
   niftiExtension detected!
   niftiAuditTrail detected!
-  vox_offset = 1280
+  vox_offset = 1296
   writing niftiExtension(s) at byte = 352
-  writing data at byte = 1280
+  writing data at byte = 1296
 > ## These files should be viewable in, for example, FSLview
 > ## Make sure you adjust the min/max values for proper visualization
 > data <- readNIfTI("test-nifti-image-uint8", verbose=TRUE)
   fname = test-nifti-image-uint8
   files = test-nifti-image-uint8.nii.gz
   nii   = test-nifti-image-uint8.nii.gz
-  vox_offset = 1280
-  seek(fid) = 348
+  vox_offset = 1296
+  niftiExtension detected!
+  seek(fid) = 352
+  seek(fid) = 1296
+ # reorient = Method 1
+ ## performPermutation
+  trans =
+     [,1] [,2] [,3]
+[1,]    1    0    0
+[2,]    0    1    0
+[3,]    0    0    1
+  sum(T != 0) = 3
+       det(T) = 1
+  sum(T != 0) == 3 && det(T) != 0 is TRUE
+ ## else {
+ ## real.dimensions = 32 32 32
+ ## dim(out) = 32 32 32
 > image(img.nifti, oma=rep(2,4), bg="white")
 > image(data, oma=rep(2,4), bg="white")
 > abs.err <- abs(data - img.nifti)
@@ -1124,7 +1138,7 @@ QForm_code = 1 : Orientation by Method 2.
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  9.84 0.18 20.113 0 0 
+Time elapsed:  9.15 0.18 9.369 0 0 
 > grDevices::dev.off()
 null device 
           1 
