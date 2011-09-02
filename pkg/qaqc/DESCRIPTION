@@ -1,0 +1,14 @@
+Package: qaqc
+Version: 0.1.4
+Date: 2011-09-01
+Title: Quality Assurance and Quality Control Procedures for DICOM Data
+Author: Brandon Whitcher
+Maintainer: Brandon Whitcher <bwhitcher@users.sourceforge.net>
+Depends: R (>= 2.10.0), hwriter, oro.dicom, oro.nifti, utils
+LazyLoad: yes
+ZipData: no
+Description: The application of quality assurance and quality control 
+  (QAQC) procedures to both header and image components of the 
+  Digital Imaging and Communications in Medicine (DICOM) standard.
+License: BSD
+Packaged: 2010-06-28 12:20:06 UTC; bjw34032

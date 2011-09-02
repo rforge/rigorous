@@ -1,0 +1,14 @@
+##
+## - Each line should contain all necessary information for an active
+##   study, separated by semicolons (;).  
+## - All text strings must be wrapped by escaped quotations (\").  
+## - Email addresses must be separated by commas (,).
+##
+## NOTE, we cannot use this method on VEG110655 because of legacy DICOM
+## header definitions.
+##
+study=\"MET111645\";date2process=\"22-03-2010\";inPath=\"/cic_data/Oncology\";outPath=\"/scratch\";sharedArea=\"//hlwsfshr10/sa200400214\";emailList=\"bjw34032@gsk.com,cf984373@gsk.com\"
+## study=\"OMB110918\";inPath=\"/cic_data/Oncology\";outPath=\"/scratch\";sharedArea=\"//hlwsfshr10/sa200400214\";emailList=\"bjw34032@gsk.com,cf984373@gsk.com\"
+## study=\"P3K112826\";inPath=\"/cic_data/Oncology\";outPath=\"/scratch\";sharedArea=\"//hlwsfshr10/sa200400214\";emailList=\"bjw34032@gsk.com,cf984373@gsk.com\"
+study=\"OMB110928\";emailList=\"bjw34032@gsk.com,cf984373@gsk.com\";inPath=\"/cic_data/Oncology\";outPath=\"/scratch\";sharedArea=\"//hlwsfshr10/sa200400214\"
+

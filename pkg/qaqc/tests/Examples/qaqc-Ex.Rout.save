@@ -1,0 +1,87 @@
+
+R version 2.13.1 (2011-07-08)
+Copyright (C) 2011 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+Platform: x86_64-unknown-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "qaqc"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> library('qaqc')
+Loading required package: hwriter
+Loading required package: oro.dicom
+
+oro.dicom: Rigorous - DICOM Input / Output (version = 0.3.0)
+
+Loading required package: oro.nifti
+Loading required package: XML
+
+oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.2.7)
+
+> 
+> assign(".oldSearch", search(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("studyParameters")
+> ### * studyParameters
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: studyParameters
+> ### Title: Initial Parameters for QAQC
+> ### Aliases: studyParameters
+> ### Keywords: ~kwd1
+> 
+> ### ** Examples
+> 
+> args <- "--args study=\"MET111645\" date2process=\"22-03-2010\" inPath=\"/cic_data/Oncology\" outPath=\"/scratch\" sharedArea=\"//hlwsfshr10/sa200400214\" emailList=\"bjw34032@gsk.com,cf984373@gsk.com\""
+> unlist(studyParameters(args))
+                                                     today 
+                                              "2010-03-22" 
+                                                   domDate 
+                                              "22.03.2010" 
+                                                 emailList 
+                       "bjw34032@gsk.com,cf984373@gsk.com" 
+                                                  mailText 
+                                            "2010-03-22, " 
+                                                     study 
+                                               "MET111645" 
+                                                       css 
+      "/cic_data/Oncology/MET111645/scripts/met111645.css" 
+                                                   compare 
+"/cic_data/Oncology/MET111645/scripts/met111645_specs.csv" 
+                                                     dicom 
+                                "/scratch/MET111645/dicom" 
+                                                   logFile 
+                  "/scratch/MET111645/logs/2010-03-22.log" 
+                                                   domFile 
+                  "/scratch/MET111645/logs/2010-03-22.dom" 
+> 
+> 
+> 
+> ### * <FOOTER>
+> ###
+> cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  1.1 0 1.099 0 0 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')

@@ -1,0 +1,26 @@
+#!/bin/bash
+
+## STUDY='MET111645'
+## SCRIPTDIR="/cic_data/Oncology/${STUDY}/scripts"
+## LOGDIR="/cic_data/Oncology/${STUDY}/logs"
+## Rscript="${SCRIPTDIR}/$(echo ${STUDY} | sed -e 's/\(.*\)/\L\1/').R"
+## Rout="${SCRIPTDIR}/$(echo ${STUDY} | sed -e 's/\(.*\)/\L\1/').Rout"
+## R='/scratch/apps/bin/R'
+## TODAY=$(date +%Y-%m-%d)
+## 
+## eval ${R} CMD BATCH --no-timing ${Rscript} ${Rout}
+## 
+## mv ${Rout} ${LOGDIR}/${STUDY}_${TODAY}.Rout
+
+Rscript='/scratch/apps/bin/Rscript' # '/usr/cic/apps/bin/Rscript'
+Rfile='qaqc_test.R'
+studyFile='studyList.txt'
+studyList=( $(awk '!/#+|^\r/' ${studyFile}) )
+## nLines=$(awk '!/#+/{n++}; END {print n+0}' ${studyList})
+for ((i = 0; i < ${#studyList[*]}; i++))
+  do
+  argList=$(echo ${studyList[$i]} | tr ';' ' ' | tr '\r' ' ')
+  Rout="$(date +%Y-%m-%d).Rout"
+  echo ${argList}
+  eval ${Rscript} ${Rfile} --args ${argList} > ${Rout}
+done
