@@ -315,7 +315,8 @@ orthographic.nifti <- function(x, y=NULL, xyz=NULL, w=1, col=gray(0:64/64),
   }
   if (! is.null(text)) {
     ## Add user-supplied text to the "fourth" plot
-    graphics::image(1:64, 1:64, matrix(NA, 64, 64))
+    graphics::image(1:64, 1:64, matrix(NA, 64, 64), xlab="", ylab="",
+                    axes=FALSE)
     text(32, 32, text, col=text.color, cex=2)
   }
   par(oldpar)

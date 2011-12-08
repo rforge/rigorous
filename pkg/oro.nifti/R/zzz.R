@@ -32,10 +32,14 @@
 ## $Id: $
 ##
 
-.onAttach <- function (lib, pkg) {
-  cat("\n", pkg,": Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = ",
-      as.character(sessionInfo()$otherPkgs$oro.nifti["Version"]), ")\n",
-      sep="", fill=TRUE)
+.onAttach <- function(lib, pkg) {
+  txt <- paste("\n",
+               pkg,
+               ": Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = ",
+               as.character(sessionInfo()$otherPkgs$oro.nifti["Version"]),
+               ")\n",
+               sep="")
+  packageStartupMessage(txt)
 }
 
 .onLoad <- function(lib, pkg) {
