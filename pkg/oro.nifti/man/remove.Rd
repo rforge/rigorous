@@ -2,15 +2,23 @@
 \alias{rmniigz}
 \alias{rmnii}
 \alias{rmgz}
-\title{Remove File Extensions Around the NIfTI Format}
+\alias{rmhdrgz}
+\alias{rmhdr}
+\alias{rmimggz}
+\alias{rmimg}
+\title{Remove File Extensions Around the NIfTI/ANALYZE Formats}
 \description{
   Simple function(s) that remove file extensions commonly found when
-  using NIfTI-1 format files.
+  using NIfTI-1 or ANALYZE format files.
 }
 \usage{
 rmniigz(x)
 rmnii(x)
 rmgz(x)
+rmhdrgz(x)
+rmhdr(x)
+rmimggz(x)
+rmimg(x)
 }
 \arguments{
   \item{x}{is the file name.}
