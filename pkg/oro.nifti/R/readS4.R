@@ -55,10 +55,10 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
     cat(paste("  fname =", fname), fill=TRUE)
   }
   ## Strip any extensions
-  fname <- sub(".gz", "", fname)
-  fname <- sub(".nii", "", fname)
-  fname <- sub(".hdr", "", fname)
-  fname <- sub(".img", "", fname)
+  fname <- sub("\\.gz$", "", fname)
+  fname <- sub("\\.nii$", "", fname)
+  fname <- sub("\\.hdr$", "", fname)
+  fname <- sub("\\.img$", "", fname)
 
   nii <- paste(fname, "nii", sep=".")
   niigz <- paste(fname, "nii.gz", sep=".")
@@ -249,7 +249,7 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
   n <- prod(nim@"dim_"[2:5])
   if (! onefile) {
     close(fid)
-    fname <- sub(".hdr", ".img", fname)
+    fname <- sub("\\.hdr$", "\\.img", fname)
     if (gzipped) {
       fid <- gzfile(fname, "rb")
     } else {
@@ -323,9 +323,9 @@ readANALYZE <- function(fname, verbose=FALSE, warn=-1) {
     cat(paste("  fname =", fname), fill=TRUE)
   }
   ## Strip any extensions
-  fname <- sub(".gz", "", fname)
-  fname <- sub(".hdr", "", fname)
-  fname <- sub(".img", "", fname)
+  fname <- sub("\\.gz$", "", fname)
+  fname <- sub("\\.hdr$", "", fname)
+  fname <- sub("\\.img$", "", fname)
   if (! (file.exists(paste(fname, "hdr", sep=".")) &&
          file.exists(paste(fname, "img", sep="."))) &&
       ! (file.exists(paste(fname, "hdr.gz", sep=".")) &&
@@ -438,10 +438,10 @@ readANALYZE <- function(fname, verbose=FALSE, warn=-1) {
   close(fid)
   ## Open image file
   if (gzipped) {
-    fname <- sub(".hdr", ".img", fname) # paste(fname, ".img.gz", sep=".")
+    fname <- sub("\\.hdr\\.gz$", "\\.img\\.gz", fname) # paste(fname, ".img.gz", sep=".")
     fid <- gzfile(fname, "rb")
   } else {
-    fname <- sub(".hdr", ".img", fname) # paste(fname, "img", sep=".")
+    fname <- sub("\\.hdr$", "\\.img", fname) # paste(fname, "img", sep=".")
     fid <- file(fname, "rb")
   }
   if (verbose) {
