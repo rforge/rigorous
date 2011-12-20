@@ -24,8 +24,9 @@
 \usage{
 \S4method{overlay}{nifti,nifti}(x, y, z=1, w=1, col.x=gray(0:64/64),
         col.y=hotmetal(), zlim.x=NULL, zlim.y=NULL,
-        plot.type=c("multiple","single"), xlab="", ylab="", axes=FALSE,
-        oma=rep(0,4), mar=rep(0,4), bg="black", ...)
+        plane=c("axial", "coronal", "saggital"),
+        plot.type=c("multiple","single"), xlab="", ylab="",
+        axes=FALSE, oma=rep(0,4), mar=rep(0,4), bg="black", ...)
 %\S4method{overlay}{anlz,anlz}(x, y, z=1, w=1, col.x=gray(0:64/64),
 %      col.y=hotmetal(), zlim.x=NULL, zlim.y=NULL,
 %      plot.type=c("multiple","single"), xlab="", ylab="",
@@ -40,10 +41,12 @@
   \item{col.y}{is hotmetal (by default).}
   \item{zlim.x,zlim.y}{are set to \code{NULL} (by default) and taken
     from the header information.}
+  \item{plane}{is the plane of acquisition to be displayed (choices are
+    \sQuote{axial}, \sQuote{coronal}, \sQuote{saggital}).}
   \item{plot.type}{allows the choice between all slices being displayed,
     in a matrix (left-to-right, top-to-bottom), or a single slice.}
-  \item{xlab}{is set to "" since all margins are set to zero.}
-  \item{ylab}{is set to "" since all margins are set to zero.}
+  \item{xlab}{is set to \dQuote{} since all margins are set to zero.}
+  \item{ylab}{is set to \dQuote{} since all margins are set to zero.}
   \item{axes}{is set to \code{FALSE} since all margins are set to zero.}
   \item{oma}{is the size of the outer margins in the \code{par} function.}
   \item{mar}{is the number of lines of margin in the \code{par} function.}
@@ -53,8 +56,9 @@
 }
 \details{
   The \code{image} command is used multiple times to simultaneously
-  visualize three orthogonal planes in a single multidimensional array
-  of medical imaging data.
+  visualize one of the three orthogonal planes in two
+  multidimensional arrays, one on top of the other, for medical imaging
+  data.
 }
 \section{Methods}{
 \describe{
