@@ -210,7 +210,8 @@ orthographic.nifti <- function(x, y=NULL, xyz=NULL, w=1, col=gray(0:64/64),
                                crosshairs=TRUE, col.crosshairs="red", 
                                xlab="", ylab="", axes=FALSE,
                                oma=rep(0,4), mar=rep(0,4), bg="black",
-                               text=NULL, text.color="white", ...) {
+                               text=NULL, text.color="white",
+                               text.cex=2, ...) {
   if (! is.null(y)) {
     ## both volumes must have the same dimension
     if (! all(dim(x)[1:3] == dim(y)[1:3])) {
@@ -317,7 +318,7 @@ orthographic.nifti <- function(x, y=NULL, xyz=NULL, w=1, col=gray(0:64/64),
     ## Add user-supplied text to the "fourth" plot
     graphics::image(1:64, 1:64, matrix(NA, 64, 64), xlab="", ylab="",
                     axes=FALSE)
-    text(32, 32, text, col=text.color, cex=2)
+    text(32, 32, text, col=text.color, cex=text.cex)
   }
   par(oldpar)
   invisible()
