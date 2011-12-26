@@ -26,8 +26,8 @@
 }
 \section{Methods}{
   \describe{
-  \item{object = "anlz"}{Extract or replace Analyze pixel dimensions.}
-  \item{object = "nifti"}{Extract or replace NIfTI pixel dimensions.}
+  \item{object = "anlz"}{Extract or replace ANALYZE "pixdim" value.}
+  \item{object = "nifti"}{Extract or replace NIfTI "pixdim" value.}
   }
 }
 \author{Brandon Whitcher \email{bjw34032@users.sourceforge.net}}

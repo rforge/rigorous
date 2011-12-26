@@ -190,48 +190,48 @@ setValidity("nifti", function(object) {
   indices <- 2:(1+object@"dim_"[1])
   ## sizeof_hdr must be 348
   if (object@"sizeof_hdr" != 348) {
-    retval <- c(retval, "sizeof_hdr != 348")
+    retval <- c(retval, "sizeof_hdr != 348\n")
   }
   ## datatype needed to specify type of image data
   if (! object@datatype %in% convert.datatype()) {
-    retval <- c(retval, "datatype not recognized")
+    retval <- c(retval, "datatype not recognized\n")
   }
   ## bitpix should correspond correctly to datatype
   if (object@bitpix != convert.bitpix()[[convert.datatype(object@datatype)]]) {
-    retval <- c(retval, "bitpix does not match the datatype")
+    retval <- c(retval, "bitpix does not match the datatype\n")
   }
   ## dim should be non-zero for dim[1] dimensions
   if (! all(object@"dim_"[indices] > 0)) {
-    retval <- c(retval, "dim[1]/dim mismatch")
+    retval <- c(retval, "dim[1]/dim mismatch\n")
   }
   ## number of data dimensions should match dim[1]
   if (length(indices) != length(dim(object@.Data))) {
-    retval <- c(retval, "dim[1]/img mismatch")
+    retval <- c(retval, "dim[1]/img mismatch\n")
   }
   ## 
   if (object@"cal_min" != min(object@.Data, na.rm=TRUE) ||
       object@"cal_max" != max(object@.Data, na.rm=TRUE)) {
-    retval <- c(retval, "range(img) != c(cal_min,cal_max)")
+    retval <- c(retval, "range(img) != c(cal_min,cal_max)\n")
   }
   ## pixdim[0] is required when qform_code != 0
   if (object@"qform_code" != 0 && pixdim(object)[1] == 0) {
-    retval <- c(retval, "pixdim[1] is required")
+    retval <- c(retval, "pixdim[1] is required\n")
   }
   ## pixdim[n] required when dim[n] is required
   if (! all(object@"dim_"[indices] > 0 & pixdim(object)[indices] > 0)) {
-    retval <- c(retval, "dim/pixdim mismatch")
+    retval <- c(retval, "dim/pixdim mismatch\n")
   }
   ## data dimensions should match dim 
   if (! isTRUE(all.equal(object@"dim_"[indices], dim(object@.Data)))) {
-    retval <- c(retval, "dim/img mismatch")
+    retval <- c(retval, "dim/img mismatch\n")
   }
   ## vox_offset required for an "n+1" header
   if (object@"magic" == "n+1" && object@"vox_offset" == 0) {
-    retval <- c(retval, "vox_offset required when magic=\"n+1\"")
+    retval <- c(retval, "vox_offset required when magic=\"n+1\"\n")
   }
   ## magic must be "ni1\0" or "n+1\0"
   if (! (object@"magic" == "n+1" || object@"magic" == "ni1")) {
-    retval <- c(retval, "magic != \"n+1\" and magic != \"ni1\"")
+    retval <- c(retval, "magic != \"n+1\" and magic != \"ni1\"\n")
   }
   if (is.null(retval)) {
     return(TRUE)
@@ -252,7 +252,7 @@ setValidity("niftiExtension", function(object) {
   validSection <- getValidity(getClassDef("niftiExtensionSection"))
   lapply(object@"extensions",
          function(x) { 
-           if (!is(x, "niftiExtensionSection")) {
+           if (! is(x, "niftiExtensionSection")) {
              retval <<- c(retval, paste("@extensions list contains non-niftiExtensionSection element:", class(x)))
            } else {
              if (! validSection(x)) {
@@ -273,10 +273,12 @@ setValidity("niftiExtension", function(object) {
 
 setValidity("niftiExtensionSection", function(object) {
   retval <- NULL
-  if (object@esize %% 16 != 0)
+  if (object@esize %% 16 != 0) {
     retval <- c(retval, "esize is not a multiple of 16")
-  if ((object@esize - 8) < nchar(object@edata, type="bytes"))
+  }
+  if ((object@esize - 8) < nchar(object@edata, type="bytes")) {
     retval <- c(retval, "esize is too small for the data contained within the section")
+  }
   if (is.null(retval)) {
     return(TRUE)
   } else {
@@ -366,12 +368,44 @@ nifti <- function(img=array(0, dim=rep(1,4)), dim, datatype=2,
 #############################################################################
 
 is.nifti <- function(x) {
-  if (!is(x, "nifti")) {
+  if (! is(x, "nifti")) {
     return(FALSE)
   } else {
     return(TRUE)
   }
 }
+
+#############################################################################
+## cal.min() accessor function to @"cal_min"
+#############################################################################
+
+setGeneric("cal.min", function(object) { standardGeneric("cal.min") })
+setMethod("cal.min", "nifti", function(object) { object@"cal_min" })
+setGeneric("cal.min<-", function(x, value) { standardGeneric("cal.min<-") })
+setReplaceMethod("cal.min", "nifti",
+                 function(x, value) { 
+		   x@"cal_min" <- value 
+		   audit.trail(x) <-
+                     niftiAuditTrailEvent(x, "modification", match.call(),
+                                          paste("cal.min <-", value))
+		   return(x)
+		 })
+
+#############################################################################
+## cal.max() accessor function to @"cal.max"
+#############################################################################
+
+setGeneric("cal.max", function(object) { standardGeneric("cal.max") })
+setMethod("cal.max", "nifti", function(object) { object@"cal_max" })
+setGeneric("cal.max<-", function(x, value) { standardGeneric("cal.max<-") })
+setReplaceMethod("cal.max", "nifti",
+                 function(x, value) { 
+		   x@"cal_max" <- value 
+		   audit.trail(x) <-
+                     niftiAuditTrailEvent(x, "modification", match.call(),
+                                          paste("cal.max <-", value))
+		   return(x)
+		 })
 
 #############################################################################
 ## pixdim() accessor function to @"pixdim"
@@ -380,7 +414,7 @@ is.nifti <- function(x) {
 setGeneric("pixdim", function(object) { standardGeneric("pixdim") })
 setMethod("pixdim", "nifti", function(object) { object@"pixdim" })
 setGeneric("pixdim<-", function(x, value) { standardGeneric("pixdim<-") })
-setReplaceMethod("descrip", "nifti",
+setReplaceMethod("pixdim", "nifti",
                  function(x, value) { 
 		   x@"pixdim" <- value 
 		   audit.trail(x) <-
