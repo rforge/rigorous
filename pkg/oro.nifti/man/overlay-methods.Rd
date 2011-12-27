@@ -24,7 +24,7 @@
 \usage{
 \S4method{overlay}{nifti,nifti}(x, y, z=1, w=1, col.x=gray(0:64/64),
         col.y=hotmetal(), zlim.x=NULL, zlim.y=NULL,
-        plane=c("axial", "coronal", "saggital"),
+        plane=c("axial", "coronal", "sagittal"),
         plot.type=c("multiple","single"), xlab="", ylab="",
         axes=FALSE, oma=rep(0,4), mar=rep(0,4), bg="black", ...)
 %\S4method{overlay}{anlz,anlz}(x, y, z=1, w=1, col.x=gray(0:64/64),
@@ -42,7 +42,7 @@
   \item{zlim.x,zlim.y}{are set to \code{NULL} (by default) and taken
     from the header information.}
   \item{plane}{is the plane of acquisition to be displayed (choices are
-    \sQuote{axial}, \sQuote{coronal}, \sQuote{saggital}).}
+    \sQuote{axial}, \sQuote{coronal}, \sQuote{sagittal}).}
   \item{plot.type}{allows the choice between all slices being displayed,
     in a matrix (left-to-right, top-to-bottom), or a single slice.}
   \item{xlab}{is set to \dQuote{} since all margins are set to zero.}

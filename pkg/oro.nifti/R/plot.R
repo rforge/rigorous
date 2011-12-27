@@ -38,7 +38,7 @@
 #############################################################################
 
 image.nifti <- function(x, z=1, w=1, col=gray(0:64/64),
-                        plane=c("axial", "coronal", "saggital"),
+                        plane=c("axial", "coronal", "sagittal"),
                         plot.type=c("multiple", "single"), zlim=NULL,
                         xlab="", ylab="", axes=FALSE, oma=rep(0,4),
                         mar=rep(0,4), bg="black", ...) {
@@ -54,7 +54,7 @@ image.nifti <- function(x, z=1, w=1, col=gray(0:64/64),
            }
            aspect <- x@pixdim[4] / x@pixdim[2]
          },
-         "saggital" = {
+         "sagittal" = {
            if (length(dim(x)) == 3) {
              x@.Data <- aperm(x, c(2,3,1))
            } else {
@@ -136,7 +136,7 @@ setMethod("image", signature(x="afni"),
 
 overlay.nifti <- function(x, y, z=1, w=1, col.x=gray(0:64/64),
                           col.y=hotmetal(), zlim.x=NULL, zlim.y=NULL,
-                          plane=c("axial", "coronal", "saggital"),
+                          plane=c("axial", "coronal", "sagittal"),
                           plot.type=c("multiple","single"),
                           xlab="", ylab="", axes=FALSE, oma=rep(0,4),
                           mar=rep(0,4), bg="black", ...) {
@@ -153,7 +153,7 @@ overlay.nifti <- function(x, y, z=1, w=1, col.x=gray(0:64/64),
            y@.Data <- aperm(y, c(1,3,2))
            aspect <- x@pixdim[4] / x@pixdim[2]
          },
-         "saggital" = {
+         "sagittal" = {
            if (length(dim(x)) == 3) {
              x@.Data <- aperm(x, c(2,3,1))
            } else {

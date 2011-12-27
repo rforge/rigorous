@@ -18,7 +18,7 @@
 }
 \usage{
 \S4method{image}{nifti}(x, z=1, w=1, col=gray(0:64/64),
-      plane=c("axial", "coronal", "saggital"),
+      plane=c("axial", "coronal", "sagittal"),
       plot.type=c("multiple","single"), zlim=NULL, xlab="",
       ylab="", axes=FALSE, oma=rep(0,4), mar=rep(0,4),
       bg="black", ...)
@@ -34,7 +34,7 @@
   \item{w}{is the time point to be displayed (4D arrays only).}
   \item{col}{is grayscale (by default).}
   \item{plane}{is the plane of acquisition to be displayed (choices are
-    \sQuote{axial}, \sQuote{coronal}, \sQuote{saggital}).}
+    \sQuote{axial}, \sQuote{coronal}, \sQuote{sagittal}).}
   \item{plot.type}{allows the choice between all slices being displayed,
     in a matrix (left-to-right, top-to-bottom), or a single slice.}
   \item{zlim}{is set to \code{NULL} by default and utilizes the internal
