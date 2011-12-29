@@ -1,6 +1,6 @@
 Package: oro.nifti
-Version: 0.2.9
-Date: 2011-12-19
+Version: 0.3.1
+Date: 2011-12-29
 Title: Rigorous - NIfTI+ANALYZE+AFNI Input / Output
 Author: Brandon Whitcher, Volker Schmid and Andrew Thornton, with 
   contributions by Karsten Tabelow

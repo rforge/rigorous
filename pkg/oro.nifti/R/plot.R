@@ -79,11 +79,14 @@ image.nifti <- function(x, z=1, w=1, col=gray(0:64/64),
   } else {
     plot.type <- "single"
   }
-  ## check for z-limits; use internal by default
+  ## check for z-limits in x; use internal by default
   if (is.null(zlim)) {
     zlim <- c(x@"cal_min", x@"cal_max")
-    if (max(zlim) == 0) {
+    if (any(!is.finite(zlim)) || diff(zlim) == 0) {
       zlim <- c(x@"glmin", x@"glmax")
+    }
+    if (any(!is.finite(zlim)) || diff(zlim) == 0) {
+      zlim <- range(x, na.rm=TRUE)
     }
   }
   breaks <- c(min(x, zlim, na.rm=TRUE),
@@ -179,8 +182,11 @@ overlay.nifti <- function(x, y, z=1, w=1, col.x=gray(0:64/64),
   ## check for z-limits in x; use internal by default
   if (is.null(zlim.x)) {
     zlim.x <- c(x@"cal_min", x@"cal_max")
-    if (max(zlim.x) == 0) {
+    if (any(!is.finite(zlim.x)) || diff(zlim.x) == 0) {
       zlim.x <- c(x@"glmin", x@"glmax")
+    }
+    if (any(!is.finite(zlim.x)) || diff(zlim.x) == 0) {
+      zlim.x <- range(x, na.rm=TRUE)
     }
   }
   breaks.x <- c(min(x, zlim.x, na.rm=TRUE),
@@ -190,8 +196,11 @@ overlay.nifti <- function(x, y, z=1, w=1, col.x=gray(0:64/64),
   ## check for z-limits in y; use internal by default
   if (is.null(zlim.y)) {
     zlim.y <- c(y@"cal_min", y@"cal_max")
-    if (max(zlim.y) == 0) {
-      zlim.y <- c(x@"glmin", x@"glmax")
+    if (any(!is.finite(zlim.y)) || diff(zlim.y) == 0) {
+      zlim.y <- c(y@"glmin", y@"glmax")
+    }
+    if (any(!is.finite(zlim.y)) || diff(zlim.y) == 0) {
+      zlim.y <- range(y, na.rm=TRUE)
     }
   }
   if (plot.type[1] == "multiple") {
