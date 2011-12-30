@@ -126,7 +126,7 @@ file.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{table}[tbp]
   \begin{center}
-    \begin{tabular}{p{0.525\textwidth}p{0.475\textwidth}}
+    \begin{tabular}{p{0.475\textwidth}p{0.425\textwidth}}
       \hline
       \multicolumn{2}{c}{\pkg{oro.nifti}}\\
       \hline
@@ -239,13 +239,14 @@ Successful execution of the commands
 <<mniLR_nifti>>=
 fname <- system.file(file.path("nifti", "mniLR.nii.gz"), package="oro.nifti")
 (mniLR <- readNIfTI(fname))
-aux.file(mniLR)
+pixdim(mniLR)
 descrip(mniLR)
+aux.file(mniLR)
 @ 
 
 produces an \proglang{S}4 \code{"nifti"} object (or
-\code{"niftiAuditTrail"} if the audit trail option is set).  Two
-accessor functions are also provided: \code{aux.file} and
+\code{"niftiAuditTrail"} if the audit trail option is set).  Some
+accessor functions are also provided; e.g., \code{aux.file} and
 \code{descrip}.  The former is used to access the original name of the
 file (if it has been provided) and the latter is the name of a valid
 NIfTI header field used to hold a ``description'' (up to 80 characters
