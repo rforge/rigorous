@@ -180,8 +180,8 @@ functionality.  An example of using statistical methodology in
 \proglang{R} for the analysis of functional magnetic resonance imaging
 (fMRI) data is given in section~\ref{fmri_example}.  Packages already
 available on CRAN that utilize \pkg{oro.nifti} include:
-\pkg{cudaBayesreg} \citep{cudaBayesreg}, \pkg{dcemriS4}
-\citep{dcemriS4}, \pkg{dpmixsim} \citep{dpmixsim}, and \pkg{RNiftyReg}
+\pkg{cudaBayesreg} \citep{daSilva:JSS}, \pkg{dcemriS4}
+\citep{whi-sch:JSS}, \pkg{dpmixsim} \citep{dpmixsim}, and \pkg{RNiftyReg}
 \citep{RNiftyReg}.
 
 \section[oro.nifti: NIfTI-1 data input/output in R]{\pkg{oro.nifti}: NIfTI-1 data input/output in \proglang{R}}

@@ -1,5 +1,5 @@
 
-R version 2.13.0 (2011-04-13)
+R version 2.14.1 (2011-12-22)
 Copyright (C) 2011 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: x86_64-unknown-linux-gnu (64-bit)
@@ -22,9 +22,10 @@ Type 'q()' to quit R.
 > source(file.path(R.home("share"), "R", "examples-header.R"))
 > options(warn = 1)
 > library('oro.nifti')
+Loading required package: bitops
 Loading required package: XML
 
-oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.2.7)
+oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.3.2)
 
 > 
 > assign(".oldSearch", search(), pos = 'CheckExEnv')
@@ -327,6 +328,38 @@ ANALYZE 7.5 format
 > 
 > 
 > cleanEx()
+> nameEx("calmin-methods")
+> ### * calmin-methods
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: cal.min-methods
+> ### Title: Extract or Replace NIfTI/Analyze Min or Max Values
+> ### Aliases: cal.min-methods cal.min,anlz-method cal.min,nifti-method
+> ###   cal.min<-,anlz-method cal.min<-,nifti-method cal.min cal.min<-
+> ###   cal.max-methods cal.max,anlz-method cal.max,nifti-method
+> ###   cal.max<-,anlz-method cal.max<-,nifti-method cal.max cal.max<-
+> ### Keywords: methods
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D url <- "http://nifti.nimh.nih.gov/nifti-1/data/avg152T1_LR_nifti.nii.gz"
+> ##D urlfile <- file.path(system.file("nifti", package="oro.nifti"),
+> ##D                      "mniLR.nii.gz")
+> ##D download.file(url, urlfile, quiet=TRUE)
+> ## End(Not run)
+> urlfile <- file.path(system.file("nifti", package="oro.nifti"),
++                      "mniLR.nii.gz")
+> mniLR <- readNIfTI(urlfile)
+> cal.min(mniLR)
+[1] 0
+> cal.max(mniLR)
+[1] 255
+> 
+> 
+> 
+> cleanEx()
 > nameEx("convert_afni")
 > ### * convert_afni
 > 
@@ -445,7 +478,7 @@ ANALYZE 7.5 format
 [1] "FSL3.2beta"
 > descrip(mniLR) <- paste(descrip(mniLR), version$version.string, sep="; ")
 > descrip(mniLR)
-[1] "FSL3.2beta; R version 2.13.0 (2011-04-13)"
+[1] "FSL3.2beta; R version 2.14.1 (2011-12-22)"
 > 
 > 
 > 
@@ -549,6 +582,14 @@ Class "niftiAuditTrail", by class "niftiExtension", distance 2
 > ### ** Examples
 > 
 > nim <- nifti() # default
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
 > nim
 NIfTI-1 format
   Type            : niftiAuditTrail
@@ -560,10 +601,17 @@ NIfTI-1 format
   Sform Code      : 0 (Unknown)
   Dimension       : 1 x 1 x 1 x 1
   Pixel Dimension : 1 x 1 x 1 x 1
-Loading required package: bitops
   Voxel Units     : Unknown
   Time Units      : Unknown
 > nim <- nifti(datatype=4) # 2-byte integers
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
 > nim
 NIfTI-1 format
   Type            : niftiAuditTrail
@@ -581,9 +629,6 @@ NIfTI-1 format
 > 
 > 
 > cleanEx()
-
-detaching ‘package:bitops’
-
 > nameEx("niftiAuditTrail-class")
 > ### * niftiAuditTrail-class
 > 
@@ -836,7 +881,39 @@ Class:   numeric   numeric character
 > afni.path <- system.file("afni", package="oro.nifti")
 > orig <- readAFNI(file.path(afni.path, "ARzs_CW_avvr.DEL+orig"))
 > image(orig, zlim=c(0.5,256), oma=rep(2,4))
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
 > orthographic(orig, zlim=c(0.5,256), oma=rep(2,4))
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
 > 
 > 
 > 
@@ -888,25 +965,24 @@ Class:   numeric   numeric character
 > ## Not run: 
 > ##D url <- "http://nifti.nimh.nih.gov/nifti-1/data/filtered_func_data.nii.gz"
 > ##D urlfile <- file.path(system.file("nifti", package="oro.nifti"),
-> ##D                      "ffd.nii.gz")
+> ##D                      "filtered_func_data")
 > ##D download.file(url, urlfile, quiet=TRUE)
 > ## End(Not run)
 > ## The NIfTI file provided here contains the first 18 volumes (10%)
 > ## of the original data set
 > urlfile <- file.path(system.file("nifti", package="oro.nifti"),
-+                      "ffd.nii.gz")
++                      "filtered_func_data")
 > (ffd <- readNIfTI(urlfile))
 NIfTI-1 format
   Type            : niftiAuditTrail
-  Data Type       : 4 (INT16)
-  Bits per Pixel  : 16
+  Data Type       : 16 (FLOAT32)
+  Bits per Pixel  : 32
   Slice Code      : 0 (Unknown)
   Intent Code     : 0 (None)
-  Qform Code      : 1 (Scanner_Anat)
-  Sform Code      : 1 (Scanner_Anat)
-  Dimension       : 64 x 64 x 21 x 18
+  Qform Code      : 0 (Unknown)
+  Sform Code      : 0 (Unknown)
+  Dimension       : 64 x 64 x 21 x 180
   Pixel Dimension : 4 x 4 x 6 x 3
-Loading required package: bitops
   Voxel Units     : mm
   Time Units      : sec
 > image(ffd, oma=rep(2,4))
@@ -915,9 +991,6 @@ Loading required package: bitops
 > 
 > 
 > cleanEx()
-
-detaching ‘package:bitops’
-
 > nameEx("tim_colors")
 > ### * tim_colors
 > 
@@ -949,7 +1022,8 @@ detaching ‘package:bitops’
 > 
 > ### ** Examples
 > 
-> ffd <- readNIfTI(system.file("nifti/ffd.nii.gz", package="oro.nifti"))
+> ffd <- readNIfTI(file.path(system.file("nifti", package="oro.nifti"),
++                            "filtered_func_data"))
 > xyz <- c(1,1,1)
 > translateCoordinate(xyz, ffd, verbose=TRUE)
 Input voxel coordinate:
@@ -957,7 +1031,7 @@ Input voxel coordinate:
 [1,]    1
 [2,]    1
 [3,]    1
-QForm_code = 1 : Orientation by Method 2.
+QForm_code and SForm_code unset: Orientation by Method 1.
      [,1]
 [1,]    0
 [2,]    0
@@ -969,9 +1043,9 @@ Input voxel coordinate:
 [1,]   32
 [2,]   32
 [3,]   10
-QForm_code = 1 : Orientation by Method 2.
+QForm_code and SForm_code unset: Orientation by Method 1.
      [,1]
-[1,] -124
+[1,]  124
 [2,]  124
 [3,]   54
 > 
@@ -1002,10 +1076,58 @@ QForm_code = 1 : Orientation by Method 2.
   files = test-afni-image.HEAD/BRIK
   endianess = little
 > image(orig, zlim=c(0.5,256), oma=rep(2,4), bg="white")
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
 > image(data, zlim=c(0.5,256), oma=rep(2,4), bg="white")
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
 > abs.err <- abs(data - orig)
 > image(as(abs.err, "nifti"), zlim=range(0,1), oma=rep(2,4),
 +       bg="white")
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
 > 
 > 
 > 
@@ -1081,23 +1203,31 @@ QForm_code = 1 : Orientation by Method 2.
 > img <- round(255 * img)
 > img[17:32,,] <- 255 - img[17:32,,]
 > img.nifti <- nifti(img) # create NIfTI object
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
 > 
 > writeNIfTI(img.nifti, "test-nifti-image-uint8", verbose=TRUE)
   niftiExtension detected!
   niftiAuditTrail detected!
-  vox_offset = 1296
+  vox_offset = 1312
   writing niftiExtension(s) at byte = 352
-  writing data at byte = 1296
+  writing data at byte = 1312
 > ## These files should be viewable in, for example, FSLview
 > ## Make sure you adjust the min/max values for proper visualization
 > data <- readNIfTI("test-nifti-image-uint8", verbose=TRUE)
   fname = test-nifti-image-uint8
   files = test-nifti-image-uint8.nii.gz
   nii   = test-nifti-image-uint8.nii.gz
-  vox_offset = 1296
+  vox_offset = 1312
   niftiExtension detected!
   seek(fid) = 352
-  seek(fid) = 1296
+  seek(fid) = 1312
  # reorient = Method 1
  ## performPermutation
   trans =
@@ -1116,6 +1246,22 @@ QForm_code = 1 : Orientation by Method 2.
 > abs.err <- abs(data - img.nifti)
 > image(as(abs.err, "nifti"), zlim=range(img.nifti), oma=rep(2,4),
 +       bg="white")
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
+Warning in removeNodes.list(kids) :
+  removeNode only works on internal nodes at present
 > 
 > ## Not run: 
 > ##D ## Loop through all possible data types
@@ -1138,7 +1284,7 @@ QForm_code = 1 : Orientation by Method 2.
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  9.15 0.18 9.369 0 0 
+Time elapsed:  10.96 1.62 12.634 0 0 
 > grDevices::dev.off()
 null device 
           1 

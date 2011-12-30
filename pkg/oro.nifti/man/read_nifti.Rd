@@ -66,13 +66,13 @@ readNIfTI(fname, verbose=FALSE, warn=-1, reorient=TRUE, call=NULL)
 \dontrun{
 url <- "http://nifti.nimh.nih.gov/nifti-1/data/filtered_func_data.nii.gz"
 urlfile <- file.path(system.file("nifti", package="oro.nifti"),
-                     "ffd.nii.gz")
+                     "filtered_func_data")
 download.file(url, urlfile, quiet=TRUE)
 }
 ## The NIfTI file provided here contains the first 18 volumes (10\%)
 ## of the original data set
 urlfile <- file.path(system.file("nifti", package="oro.nifti"),
-                     "ffd.nii.gz")
+                     "filtered_func_data")
 (ffd <- readNIfTI(urlfile))
 image(ffd, oma=rep(2,4))
 orthographic(ffd, oma=rep(2,4))
