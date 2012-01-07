@@ -42,8 +42,9 @@
 }
 
 .onLoad <- function(lib, pkg) {
-  if ((is.null(getOption("niftiAuditTrail")) ||
-       getOption("niftiAuditTrail")) && require("XML")) {
+  go.NAT <- getOption("niftiAuditTrail")
+  is.XML <- length(find.package("XML", quiet=TRUE)) > 0
+  if ((is.null(go.NAT) || go.NAT) && is.XML) {
     enableAuditTrail()
   } else {
     options("niftiAuditTrail"=FALSE)
