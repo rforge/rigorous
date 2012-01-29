@@ -544,6 +544,9 @@ obtained from the \pkg{FSL} evaluation and example data suite
 (\url{http://www.fmrib.ox.ac.uk/fsl/fsl/feeds.html}).  Successful
 execution of the commands
 
+<<ffd-load>>=
+load(system.file(file.path("nifti/ffd.RData", package="oro.nifti"))
+@ 
 <<ffd>>=
 filtered.func.data <- 
   system.file(file.path("nifti", "filtered_func_data.nii.gz"), 
