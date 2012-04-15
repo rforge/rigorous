@@ -545,7 +545,7 @@ obtained from the \pkg{FSL} evaluation and example data suite
 execution of the commands
 
 <<ffd-load>>=
-load(system.file(file.path("nifti/ffd.RData", package="oro.nifti"))
+load(system.file(file.path("nifti/ffd.RData", package="oro.nifti")))
 @ 
 <<ffd>>=
 filtered.func.data <- 
