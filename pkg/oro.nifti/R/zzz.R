@@ -35,16 +35,19 @@
   txt <- paste("\n",
                pkg,
                ": Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = ",
-               as.character(sessionInfo()$otherPkgs$oro.nifti["Version"]),
+               packageDescription(pkg, lib)[["Version"]],
                ")\n",
                sep="")
   packageStartupMessage(txt)
 }
 
 .onLoad <- function(lib, pkg) {
-  go.NAT <- getOption("niftiAuditTrail")
-  is.XML <- length(find.package("XML", quiet=TRUE)) > 0
-  if ((is.null(go.NAT) || go.NAT) && is.XML) {
+  is.XML <- function(xml="XML") {
+    any(grepl(xml, .packages(TRUE)))
+  }
+  
+  if ((is.null(getOption("niftiAuditTrail")) ||
+       getOption("niftiAuditTrail")) && is.XML()) {
     enableAuditTrail()
   } else {
     options("niftiAuditTrail"=FALSE)
