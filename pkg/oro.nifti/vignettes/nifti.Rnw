@@ -544,9 +544,6 @@ obtained from the \pkg{FSL} evaluation and example data suite
 (\url{http://www.fmrib.ox.ac.uk/fsl/fsl/feeds.html}).  Successful
 execution of the commands
 
-<<ffd-load>>=
-load(system.file(file.path("nifti/ffd.RData", package="oro.nifti")))
-@ 
 <<ffd>>=
 filtered.func.data <- 
   system.file(file.path("nifti", "filtered_func_data.nii.gz"), 
@@ -655,6 +652,9 @@ individual stimulus, along with an $F$-statistic for the hypothesis
 test of no effect of any stimuli using the \code{ls.print} function.
 
 <<ffd-glm,echo=TRUE,results=hide>>=
+##reduced length due to R package storage limitations
+visual.hrf<-visual.hrf[1:64]
+auditory.hrf<-auditory.hrf[1:64]
 ## background threshold: 10% max intensity
 voxel.lsfit <- function(x, thresh) { # general linear model
   ## check against background threshold
