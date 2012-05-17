@@ -1,6 +1,6 @@
 
-R version 2.14.1 (2011-12-22)
-Copyright (C) 2011 The R Foundation for Statistical Computing
+R version 2.15.0 (2012-03-30)
+Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: x86_64-unknown-linux-gnu (64-bit)
 
@@ -25,7 +25,7 @@ Type 'q()' to quit R.
 Loading required package: bitops
 Loading required package: XML
 
-oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.3.2)
+oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.3.3)
 
 > 
 > assign(".oldSearch", search(), pos = 'CheckExEnv')
@@ -478,7 +478,7 @@ ANALYZE 7.5 format
 [1] "FSL3.2beta"
 > descrip(mniLR) <- paste(descrip(mniLR), version$version.string, sep="; ")
 > descrip(mniLR)
-[1] "FSL3.2beta; R version 2.14.1 (2011-12-22)"
+[1] "FSL3.2beta; R version 2.15.0 (2012-03-30)"
 > 
 > 
 > 
@@ -975,16 +975,16 @@ Warning in removeNodes.list(kids) :
 > (ffd <- readNIfTI(urlfile))
 NIfTI-1 format
   Type            : niftiAuditTrail
-  Data Type       : 16 (FLOAT32)
-  Bits per Pixel  : 32
+  Data Type       : 4 (INT16)
+  Bits per Pixel  : 16
   Slice Code      : 0 (Unknown)
   Intent Code     : 0 (None)
   Qform Code      : 0 (Unknown)
   Sform Code      : 0 (Unknown)
-  Dimension       : 64 x 64 x 21 x 180
-  Pixel Dimension : 4 x 4 x 6 x 3
-  Voxel Units     : mm
-  Time Units      : sec
+  Dimension       : 64 x 64 x 21 x 64
+  Pixel Dimension : 1 x 1 x 1 x 1
+  Voxel Units     : Unknown
+  Time Units      : Unknown
 > image(ffd, oma=rep(2,4))
 > orthographic(ffd, oma=rep(2,4))
 > 
@@ -1045,9 +1045,9 @@ Input voxel coordinate:
 [3,]   10
 QForm_code and SForm_code unset: Orientation by Method 1.
      [,1]
-[1,]  124
-[2,]  124
-[3,]   54
+[1,]   31
+[2,]   31
+[3,]    9
 > 
 > 
 > 
@@ -1284,7 +1284,7 @@ Warning in removeNodes.list(kids) :
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  10.96 1.62 12.634 0 0 
+Time elapsed:  8.09 0.29 8.411 0 0 
 > grDevices::dev.off()
 null device 
           1 
