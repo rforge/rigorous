@@ -39,7 +39,7 @@
 }
 
 ##
-##
+## readNIfTI() is a convient interface for the user
 ##
 
 readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
@@ -175,7 +175,17 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
     cat("  vox_offset =", nim@"vox_offset", fill=TRUE)
   }
   nim@"scl_slope" <- readBin(fid, numeric(), size=4, endian=endian)
+  ## WARNING to the user
+  if (nim@"scl_slope" != 1) {
+    warning(paste("scl_slope =", nim@"scl_slope", "and data must be rescaled."))
+  }
+  ##
   nim@"scl_inter" <- readBin(fid, numeric(), size=4, endian=endian)
+  ## WARNING to the user
+  if (nim@"scl_inter" != 0) {
+    warning(paste("scl_inter =", nim@"scl_inter", "and data must be translated."))
+  }
+  ##
   nim@"slice_end" <- readBin(fid, integer(), size=2, endian=endian)
   nim@"slice_code" <- readBin(fid, integer(), size=1, signed=FALSE,
                               endian=endian)
@@ -246,7 +256,8 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
   if (verbose) {
     cat("  seek(fid) =", seek(fid), fill=TRUE)
   }
-  n <- prod(nim@"dim_"[2:5])
+  dims <- 2:(1+nim@"dim_"[1])
+  n <- prod(nim@"dim_"[dims])
   if (! onefile) {
     close(fid)
     fname <- sub("\\.hdr$", "\\.img", fname)
@@ -289,7 +300,6 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
   ## This is a right-handed coordinate system.  However, the exact
   ## direction these axes point with respect to the subject depends on
   ## qform_code (Method 2) and sform_code (Method 3).
-  dims <- 2:(1+nim@"dim_"[1])
   if (reorient) {
     nim@.Data <- reorient(nim, data, verbose=verbose)
     nim@"reoriented" <- TRUE
@@ -312,7 +322,7 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
 }
 
 ############################################################################
-############################################################################
+## readANALYZE() is a convenient interface for the user
 ############################################################################
 
 readANALYZE <- function(fname, verbose=FALSE, warn=-1) {
@@ -409,7 +419,17 @@ readANALYZE <- function(fname, verbose=FALSE, warn=-1) {
   aim@"pixdim" <- readBin(fid, numeric(), 8, size=4, endian=endian)
   aim@"vox_offset" <- readBin(fid, numeric(), size=4, endian=endian)
   aim@"funused1" <- readBin(fid, numeric(), size=4, endian=endian)
+  ## SPM has used the ANALYZE 7.5 funused1 field as a scaling factor
+  if (aim@"funused1" != 0) {
+    warning(paste("funused1 =", aim@"funused1", "and data must be rescaled."))
+  }
+  ##
   aim@"funused2" <- readBin(fid, numeric(), size=4, endian=endian)
+  ## Maybe I'm paranoid, but let's check funused2 in case it is an intercept
+  if (aim@"funused2" != 0) {
+    warning(paste("funused2 =", aim@"funused2", "and data must be translated."))
+  }
+  ##
   aim@"funused3" <- readBin(fid, numeric(), size=4, endian=endian)
   aim@"cal_max" <- readBin(fid, numeric(), size=4, endian=endian)
   aim@"cal_min" <- readBin(fid, numeric(), size=4, endian=endian)
