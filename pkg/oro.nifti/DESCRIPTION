@@ -4,7 +4,7 @@ Date: 2012-05-17
 Title: Rigorous - NIfTI+ANALYZE+AFNI Input / Output
 Author: Brandon Whitcher, Volker Schmid and Andrew Thornton, with 
   contributions by Karsten Tabelow
-Maintainer: Brandon Whitcher <bjw34032@users.sourceforge.net>
+Maintainer: Brandon Whitcher <bwhitcher@gmail.com>
 Description: Functions for the input/output and visualization of
   medical imaging data that follow either the ANALYZE, NIfTI or AFNI
   formats.  This package is part of the Rigorous Analytics bundle.

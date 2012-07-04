@@ -25,7 +25,7 @@ Type 'q()' to quit R.
 Loading required package: bitops
 Loading required package: XML
 
-oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.3.3)
+oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.3.4)
 
 > 
 > assign(".oldSearch", search(), pos = 'CheckExEnv')
@@ -1284,7 +1284,7 @@ Warning in removeNodes.list(kids) :
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  8.09 0.29 8.411 0 0 
+Time elapsed:  8.62 0.25 8.91 0 0 
 > grDevices::dev.off()
 null device 
           1 
