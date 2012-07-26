@@ -44,12 +44,13 @@ readNIfTI(fname, verbose=FALSE, warn=-1, reorient=TRUE, call=NULL)
 
   Current acceptable data types include
   \describe{
-    \item{\dQuote{UINT8}}{DT BINARY (1 bit per voxel)}
-    \item{\dQuote{INT16}}{DT SIGNED SHORT (16 bits per voxel)}
-    \item{\dQuote{INT32}}{DT SINGED INT (32 bits per voxel)}
-    \item{\dQuote{FLOAT32}}{DT FLOAT (32 bits per voxel)}
-    \item{\dQuote{DOUBLE64}}{DT DOUBLE (64 bits per voxel)}
-    \item{\dQuote{UINT16}}{DT UNSIGNED SHORT (16 bits per voxel)}
+    \item{\dQuote{UINT8}}{BINARY (1 bit per voxel)}
+    \item{\dQuote{INT16}}{SIGNED SHORT (16 bits per voxel)}
+    \item{\dQuote{INT32}}{SINGED INT (32 bits per voxel)}
+    \item{\dQuote{FLOAT32}}{FLOAT (32 bits per voxel)}
+    \item{\dQuote{DOUBLE64}}{DOUBLE (64 bits per voxel)}
+    \item{\dQuote{UINT16}}{UNSIGNED SHORT (16 bits per voxel)}
+    \item{\dQuote{UINT32}}{UNSIGNED INT (32 bits per voxel)}
     }
 }
 \value{
