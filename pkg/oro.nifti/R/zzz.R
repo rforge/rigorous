@@ -31,6 +31,11 @@
 ## $Id: $
 ##
 
+.onLoad <- function(lib, pkg) {
+  options("niftiAuditTrail" = TRUE)
+  enableAuditTrail()
+}
+
 .onAttach <- function(lib, pkg) {
   txt <- paste("\n",
                pkg,
@@ -39,18 +44,5 @@
                ")\n",
                sep="")
   packageStartupMessage(txt)
-}
-
-.onLoad <- function(lib, pkg) {
-  is.XML <- function(xml="XML") {
-    any(grepl(xml, .packages(TRUE)))
-  }
-  
-  if ((is.null(getOption("niftiAuditTrail")) ||
-       getOption("niftiAuditTrail")) && is.XML()) {
-    enableAuditTrail()
-  } else {
-    options("niftiAuditTrail"=FALSE)
-  }
 }
 
