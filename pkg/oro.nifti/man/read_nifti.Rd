@@ -77,6 +77,17 @@ urlfile <- file.path(system.file("nifti", package="oro.nifti"),
 (ffd <- readNIfTI(urlfile))
 image(ffd, oma=rep(2,4))
 orthographic(ffd, oma=rep(2,4))
+\dontrun{
+## 27 scans of Colin Holmes (MNI) brain co-registered and averaged
+## NIfTI two-file format
+URL <- "http://imaging.mrc-cbu.cam.ac.uk/downloads/Colin/colin_1mm.tgz"
+urlfile <- file.path(tempdir(), "colin_1mm.tgz")
+download.file(URL, dest=urlfile, quiet=TRUE)
+untar(urlfile, exdir=tempdir())
+colin <- readNIfTI(file.path(tempdir(), "colin_1mm"), oneFile=FALSE)
+image(colin, oma=rep(2,4))
+orthographic(colin, oma=rep(2,4))
+}
 }
 \author{
   Brandon Whitcher \email{bjw34032@users.sourceforge.net},\cr

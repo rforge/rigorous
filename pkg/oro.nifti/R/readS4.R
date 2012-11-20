@@ -1,6 +1,6 @@
 ##
 ##
-## Copyright (c) 2009-2011 Brandon Whitcher and Volker Schmid
+## Copyright (c) 2009-2012 Brandon Whitcher and Volker Schmid
 ## All rights reserved.
 ## 
 ## Redistribution and use in source and binary forms, with or without
@@ -327,7 +327,7 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
 ## readANALYZE() is a convenient interface for the user
 ############################################################################
 
-readANALYZE <- function(fname, verbose=FALSE, warn=-1) {
+readANALYZE <- function(fname, SPM=FALSE, verbose=FALSE, warn=-1) {
   ## Warnings?
   oldwarn <- getOption("warn")
   options(warn=warn)
@@ -350,8 +350,8 @@ readANALYZE <- function(fname, verbose=FALSE, warn=-1) {
     if (verbose) {
       cat(paste("  files = ", fname, ".{hdr,img}", sep=""), fill=TRUE)
     }
-    aim <- .read.analyze.content(fname, gzipped=FALSE, verbose=verbose,
-                                 warn=warn)
+    aim <- .read.analyze.content(fname, gzipped=FALSE, SPM=SPM,
+                                 verbose=verbose, warn=warn)
     options(warn=oldwarn)
     return(aim)
   }
@@ -361,8 +361,8 @@ readANALYZE <- function(fname, verbose=FALSE, warn=-1) {
     if (verbose) {
       cat(paste("  files = ", fname, ".{hdr.gz,img.gz}", sep=""), fill=TRUE)
     }
-    aim <- .read.analyze.content(fname, gzipped=TRUE, verbose=verbose,
-                                 warn=warn)
+    aim <- .read.analyze.content(fname, gzipped=TRUE, SPM=SPM,
+                                 verbose=verbose, warn=warn)
     options(warn=oldwarn)
     return(aim)
   }
@@ -373,8 +373,8 @@ readANALYZE <- function(fname, verbose=FALSE, warn=-1) {
 ############################################################################
 ############################################################################
 
-.read.analyze.content <- function(fname, gzipped=TRUE, verbose=FALSE,
-                                  warn=-1) {
+.read.analyze.content <- function(fname, gzipped=TRUE, SPM=FALSE,
+                                  verbose=FALSE, warn=-1) {
   ## Open header file
   if (gzipped) {
     fname <- paste(fname, "hdr.gz", sep=".")
@@ -448,7 +448,7 @@ readANALYZE <- function(fname, verbose=FALSE, warn=-1) {
   aim@"patient_id" <- .readCharWithEmbeddedNuls(fid, 10)
   aim@"exp_date" <- .readCharWithEmbeddedNuls(fid, 10)
   aim@"exp_time" <- .readCharWithEmbeddedNuls(fid, 10)
-  aim@"hist_un0" <- .readCharWithEmbeddedNuls(fid, n=3)
+  aim@"hist_un0" <- .readCharWithEmbeddedNuls(fid, 3)
   aim@"views" <- readBin(fid, integer(), size=4, endian=endian)
   aim@"vols_added" <- readBin(fid, integer(), size=4, endian=endian)
   aim@"start_field" <- readBin(fid, integer(), size=4, endian=endian)
@@ -456,7 +456,12 @@ readANALYZE <- function(fname, verbose=FALSE, warn=-1) {
   aim@"omax" <- readBin(fid, integer(), size=4, endian=endian)
   aim@"omin" <- readBin(fid, integer(), size=4, endian=endian)
   aim@"smax" <- readBin(fid, integer(), size=4, endian=endian)
-  aim@"smin" <- readBin(fid, integer(), size=4, endian=endian)
+  magic <- readBin(fid, raw(), n=4, endian=endian)
+  aim@"smin" <- as.integer(magic) # readBin(fid, integer(), size=4, endian=endian)
+  ## Test for "magic" field (should not exist)
+  if (rawToChar(magic) == "ni1") { # now its actually NIfTI two-file format
+    stop("This is not ANALYZE format, please use readNIfTI with \"oneFile=FALSE"\")
+  }
   close(fid)
   ## Open image file
   if (gzipped) {
@@ -488,7 +493,14 @@ readANALYZE <- function(fname, verbose=FALSE, warn=-1) {
                             ") unsupported in", fname, sep="")))
   close(fid)
   dims <- 2:(1+aim@"dim_"[1])
-  aim@.Data <- array(data, aim@"dim_"[dims])
+  if (SPM) {
+    if (verbose) {
+      cat("  SPM format has been specified and data re-scaled.", fill=TRUE)
+    }
+    aim@.Data <- array(aim@"funused1" * data, aim@"dim_"[dims])
+  } else {
+    aim@.Data <- array(data, aim@"dim_"[dims])
+  }
   ## Warnings?
   options(warn=oldwarn)
   ## Check validity

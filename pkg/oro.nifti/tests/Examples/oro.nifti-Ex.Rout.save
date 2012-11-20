@@ -1,5 +1,5 @@
 
-R version 2.15.0 (2012-03-30)
+R version 2.15.2 (2012-10-26) -- "Trick or Treat"
 Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: x86_64-unknown-linux-gnu (64-bit)
@@ -25,7 +25,7 @@ Type 'q()' to quit R.
 Loading required package: bitops
 Loading required package: XML
 
-oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.3.4)
+oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.3.6)
 
 > 
 > assign(".oldSearch", search(), pos = 'CheckExEnv')
@@ -478,7 +478,7 @@ ANALYZE 7.5 format
 [1] "FSL3.2beta"
 > descrip(mniLR) <- paste(descrip(mniLR), version$version.string, sep="; ")
 > descrip(mniLR)
-[1] "FSL3.2beta; R version 2.15.0 (2012-03-30)"
+[1] "FSL3.2beta; R version 2.15.2 (2012-10-26)"
 > 
 > 
 > 
@@ -1284,7 +1284,7 @@ Warning in removeNodes.list(kids) :
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  8.62 0.25 8.91 0 0 
+Time elapsed:  7.98 0.19 8.431 0 0 
 > grDevices::dev.off()
 null device 
           1 
