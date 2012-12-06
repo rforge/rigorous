@@ -40,6 +40,7 @@ oro.nifti.info <- function(type) {
 
 enableAuditTrail <- function() {
   if (!isClass("niftiAuditTrail")) {
+    require("XML")
     options("niftiAuditTrail"=TRUE)
     setClass("niftiAuditTrail", representation(trail="XMLAbstractNode"),
              prototype(trail=newAuditTrail()), contains="niftiExtension")
