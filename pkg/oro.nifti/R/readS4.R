@@ -72,16 +72,18 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
     if (verbose) {
       cat(paste("  files =", niigz), fill=TRUE)
     }
-    nim <- .read.nifti.content(fname, gzipped=TRUE, verbose=verbose,
-                               warn=warn, reorient=reorient, call=call)
+    nim <- .read.nifti.content(fname, onefile=TRUE, gzipped=TRUE,
+                               verbose=verbose, warn=warn, reorient=reorient,
+                               call=call)
   } else {
     if (file.exists(nii)) {
       ## If uncompressed file exists, then upload!
       if (verbose) {
         cat(paste("  files =", nii), fill=TRUE)
       }
-      nim <- .read.nifti.content(fname, gzipped=FALSE, verbose=verbose,
-                                 warn=warn, reorient=reorient, call=call)
+      nim <- .read.nifti.content(fname, onefile=TRUE, gzipped=FALSE,
+                                 verbose=verbose, warn=warn, reorient=reorient,
+                                 call=call)
     } else {
       if (file.exists(hdrgz) && file.exists(imggz)) {
         ## If compressed files exist, then upload!
@@ -220,7 +222,7 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
   ## start of the file, but trying to avoid clobbering widely-used
   ## ANALYZE 7.5 fields led to putting this marker last.  However,
   ## recall that "the last shall be first" (Matthew 20:16).
-  if (onefile) {  
+  if (onefile && nim@"magic" == "n+1") {  
     nim@"extender" <- readBin(fid, integer(), 4, size=1, signed=FALSE,
                               endian=endian)
     ## If extension[0] is nonzero, it indicates that extended header
@@ -251,6 +253,8 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
         stop("-- extension size (esize) has overshot voxel offset --")
       }
     }
+  } else {
+    stop("This is not a one-file NIfTI format")
   }
 
   if (verbose) {
@@ -259,6 +263,9 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
   dims <- 2:(1+nim@"dim_"[1])
   n <- prod(nim@"dim_"[dims])
   if (! onefile) {
+    if (nim@"magic" != "ni1") {
+      stop("This is not a two-file NIfTI format")
+    }
     close(fid)
     fname <- sub("\\.hdr$", "\\.img", fname)
     if (gzipped) {
@@ -266,7 +273,7 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
     } else {
       fid <- file(fname, "rb")
     }
-    seek(fid, nim@"vox_offset") ## is this correct?
+    ## seek(fid, nim@"vox_offset") # not necessary for two-file format
   }
   data <-
     switch(as.character(nim@"datatype"),
@@ -405,7 +412,7 @@ readANALYZE <- function(fname, SPM=FALSE, verbose=FALSE, warn=-1) {
   ## Construct S4 object
   aim <- new("anlz")
   aim@"sizeof_hdr" <- sizeof.hdr
-  aim@"data_type" <- .readCharWithEmbeddedNuls(fid, 10)
+  aim@"data_type" <- .readCharWithEmbeddedNuls(fid, n=10)
   aim@"db_name" <- .readCharWithEmbeddedNuls(fid, n=18)
   aim@"extents" <- readBin(fid, integer(), size=4, endian=endian)
   aim@"session_error" <- readBin(fid, integer(), size=2, endian=endian)
@@ -442,13 +449,13 @@ readANALYZE <- function(fname, SPM=FALSE, verbose=FALSE, warn=-1) {
   aim@"descrip" <- .readCharWithEmbeddedNuls(fid, n=80)
   aim@"aux_file" <- .readCharWithEmbeddedNuls(fid, n=24)
   aim@"orient" <- .readCharWithEmbeddedNuls(fid, n=1)
-  aim@"origin" <- readBin(fid, integer(), 5, size=2, endian=endian) # .readCharWithEmbeddedNuls(fid, 10)
-  aim@"generated" <- .readCharWithEmbeddedNuls(fid, 10)
-  aim@"scannum" <- .readCharWithEmbeddedNuls(fid, 10)
-  aim@"patient_id" <- .readCharWithEmbeddedNuls(fid, 10)
-  aim@"exp_date" <- .readCharWithEmbeddedNuls(fid, 10)
-  aim@"exp_time" <- .readCharWithEmbeddedNuls(fid, 10)
-  aim@"hist_un0" <- .readCharWithEmbeddedNuls(fid, 3)
+  aim@"origin" <- readBin(fid, integer(), 5, size=2, endian=endian) # .readCharWithEmbeddedNuls(fid, n=10)
+  aim@"generated" <- .readCharWithEmbeddedNuls(fid, n=10)
+  aim@"scannum" <- .readCharWithEmbeddedNuls(fid, n=10)
+  aim@"patient_id" <- .readCharWithEmbeddedNuls(fid, n=10)
+  aim@"exp_date" <- .readCharWithEmbeddedNuls(fid, n=10)
+  aim@"exp_time" <- .readCharWithEmbeddedNuls(fid, n=10)
+  aim@"hist_un0" <- .readCharWithEmbeddedNuls(fid, n=3)
   aim@"views" <- readBin(fid, integer(), size=4, endian=endian)
   aim@"vols_added" <- readBin(fid, integer(), size=4, endian=endian)
   aim@"start_field" <- readBin(fid, integer(), size=4, endian=endian)
@@ -460,7 +467,7 @@ readANALYZE <- function(fname, SPM=FALSE, verbose=FALSE, warn=-1) {
   aim@"smin" <- as.integer(magic) # readBin(fid, integer(), size=4, endian=endian)
   ## Test for "magic" field (should not exist)
   if (rawToChar(magic) == "ni1") { # now its actually NIfTI two-file format
-    stop("This is not ANALYZE format, please use readNIfTI with \"oneFile=FALSE"\")
+    stop("This is in two-file NIfTI format, please use readNIfTI")
   }
   close(fid)
   ## Open image file

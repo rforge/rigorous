@@ -84,7 +84,7 @@ URL <- "http://imaging.mrc-cbu.cam.ac.uk/downloads/Colin/colin_1mm.tgz"
 urlfile <- file.path(tempdir(), "colin_1mm.tgz")
 download.file(URL, dest=urlfile, quiet=TRUE)
 untar(urlfile, exdir=tempdir())
-colin <- readNIfTI(file.path(tempdir(), "colin_1mm"), oneFile=FALSE)
+colin <- readNIfTI(file.path(tempdir(), "colin_1mm"))
 image(colin, oma=rep(2,4))
 orthographic(colin, oma=rep(2,4))
 }
