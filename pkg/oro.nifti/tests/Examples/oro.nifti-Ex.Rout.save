@@ -936,17 +936,6 @@ Warning in removeNodes.list(kids) :
 > image(mni152, oma=rep(2,4))
 > orthographic(mni152, oma=rep(2,4))
 > 
-> ## Not run: 
-> ##D ## 27 scans of Colin Holmes (MNI) brain co-registered and averaged
-> ##D URL <- "http://imaging.mrc-cbu.cam.ac.uk/downloads/Colin/colin_1mm.tgz"
-> ##D urlfile <- file.path(tempdir(), "colin_1mm.tgz")
-> ##D download.file(URL, dest=urlfile, quiet=TRUE)
-> ##D untar(urlfile, exdir=tempdir())
-> ##D colin <- readANALYZE(file.path(tempdir(), "colin_1mm"))
-> ##D image(colin, oma=rep(2,4))
-> ##D orthographic(colin, oma=rep(2,4))
-> ## End(Not run)
-> 
 > 
 > 
 > cleanEx()
@@ -987,6 +976,17 @@ NIfTI-1 format
   Time Units      : Unknown
 > image(ffd, oma=rep(2,4))
 > orthographic(ffd, oma=rep(2,4))
+> ## Not run: 
+> ##D ## 27 scans of Colin Holmes (MNI) brain co-registered and averaged
+> ##D ## NIfTI two-file format
+> ##D URL <- "http://imaging.mrc-cbu.cam.ac.uk/downloads/Colin/colin_1mm.tgz"
+> ##D urlfile <- file.path(tempdir(), "colin_1mm.tgz")
+> ##D download.file(URL, dest=urlfile, quiet=TRUE)
+> ##D untar(urlfile, exdir=tempdir())
+> ##D colin <- readNIfTI(file.path(tempdir(), "colin_1mm"))
+> ##D image(colin, oma=rep(2,4))
+> ##D orthographic(colin, oma=rep(2,4))
+> ## End(Not run)
 > 
 > 
 > 
@@ -1284,7 +1284,7 @@ Warning in removeNodes.list(kids) :
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  7.98 0.19 8.431 0 0 
+Time elapsed:  7.9 0.25 8.215 0 0 
 > grDevices::dev.off()
 null device 
           1 
