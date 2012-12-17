@@ -1,5 +1,5 @@
 
-R version 2.15.2 (2012-10-26) -- "Trick or Treat"
+R version 2.15.2 RC (2012-10-18 r60960) -- "Trick or Treat"
 Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: x86_64-unknown-linux-gnu (64-bit)
@@ -25,7 +25,7 @@ Type 'q()' to quit R.
 Loading required package: bitops
 Loading required package: XML
 
-oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.3.6)
+oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.3.7)
 
 > 
 > assign(".oldSearch", search(), pos = 'CheckExEnv')
@@ -478,7 +478,7 @@ ANALYZE 7.5 format
 [1] "FSL3.2beta"
 > descrip(mniLR) <- paste(descrip(mniLR), version$version.string, sep="; ")
 > descrip(mniLR)
-[1] "FSL3.2beta; R version 2.15.2 (2012-10-26)"
+[1] "FSL3.2beta; R version 2.15.2 RC (2012-10-18 r60960)"
 > 
 > 
 > 
@@ -582,14 +582,6 @@ Class "niftiAuditTrail", by class "niftiExtension", distance 2
 > ### ** Examples
 > 
 > nim <- nifti() # default
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
 > nim
 NIfTI-1 format
   Type            : niftiAuditTrail
@@ -604,14 +596,6 @@ NIfTI-1 format
   Voxel Units     : Unknown
   Time Units      : Unknown
 > nim <- nifti(datatype=4) # 2-byte integers
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
 > nim
 NIfTI-1 format
   Type            : niftiAuditTrail
@@ -881,39 +865,7 @@ Class:   numeric   numeric character
 > afni.path <- system.file("afni", package="oro.nifti")
 > orig <- readAFNI(file.path(afni.path, "ARzs_CW_avvr.DEL+orig"))
 > image(orig, zlim=c(0.5,256), oma=rep(2,4))
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
 > orthographic(orig, zlim=c(0.5,256), oma=rep(2,4))
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
 > 
 > 
 > 
@@ -1076,58 +1028,10 @@ QForm_code and SForm_code unset: Orientation by Method 1.
   files = test-afni-image.HEAD/BRIK
   endianess = little
 > image(orig, zlim=c(0.5,256), oma=rep(2,4), bg="white")
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
 > image(data, zlim=c(0.5,256), oma=rep(2,4), bg="white")
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
 > abs.err <- abs(data - orig)
 > image(as(abs.err, "nifti"), zlim=range(0,1), oma=rep(2,4),
 +       bg="white")
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
 > 
 > 
 > 
@@ -1203,31 +1107,23 @@ Warning in removeNodes.list(kids) :
 > img <- round(255 * img)
 > img[17:32,,] <- 255 - img[17:32,,]
 > img.nifti <- nifti(img) # create NIfTI object
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
 > 
 > writeNIfTI(img.nifti, "test-nifti-image-uint8", verbose=TRUE)
   niftiExtension detected!
   niftiAuditTrail detected!
-  vox_offset = 1312
+  vox_offset = 1232
   writing niftiExtension(s) at byte = 352
-  writing data at byte = 1312
+  writing data at byte = 1232
 > ## These files should be viewable in, for example, FSLview
 > ## Make sure you adjust the min/max values for proper visualization
 > data <- readNIfTI("test-nifti-image-uint8", verbose=TRUE)
   fname = test-nifti-image-uint8
   files = test-nifti-image-uint8.nii.gz
   nii   = test-nifti-image-uint8.nii.gz
-  vox_offset = 1312
+  vox_offset = 1232
   niftiExtension detected!
   seek(fid) = 352
-  seek(fid) = 1312
+  seek(fid) = 1232
  # reorient = Method 1
  ## performPermutation
   trans =
@@ -1246,22 +1142,6 @@ Warning in removeNodes.list(kids) :
 > abs.err <- abs(data - img.nifti)
 > image(as(abs.err, "nifti"), zlim=range(img.nifti), oma=rep(2,4),
 +       bg="white")
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
-Warning in removeNodes.list(kids) :
-  removeNode only works on internal nodes at present
 > 
 > ## Not run: 
 > ##D ## Loop through all possible data types
@@ -1284,7 +1164,7 @@ Warning in removeNodes.list(kids) :
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  7.9 0.25 8.215 0 0 
+Time elapsed:  10.9 0.248 11.244 0 0 
 > grDevices::dev.off()
 null device 
           1 

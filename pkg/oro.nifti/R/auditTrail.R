@@ -42,8 +42,10 @@ enableAuditTrail <- function() {
   if (!isClass("niftiAuditTrail")) {
     require("XML")
     options("niftiAuditTrail"=TRUE)
-    setClass("niftiAuditTrail", representation(trail="XMLAbstractNode"),
-             prototype(trail=newAuditTrail()), contains="niftiExtension")
+    setClass("niftiAuditTrail",
+             representation(trail="XMLAbstractNode"),
+             prototype(trail=newAuditTrail()),
+             contains="niftiExtension")
   }
 }
 
@@ -54,7 +56,7 @@ getLastCallWithName <- function(functionName) {
   theCalls <- sys.calls()
   correctCalls <- which(sapply(theCalls, function(x) x[[1]] == functionName))
   if (length(correctCalls) == 0) {
-    return(theCalls[max(1, length(theCalls)-2)])
+    return(theCalls[max(1, length(theCalls) - 2)])
   }
   return(theCalls[[max(correctCalls)]])
 }
@@ -138,10 +140,10 @@ niftiAuditTrailSystemNode <- function(type="system-info",
     children <- .listToNodes(c("workingDirectory"=workingDirectory,
                                  "filename"=filename, "call"=call))
     sysinfo <-
-      .listToNodes(c("r-version"=R.version["version.string"],
+      .listToNodes(c("r-version"=R.version$version.string,
                      "date"=currentDateTime,
                      "user"=Sys.getenv("LOGNAME"),
-                     "package-version"=packageDescription("oro.nifti")["Version"]))
+                     "package-version"=packageDescription("oro.nifti")$Version))
     if (is.null(children)) {
       children <- sysinfo
     } else {
@@ -156,7 +158,7 @@ niftiAuditTrailSystemNodeEvent <- function(trail, type=NULL, call=NULL,
                                            workingDirectory=NULL,
                                            filename=NULL, comment=NULL) {
   if (getOption("niftiAuditTrail")) {
-    if (is(trail,"niftiAuditTrail")) {
+    if (is(trail, "niftiAuditTrail")) {
       return(niftiAuditTrailSystemNodeEvent(audit.trail(trail), type, call,
                                             workingDirectory, filename,
                                             comment))
@@ -239,4 +241,3 @@ niftiAuditTrailEvent <- function(trail, type=NULL, call=NULL, comment=NULL) {
     return(trail)
   }
 }
-
