@@ -92,6 +92,7 @@ library("XML")
 library("splines")
 library("oro.nifti")
 options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
+options(niftiAuditTrail = TRUE)
 @
 
 \begin{document}
@@ -449,31 +450,27 @@ list.files(pattern="random")
 
 Following on from the \proglang{S}4 implementation of both the NIfTI
 and ANALYZE data formats, the ability to extend the NIfTI data format
-header is utilized in the \pkg{oro.nifti} package.  First, extensions
-are properly handled when reading and writing NIfTI data.  Second,
-users are allowed to add extensions to newly-created NIfTI objects by
-casting them as \code{niftiExtension} objects and adding
-\code{niftiExtensionSection} objects to the \code{extensions} slot.
-Third, by default all operations that are performed on a NIfTI object
-will generate what we call an \emph{audit trail} that consists of an
-\proglang{XML}-based log \citep{XML}.  Each log entry contains
-information not only about the function applied to the NIfTI object,
-but also various system-level information; e.g., version of
-\proglang{R}, user name, date, time, etc.  When writing NIfTI-class
-objects to disk, the \proglang{XML}-based NIfTI extension is converted
-into plain text and saved using \code{ecode=6} to denote plain ASCII
-text only.  The user may control the tracking of data manipulation via
-the audit trail using a global option.  For example, please use the
+header is utilized in the \pkg{oro.nifti} package.  Please use the
 command
 
 <<niftiAuditTrail,eval=FALSE>>=
-options(niftiAuditTrail=FALSE)
+options(niftiAuditTrail=TRUE)
 @
 
-to turn off the ``audit trail'' option in \pkg{oro.nifti}.
-Figure~\ref{fig:mniLR-audit-trail} displays output from the accessor
-function \code{audit.trail(mniLR)}, the \proglang{XML}-based audit
-trail that is stored as a NIfTI header extension.
+to turn on the ``audit trail'' option in \pkg{oro.nifti} and then
+execute the function \code{enableAuditTrail()}.  With the option
+enabled extensions are properly handled when reading and writing NIfTI
+data, users are allowed to add extensions to newly-created NIfTI
+objects by casting them as \code{niftiExtension} objects and adding
+\code{niftiExtensionSection} objects to the \code{extensions} slot,
+and all operations that are performed on a NIfTI object will generate
+what we call an \emph{audit trail} that consists of an
+\proglang{XML}-based log \citep{XML}.
+
+Figure~\ref{fig:mniLR-audit-trail} displays output
+from the accessor function \code{audit.trail(mniLR)}, the
+\proglang{XML}-based audit trail that is stored as a NIfTI header
+extension.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{sidewaysfigure}
@@ -484,10 +481,20 @@ audit.trail(mniLR)
 @
   \end{tabular}
   \caption{\proglang{XML}-based audit trail obtained via
-    \code{audit.trail(mniLR)}.}
+    \code{audit.trail(mniLR)}.  Note, this function will return
+    \code{NULL} if the \pkg{XML} package is not available.}
   \label{fig:mniLR-audit-trail}
 \end{sidewaysfigure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Each log entry contains information not only about the function
+applied to the NIfTI object, but also various system-level
+information; e.g., version of \proglang{R}, user name, date, time,
+etc.  When writing NIfTI-class objects to disk, the
+\proglang{XML}-based NIfTI extension is converted into plain text and
+saved using \code{ecode=6} to denote plain ASCII text.  The user may
+control the tracking of data manipulation via the audit trail using the
+global option \code{niftiAuditTrail}.  
 
 \subsection{Interactive visualization}
 
@@ -554,7 +561,7 @@ filtered.func.data <-
 png(filename="ffd.png", width=2*480, height=2*480, bg="black")
 @ 
 <<ffd-image>>=
-image(ffd, zlim=range(ffd)*0.85)
+image(ffd, zlim=range(ffd)*0.95)
 @ 
 <<ffd-dev.off,echo=FALSE,results=hide>>=
 dev.off()
@@ -576,7 +583,7 @@ approximately center the crosshair vertically.
 png(filename="ffd_orthographic.png", width=2*480, height=2*480, bg="black")
 @ 
 <<ffd-orthographic>>=
-orthographic(ffd, xyz=c(34,29,10), zlim=range(ffd)*0.85)
+orthographic(ffd, xyz=c(34,29,10), zlim=range(ffd)*0.9)
 @ 
 <<ffd-ortho-dev.off,echo=FALSE,results=hide>>=
 dev.off()
@@ -634,10 +641,11 @@ auditory.hrf <- auditory.hrf[index]
 @ 
 <<ffd-design.png,echo=FALSE,results=hide>>=
 png("ffd_design.png", width=3*480, height=1.5*480)
-par(mfrow=c(1,2), mex=0.85)
-plot(index, visual.hrf, type="l", 
+par(mfrow=c(1,2), mar=c(5,4,4,2) + 1, mex=0.85, 
+    cex=1.5, cex.axis=1.5, cex.lab=1.5, cex.main=1.5)
+plot(index, visual.hrf, type="l", lwd=2,
      xlab="Acquisition Index", ylab="Visual Stimulus")
-plot(index, auditory.hrf, type="l", 
+plot(index, auditory.hrf, type="l", lwd=2,
      xlab="Acquisition Index", ylab="Auditory Stimulus") 
 dev.off()
 @ 
@@ -709,8 +717,9 @@ Z.auditory <- nifti(qnorm(pt(ffd.glm[2,,,], dof, log.p=TRUE), log.p=TRUE),
 png("ffd_zstat1.png", width=2*480, height=2*480, bg="black")
 @ 
 <<zstat1-overlay>>=
+yrange <- c(5, max(Z.visual, na.rm=TRUE))
 overlay(ffd, ifelse(Z.visual > 5, Z.visual, NA), 
-        zlim.x=range(ffd)*0.85, zlim.y=range(Z.visual, na.rm=TRUE))
+        zlim.x=range(ffd)*0.95, zlim.y=yrange)
 <<zstat1-dev.off,echo=FALSE,results=hide>>=
 dev.off()
 @ 
@@ -718,8 +727,9 @@ dev.off()
 png("ffd_zstat2.png", width=2*480, height=2*480, bg="black")
 @ 
 <<zstat2-overlay>>=
+yrange <- c(5, max(Z.auditory, na.rm=TRUE))
 overlay(ffd, ifelse(Z.auditory > 5, Z.auditory, NA), 
-        zlim.x=range(ffd)*0.85, zlim.y=range(Z.auditory, na.rm=TRUE))
+        zlim.x=range(ffd)*0.95, zlim.y=yrange)
 <<zstat2-dev.off,echo=FALSE,results=hide>>=
 dev.off()
 @ 

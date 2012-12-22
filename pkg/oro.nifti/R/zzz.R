@@ -1,5 +1,5 @@
 ##
-## Copyright (c) 2009, 2010, 2011 Brandon Whitcher and Volker Schmid
+## Copyright (c) 2009, 2010, 2011, 2012 Brandon Whitcher and Volker Schmid
 ## All rights reserved.
 ##
 ## Redistribution and use in source and binary forms, with or without
@@ -32,8 +32,7 @@
 ##
 
 .onLoad <- function(lib, pkg) {
-  options("niftiAuditTrail" = TRUE)
-  enableAuditTrail()
+  options("niftiAuditTrail" = FALSE)
 }
 
 .onAttach <- function(lib, pkg) {
@@ -42,7 +41,7 @@
                ": Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = ",
                packageDescription(pkg, lib)[["Version"]],
                ")\n",
-               sep="")
+               sep = "")
   packageStartupMessage(txt)
 }
 

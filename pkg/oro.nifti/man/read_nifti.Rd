@@ -90,7 +90,7 @@ orthographic(colin, oma=rep(2,4))
 }
 }
 \author{
-  Brandon Whitcher \email{bjw34032@users.sourceforge.net},\cr
+  Brandon Whitcher \email{bwhitcher@gmail.com},\cr
   Volker Schmid \email{volkerschmid@users.sourceforge.net},\cr
   Andrew Thornton \email{zeripath@users.sourceforge.net}
 }

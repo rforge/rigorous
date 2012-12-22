@@ -138,6 +138,15 @@ setClass("niftiExtension",
          contains="nifti")
 
 #############################################################################
+## setClass("niftiAuditTrail")
+#############################################################################
+
+setClass("niftiAuditTrail",
+         representation(trail="ANY"),
+         prototype(trail=newAuditTrail()),
+         contains="niftiExtension")
+
+#############################################################################
 ## setClass("niftiExtensionSection")
 #############################################################################
 

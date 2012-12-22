@@ -23,9 +23,8 @@ Type 'q()' to quit R.
 > options(warn = 1)
 > library('oro.nifti')
 Loading required package: bitops
-Loading required package: XML
 
-oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.3.7)
+oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.3.8)
 
 > 
 > assign(".oldSearch", search(), pos = 'CheckExEnv')
@@ -259,6 +258,10 @@ ANALYZE 7.5 format
 > ## A good example of the use of these functions is shown by this
 > ## wrapper function which takes a function fun(nim, ...) returning
 > ## lists of arrays which are nifti-ized using as(...)
+> options("niftiAuditTrail"=TRUE)
+> enableAuditTrail()
+Loading required package: XML
+> 
 > wrapper <- function(functionToWrap, nameOfCallingFunction, nim, ...) {
 +   if (!is(nim, "nifti")) 
 +     nim <- as(nim, "nifti")
@@ -288,7 +291,7 @@ ANALYZE 7.5 format
 > 
 > ## Not run: 
 > ##D ## compare the trails
-> ##D if (getOption("niftiAuditTrail")) {
+> ##D if (isTRUE(getOption("niftiAuditTrail"))) {
 > ##D   print((as.nifti(functionToWrap(nifti(), 4, 4), nifti()))@trail)
 > ##D   print(niftiizedForm(nifti(), 4, 4)@trail)
 > ##D }
@@ -297,6 +300,9 @@ ANALYZE 7.5 format
 > 
 > 
 > cleanEx()
+
+detaching ‘package:XML’
+
 > nameEx("aux_file-methods")
 > ### * aux_file-methods
 > 
@@ -316,6 +322,8 @@ ANALYZE 7.5 format
 > ##D                      "mniRL.nii.gz")
 > ##D download.file(url, urlfile, quiet=TRUE)
 > ## End(Not run)
+> options("niftiAuditTrail"=FALSE)
+> 
 > urlfile <- file.path(system.file("nifti", package="oro.nifti"),
 +                      "mniRL.nii.gz")
 > mniRL <- readNIfTI(urlfile)
@@ -581,10 +589,12 @@ Class "niftiAuditTrail", by class "niftiExtension", distance 2
 > 
 > ### ** Examples
 > 
+> options("niftiAuditTrail"=FALSE)
+> 
 > nim <- nifti() # default
 > nim
 NIfTI-1 format
-  Type            : niftiAuditTrail
+  Type            : nifti
   Data Type       : 2 (UINT8)
   Bits per Pixel  : 8
   Slice Code      : 0 (Unknown)
@@ -598,7 +608,7 @@ NIfTI-1 format
 > nim <- nifti(datatype=4) # 2-byte integers
 > nim
 NIfTI-1 format
-  Type            : niftiAuditTrail
+  Type            : nifti
   Data Type       : 4 (INT16)
   Bits per Pixel  : 16
   Slice Code      : 0 (Unknown)
@@ -629,42 +639,42 @@ NIfTI-1 format
 Class "niftiAuditTrail" [package "oro.nifti"]
 
 Slots:
-                                                                      
-Name:            .Data           trail      extensions      sizeof_hdr
-Class:           array XMLAbstractNode            list         numeric
-                                                                      
-Name:        data_type         db_name         extents   session_error
-Class:       character       character         numeric         numeric
-                                                                      
-Name:          regular        dim_info            dim_       intent_p1
-Class:       character       character          vector         numeric
-                                                                      
-Name:        intent_p2       intent_p3     intent_code        datatype
-Class:         numeric         numeric         numeric         numeric
-                                                                      
-Name:           bitpix     slice_start          pixdim      vox_offset
-Class:         numeric         numeric          vector         numeric
-                                                                      
-Name:        scl_slope       scl_inter       slice_end      slice_code
-Class:         numeric         numeric         numeric         numeric
-                                                                      
-Name:       xyzt_units         cal_max         cal_min  slice_duration
-Class:         numeric         numeric         numeric         numeric
-                                                                      
-Name:          toffset           glmax           glmin         descrip
-Class:         numeric         numeric         numeric       character
-                                                                      
-Name:         aux_file      qform_code      sform_code       quatern_b
-Class:       character         numeric         numeric         numeric
-                                                                      
-Name:        quatern_c       quatern_d       qoffset_x       qoffset_y
-Class:         numeric         numeric         numeric         numeric
-                                                                      
-Name:        qoffset_z          srow_x          srow_y          srow_z
-Class:         numeric          vector          vector          vector
-                                                                      
-Name:      intent_name           magic        extender      reoriented
-Class:       character       character          vector         logical
+                                                                  
+Name:           .Data          trail     extensions     sizeof_hdr
+Class:          array            ANY           list        numeric
+                                                                  
+Name:       data_type        db_name        extents  session_error
+Class:      character      character        numeric        numeric
+                                                                  
+Name:         regular       dim_info           dim_      intent_p1
+Class:      character      character         vector        numeric
+                                                                  
+Name:       intent_p2      intent_p3    intent_code       datatype
+Class:        numeric        numeric        numeric        numeric
+                                                                  
+Name:          bitpix    slice_start         pixdim     vox_offset
+Class:        numeric        numeric         vector        numeric
+                                                                  
+Name:       scl_slope      scl_inter      slice_end     slice_code
+Class:        numeric        numeric        numeric        numeric
+                                                                  
+Name:      xyzt_units        cal_max        cal_min slice_duration
+Class:        numeric        numeric        numeric        numeric
+                                                                  
+Name:         toffset          glmax          glmin        descrip
+Class:        numeric        numeric        numeric      character
+                                                                  
+Name:        aux_file     qform_code     sform_code      quatern_b
+Class:      character        numeric        numeric        numeric
+                                                                  
+Name:       quatern_c      quatern_d      qoffset_x      qoffset_y
+Class:        numeric        numeric        numeric        numeric
+                                                                  
+Name:       qoffset_z         srow_x         srow_y         srow_z
+Class:        numeric         vector         vector         vector
+                                                                  
+Name:     intent_name          magic       extender     reoriented
+Class:      character      character         vector        logical
 
 Extends: 
 Class "niftiExtension", directly
@@ -915,7 +925,7 @@ Class:   numeric   numeric character
 +                      "filtered_func_data")
 > (ffd <- readNIfTI(urlfile))
 NIfTI-1 format
-  Type            : niftiAuditTrail
+  Type            : niftiExtension
   Data Type       : 4 (INT16)
   Bits per Pixel  : 16
   Slice Code      : 0 (Unknown)
@@ -1109,21 +1119,15 @@ QForm_code and SForm_code unset: Orientation by Method 1.
 > img.nifti <- nifti(img) # create NIfTI object
 > 
 > writeNIfTI(img.nifti, "test-nifti-image-uint8", verbose=TRUE)
-  niftiExtension detected!
-  niftiAuditTrail detected!
-  vox_offset = 1232
-  writing niftiExtension(s) at byte = 352
-  writing data at byte = 1232
+  writing data at byte = 352
 > ## These files should be viewable in, for example, FSLview
 > ## Make sure you adjust the min/max values for proper visualization
 > data <- readNIfTI("test-nifti-image-uint8", verbose=TRUE)
   fname = test-nifti-image-uint8
   files = test-nifti-image-uint8.nii.gz
   nii   = test-nifti-image-uint8.nii.gz
-  vox_offset = 1232
-  niftiExtension detected!
+  vox_offset = 352
   seek(fid) = 352
-  seek(fid) = 1232
  # reorient = Method 1
  ## performPermutation
   trans =
@@ -1164,7 +1168,7 @@ QForm_code and SForm_code unset: Orientation by Method 1.
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  10.9 0.248 11.244 0 0 
+Time elapsed:  10.72 0.292 11.025 0 0 
 > grDevices::dev.off()
 null device 
           1 
