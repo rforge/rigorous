@@ -177,17 +177,7 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
     cat("  vox_offset =", nim@"vox_offset", fill=TRUE)
   }
   nim@"scl_slope" <- readBin(fid, numeric(), size=4, endian=endian)
-  ## WARNING to the user
-  if (nim@"scl_slope" != 1) {
-    warning(paste("scl_slope =", nim@"scl_slope", "and data must be rescaled."))
-  }
-  ##
   nim@"scl_inter" <- readBin(fid, numeric(), size=4, endian=endian)
-  ## WARNING to the user
-  if (nim@"scl_inter" != 0) {
-    warning(paste("scl_inter =", nim@"scl_inter", "and data must be translated."))
-  }
-  ##
   nim@"slice_end" <- readBin(fid, integer(), size=2, endian=endian)
   nim@"slice_code" <- readBin(fid, integer(), size=1, signed=FALSE,
                               endian=endian)
@@ -222,7 +212,10 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
   ## start of the file, but trying to avoid clobbering widely-used
   ## ANALYZE 7.5 fields led to putting this marker last.  However,
   ## recall that "the last shall be first" (Matthew 20:16).
-  if (onefile && nim@"magic" == "n+1") {  
+  if (onefile) {  
+    if (nim@"magic" != "n+1") {
+      stop("This is not a one-file NIfTI format")
+    }   
     nim@"extender" <- readBin(fid, integer(), 4, size=1, signed=FALSE,
                               endian=endian)
     ## If extension[0] is nonzero, it indicates that extended header
@@ -253,8 +246,6 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
         stop("-- extension size (esize) has overshot voxel offset --")
       }
     }
-  } else {
-    stop("This is not a one-file NIfTI format")
   }
 
   if (verbose) {
@@ -290,6 +281,15 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
            stop(paste("Data type", nim@"datatype", "unsupported in", fname))
            )
   close(fid)
+
+  ## WARNING to the user
+  if (nim@"scl_slope" != 0) {
+    warning(paste("scl_slope =", nim@"scl_slope", "and data must be rescaled."))
+    data <- data * nim@"scl_slope" + nim@"scl_inter"
+  }
+
+  ##
+  ##
   ##
   ## THE SLOW BIT FOLLOWS
   ##
