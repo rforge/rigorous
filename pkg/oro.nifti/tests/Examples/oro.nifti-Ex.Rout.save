@@ -1,5 +1,5 @@
 
-R version 2.15.2 RC (2012-10-18 r60960) -- "Trick or Treat"
+R version 2.15.2 Patched (2012-12-18 r61375) -- "Trick or Treat"
 Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: x86_64-unknown-linux-gnu (64-bit)
@@ -24,7 +24,7 @@ Type 'q()' to quit R.
 > library('oro.nifti')
 Loading required package: bitops
 
-oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.3.8)
+oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.3.9)
 
 > 
 > assign(".oldSearch", search(), pos = 'CheckExEnv')
@@ -486,7 +486,7 @@ detaching ‘package:XML’
 [1] "FSL3.2beta"
 > descrip(mniLR) <- paste(descrip(mniLR), version$version.string, sep="; ")
 > descrip(mniLR)
-[1] "FSL3.2beta; R version 2.15.2 RC (2012-10-18 r60960)"
+[1] "FSL3.2beta; R version 2.15.2 Patched (2012-12-18 r61375)"
 > 
 > 
 > 
@@ -1168,7 +1168,7 @@ QForm_code and SForm_code unset: Orientation by Method 1.
 > ### * <FOOTER>
 > ###
 > cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  10.72 0.292 11.025 0 0 
+Time elapsed:  10.196 0.24 10.538 0 0 
 > grDevices::dev.off()
 null device 
           1 
