@@ -1,6 +1,6 @@
 ##
 ##
-## Copyright (c) 2009-2011 Brandon Whitcher and Volker Schmid
+## Copyright (c) 2009-2013 Brandon Whitcher and Volker Schmid
 ## All rights reserved.
 ## 
 ## Redistribution and use in source and binary forms, with or without
@@ -184,35 +184,35 @@ convert.slice <- function(slice.code) {
 
 xyzt2space <- function(xyzt) {
   ## define XYZT_TO_SPACE(xyzt) ( (xyzt) & 0x07 )
-  bitAnd(xyzt, 7)
+  bitops::bitAnd(xyzt, 7)
 }
 
 xyzt2time <- function(xyzt) {
   ## define XYZT_TO_TIME(xyzt) ( (xyzt) & 0x38 )
-  bitAnd(xyzt, 56)
+  bitops::bitAnd(xyzt, 56)
 }
 
 space.time2xyzt <- function(ss, tt) {
   ## define SPACE_TIME_TO_XYZT(ss,tt) (  (((char)(ss)) & 0x07)   \
   ##                                   | (((char)(tt)) & 0x38) )
-  ss <- bitAnd(convert.units(ss, inverse=TRUE), 7)
-  tt <- bitAnd(convert.units(tt, inverse=TRUE), 56)
+  ss <- bitops::bitAnd(convert.units(ss, inverse=TRUE), 7)
+  tt <- bitops::bitAnd(convert.units(tt, inverse=TRUE), 56)
   ss + tt
 }
 
 dim2freq <- function(di) {
   ## define DIM_INFO_TO_FREQ_DIM(di) ( ((di)     ) & 0x03 )
-  bitAnd(di, 3)
+  bitops::bitAnd(di, 3)
 }
 
 dim2phase <- function(di) {
   ## define DIM_INFO_TO_PHASE_DIM(di) ( ((di) >> 2) & 0x03 )
-  bitAnd(bitShiftR(di, 2), 3)
+  bitops::bitAnd(bitops::bitShiftR(di, 2), 3)
 }
 
 dim2slice <- function(di) {
   ## define DIM_INFO_TO_SLICE_DIM(di) ( ((di) >> 4) & 0x03 )
-  bitAnd(bitShiftR(di, 4), 3)
+  bitops::bitAnd(bitops::bitShiftR(di, 4), 3)
 }
 
 ############################################################################
@@ -339,4 +339,3 @@ as.nifti <- function(from, value=NULL, verbose=FALSE) {
   }
   return(nim)
 }
-

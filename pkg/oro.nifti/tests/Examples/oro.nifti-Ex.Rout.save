@@ -1,8 +1,7 @@
 
-R version 2.15.2 Patched (2012-12-18 r61375) -- "Trick or Treat"
-Copyright (C) 2012 The R Foundation for Statistical Computing
-ISBN 3-900051-07-0
-Platform: x86_64-unknown-linux-gnu (64-bit)
+R version 3.0.2 (2013-09-25) -- "Frisbee Sailing"
+Copyright (C) 2013 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin10.8.0 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -21,19 +20,31 @@ Type 'q()' to quit R.
 > pkgname <- "oro.nifti"
 > source(file.path(R.home("share"), "R", "examples-header.R"))
 > options(warn = 1)
+> base::assign(".ExTimings", "oro.nifti-Ex.timings", pos = 'CheckExEnv')
+> base::cat("name\tuser\tsystem\telapsed\n", file=base::get(".ExTimings", pos = 'CheckExEnv'))
+> base::assign(".format_ptime",
++ function(x) {
++   if(!is.na(x[4L])) x[1L] <- x[1L] + x[4L]
++   if(!is.na(x[5L])) x[2L] <- x[2L] + x[5L]
++   options(OutDec = '.')
++   format(x[1L:3L], digits = 7L)
++ },
++ pos = 'CheckExEnv')
+> 
+> ### * </HEADER>
 > library('oro.nifti')
-Loading required package: bitops
 
-oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.3.9)
+oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.4.0)
 
 > 
-> assign(".oldSearch", search(), pos = 'CheckExEnv')
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
 > cleanEx()
 > nameEx("afni-class")
 > ### * afni-class
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: afni-class
 > ### Title: Class "afni"
 > ### Aliases: afni-class show,afni-method
@@ -129,19 +140,20 @@ Class:                character                character
 
 Extends: 
 Class "array", from data part
-Class "matrix", by class "array", distance 2, with explicit test and coerce
 Class "structure", by class "array", distance 2
 Class "vector", by class "array", distance 3, with explicit coerce
-Class "vector", by class "array", distance 5, with explicit test and coerce
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("afni-class", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("anlz-class")
 > ### * anlz-class
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: anlz-class
 > ### Title: Class "anlz"
 > ### Aliases: anlz-class show,anlz-method
@@ -183,19 +195,20 @@ Class:       numeric       numeric       numeric       numeric
 
 Extends: 
 Class "array", from data part
-Class "matrix", by class "array", distance 2, with explicit test and coerce
 Class "structure", by class "array", distance 2
 Class "vector", by class "array", distance 3, with explicit coerce
-Class "vector", by class "array", distance 5, with explicit test and coerce
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("anlz-class", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("anlz")
 > ### * anlz
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: anlz
 > ### Title: Constructor for Analyze
 > ### Aliases: anlz is.anlz
@@ -214,12 +227,15 @@ ANALYZE 7.5 format
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("anlz", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("audit_trail-methods")
 > ### * audit_trail-methods
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: audit.trail-methods
 > ### Title: Extract or Replace NIfTI Audit Trail
 > ### Aliases: audit.trail-methods audit.trail,nifti-method audit.trail
@@ -240,12 +256,15 @@ ANALYZE 7.5 format
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("audit_trail-methods", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("audit_trail")
 > ### * audit_trail
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: Audit Trails
 > ### Title: Facilitate the Creation and Modification of Audit Trails
 > ### Aliases: oro.nifti.info enableAuditTrail newAuditTrail
@@ -299,6 +318,8 @@ Loading required package: XML
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("audit_trail", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 
 detaching ‘package:XML’
@@ -308,6 +329,7 @@ detaching ‘package:XML’
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: aux.file-methods
 > ### Title: Extract or Replace NIfTI/Analyze Auxiliary File
 > ### Aliases: aux.file-methods aux.file,anlz-method aux.file,nifti-method
@@ -335,12 +357,15 @@ detaching ‘package:XML’
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("aux_file-methods", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("calmin-methods")
 > ### * calmin-methods
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: cal.min-methods
 > ### Title: Extract or Replace NIfTI/Analyze Min or Max Values
 > ### Aliases: cal.min-methods cal.min,anlz-method cal.min,nifti-method
@@ -367,12 +392,15 @@ detaching ‘package:XML’
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("calmin-methods", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("convert_afni")
 > ### * convert_afni
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: convert.scene
 > ### Title: Convert AFNI data codes
 > ### Aliases: convert.scene
@@ -386,12 +414,15 @@ detaching ‘package:XML’
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("convert_afni", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("convert_anlz")
 > ### * convert_anlz
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: Convert ANALYZE Codes
 > ### Title: Convert NIfTI Codes
 > ### Aliases: convert.bitpix.anlz convert.datatype.anlz convert.orient.anlz
@@ -413,12 +444,15 @@ detaching ‘package:XML’
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("convert_anlz", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("convert_nifti")
 > ### * convert_nifti
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: Convert NIfTI Codes
 > ### Title: Convert NIfTI Codes
 > ### Aliases: convert.datatype convert.bitpix convert.intent convert.form
@@ -459,12 +493,15 @@ detaching ‘package:XML’
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("convert_nifti", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("descrip-methods")
 > ### * descrip-methods
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: descrip-methods
 > ### Title: Extract or Replace NIfTI/Analyze Description
 > ### Aliases: descrip-methods descrip,anlz-method descrip,nifti-method
@@ -486,16 +523,19 @@ detaching ‘package:XML’
 [1] "FSL3.2beta"
 > descrip(mniLR) <- paste(descrip(mniLR), version$version.string, sep="; ")
 > descrip(mniLR)
-[1] "FSL3.2beta; R version 2.15.2 Patched (2012-12-18 r61375)"
+[1] "FSL3.2beta; R version 3.0.2 (2013-09-25)"
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("descrip-methods", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("hotmetal")
 > ### * hotmetal
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: hotmetal
 > ### Title: Hot Metal Color Table
 > ### Aliases: hotmetal
@@ -510,12 +550,15 @@ detaching ‘package:XML’
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("hotmetal", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("nifti-class")
 > ### * nifti-class
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: nifti-class
 > ### Title: Class "nifti"
 > ### Aliases: nifti-class show,nifti-method
@@ -566,10 +609,8 @@ Class:         vector        logical
 
 Extends: 
 Class "array", from data part
-Class "matrix", by class "array", distance 2, with explicit test and coerce
 Class "structure", by class "array", distance 2
 Class "vector", by class "array", distance 3, with explicit coerce
-Class "vector", by class "array", distance 5, with explicit test and coerce
 
 Known Subclasses: 
 Class "niftiExtension", directly
@@ -577,12 +618,15 @@ Class "niftiAuditTrail", by class "niftiExtension", distance 2
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("nifti-class", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("nifti")
 > ### * nifti
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: nifti
 > ### Title: Constructor for NIfTI
 > ### Aliases: nifti is.nifti
@@ -622,12 +666,15 @@ NIfTI-1 format
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("nifti", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("niftiAuditTrail-class")
 > ### * niftiAuditTrail-class
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: niftiAuditTrail-class
 > ### Title: Class "niftiAuditTrail"
 > ### Aliases: niftiAuditTrail-class
@@ -680,19 +727,20 @@ Extends:
 Class "niftiExtension", directly
 Class "nifti", by class "niftiExtension", distance 2
 Class "array", by class "niftiExtension", distance 3
-Class "matrix", by class "niftiExtension", distance 4, with explicit test and coerce
 Class "structure", by class "niftiExtension", distance 4
 Class "vector", by class "niftiExtension", distance 5, with explicit coerce
-Class "vector", by class "niftiExtension", distance 7, with explicit test and coerce
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("niftiAuditTrail-class", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("niftiExtension-class")
 > ### * niftiExtension-class
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: niftiExtension-class
 > ### Title: Class "niftiExtension"
 > ### Aliases: niftiExtension-class
@@ -744,21 +792,22 @@ Class:      character         vector        logical
 Extends: 
 Class "nifti", directly
 Class "array", by class "nifti", distance 2
-Class "matrix", by class "nifti", distance 3, with explicit test and coerce
 Class "structure", by class "nifti", distance 3
 Class "vector", by class "nifti", distance 4, with explicit coerce
-Class "vector", by class "nifti", distance 6, with explicit test and coerce
 
 Known Subclasses: "niftiAuditTrail"
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("niftiExtension-class", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("niftiExtensionSection-class")
 > ### * niftiExtensionSection-class
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: niftiExtensionSection-class
 > ### Title: Class "niftiExtensionSection"
 > ### Aliases: niftiExtensionSection-class
@@ -776,12 +825,15 @@ Class:   numeric   numeric character
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("niftiExtensionSection-class", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("pixdim-methods")
 > ### * pixdim-methods
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: pixdim-methods
 > ### Title: Extract or Replace NIfTI/Analyze Pixel Dimensions
 > ### Aliases: pixdim-methods pixdim,anlz-method pixdim,nifti-method
@@ -804,12 +856,15 @@ Class:   numeric   numeric character
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("pixdim-methods", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("q2R")
 > ### * q2R
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: quaternion2rotation
 > ### Title: Convert Quaternion into a Rotation Matrix
 > ### Aliases: quaternion2rotation quaternion2mat44
@@ -826,12 +881,15 @@ Class:   numeric   numeric character
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("q2R", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("qformsform")
 > ### * qformsform
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: orientation-methods
 > ### Title: Extract NIfTI 3D Image Orientation
 > ### Aliases: qform-methods qform,nifti-method qform sform-methods
@@ -857,12 +915,15 @@ Class:   numeric   numeric character
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("qformsform", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("read_afni")
 > ### * read_afni
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: readAFNI
 > ### Title: readAFNI
 > ### Aliases: readAFNI
@@ -879,12 +940,15 @@ Class:   numeric   numeric character
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("read_afni", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("read_anlz")
 > ### * read_anlz
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: readANALYZE
 > ### Title: readANALYZE
 > ### Aliases: readANALYZE
@@ -900,12 +964,15 @@ Class:   numeric   numeric character
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("read_anlz", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("read_nifti")
 > ### * read_nifti
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: readNIfTI
 > ### Title: readNIfTI
 > ### Aliases: readNIfTI
@@ -952,12 +1019,15 @@ NIfTI-1 format
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("read_nifti", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("tim_colors")
 > ### * tim_colors
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: tim.colors
 > ### Title: Tim's Useful Color Table
 > ### Aliases: tim.colors
@@ -972,12 +1042,15 @@ NIfTI-1 format
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("tim_colors", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("transformCoordinate")
 > ### * transformCoordinate
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: translateCoordinate
 > ### Title: translateCoordinate
 > ### Aliases: translateCoordinate
@@ -1013,12 +1086,15 @@ QForm_code and SForm_code unset: Orientation by Method 1.
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("transformCoordinate", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("write_afni")
 > ### * write_afni
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: writeAFNI-methods
 > ### Title: writeAFNI
 > ### Aliases: writeAFNI-methods writeAFNI,afni-method writeAFNI,ANY-method
@@ -1045,12 +1121,15 @@ QForm_code and SForm_code unset: Orientation by Method 1.
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("write_afni", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("write_anlz")
 > ### * write_anlz
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: writeANALYZE-methods
 > ### Title: writeANALYZE
 > ### Aliases: writeANALYZE-methods writeANALYZE,anlz-method writeANALYZE
@@ -1097,12 +1176,15 @@ QForm_code and SForm_code unset: Orientation by Method 1.
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("write_anlz", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("write_nifti")
 > ### * write_nifti
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: writeNIfTI-methods
 > ### Title: writeNIfTI
 > ### Aliases: writeNIfTI-methods writeNIfTI,nifti-method
@@ -1165,10 +1247,13 @@ QForm_code and SForm_code unset: Orientation by Method 1.
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("write_nifti", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > ### * <FOOTER>
 > ###
-> cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  10.196 0.24 10.538 0 0 
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  6.314 0.46 6.846 0 0 
 > grDevices::dev.off()
 null device 
           1 

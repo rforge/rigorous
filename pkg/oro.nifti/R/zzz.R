@@ -1,5 +1,5 @@
 ##
-## Copyright (c) 2009, 2010, 2011, 2012 Brandon Whitcher and Volker Schmid
+## Copyright (c) 2009, 2010, 2011, 2012, 2013 Brandon Whitcher and Volker Schmid
 ## All rights reserved.
 ##
 ## Redistribution and use in source and binary forms, with or without
@@ -39,7 +39,7 @@
   txt <- paste("\n",
                pkg,
                ": Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = ",
-               packageDescription(pkg, lib)[["Version"]],
+               utils::packageDescription(pkg, lib)[["Version"]],
                ")\n",
                sep = "")
   packageStartupMessage(txt)

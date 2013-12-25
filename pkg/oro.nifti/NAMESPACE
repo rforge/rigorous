@@ -1,4 +1,4 @@
-import("grDevices", "graphics", "methods", "utils")
+import("bitops", "grDevices", "graphics", "methods", "utils")
 
 importFrom("splines", "interpSpline")
 
