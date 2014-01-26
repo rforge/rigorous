@@ -1,6 +1,6 @@
 ##
 ##
-## Copyright (c) 2009-2012 Brandon Whitcher and Volker Schmid
+## Copyright (c) 2009-2014 Brandon Whitcher and Volker Schmid
 ## All rights reserved.
 ## 
 ## Redistribution and use in source and binary forms, with or without
@@ -50,23 +50,31 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
   ## Warnings?
   oldwarn <- getOption("warn")
   options(warn=warn)
-
   if (verbose) {
     cat(paste("  fname =", fname), fill=TRUE)
+  }
+  ## Separate path and file name for more robust extension stripping
+  pathVector <- unlist(strsplit(fname, "/"))
+  file.name <- pathVector[length(pathVector)]
+  path <- paste(pathVector[-length(pathVector)], collapse="/")
+  if (length(pathVector) > 1) {
+      fname <- paste(path, file.name, sep="/")
+  } else {
+      fname <- file.name
   }
   ## Strip any extensions
   fname <- sub("\\.gz$", "", fname)
   fname <- sub("\\.nii$", "", fname)
   fname <- sub("\\.hdr$", "", fname)
   fname <- sub("\\.img$", "", fname)
-
+  ## Add all possible file extensions 
   nii <- paste(fname, "nii", sep=".")
   niigz <- paste(fname, "nii.gz", sep=".")
   hdr <- paste(fname, "hdr", sep=".")
   hdrgz <- paste(fname, "hdr.gz", sep=".")
   img <- paste(fname, "img", sep=".")
   imggz <- paste(fname, "img.gz", sep=".")
-
+  ## Check all possible file extensions
   if (file.exists(niigz)) {
     ## If compressed file exists, then upload!
     if (verbose) {

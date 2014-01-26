@@ -22,7 +22,7 @@ Type 'q()' to quit R.
 > options(warn = 1)
 > library('oro.nifti')
 
-oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.4.0)
+oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.4.1)
 
 > 
 > base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
@@ -1157,7 +1157,7 @@ QForm_code and SForm_code unset: Orientation by Method 1.
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  6.548 0.431 7.05 0 0 
+Time elapsed:  6.611 0.466 7.155 0 0 
 > grDevices::dev.off()
 null device 
           1 
