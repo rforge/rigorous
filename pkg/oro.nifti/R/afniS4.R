@@ -420,8 +420,8 @@ readAFNI <- function(fname, vol=NULL, verbose=FALSE, warn=-1, call=NULL) {
   ## Constructor S4 object
   dim(dataCube) <- c(ddim, length(vol))
   values$DATASET_RANK[2] <- length(vol)
-  values$TAXIS_NUMS[1] <- length(vol)
-  values$BRICK_TYPES <- values$BRICK_TYPES[vol]
+  if (!is.null(values$TAXIS_NUMS)) values$TAXIS_NUMS[1] <- length(vol)
+  if (!is.null(values$BRICK_TYPES)) values$BRICK_TYPES <- values$BRICK_TYPES[vol]
   nim <- new("afni",
              dataCube,
              DATASET_RANK = values$DATASET_RANK,
