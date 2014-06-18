@@ -49,7 +49,7 @@ oro2fmri <- function(from, value=NULL, level=0.75, setmask=TRUE) {
       mask[is.na(na)] <- FALSE
       ttt[is.na(na), ] <- 0
       dim(mask) <- c(dx, dy, dz)
-      mask <- fmri:::connect.mask(mask)
+      mask <- fmri::connect.mask(mask)
     }
     z <- list(ttt = writeBin(as.numeric(ttt), raw(), 4), 
               format = "NIFTI",

@@ -349,6 +349,15 @@ readANALYZE <- function(fname, SPM=FALSE, verbose=FALSE, warn=-1) {
   if (verbose) {
     cat(paste("  fname =", fname), fill=TRUE)
   }
+  ## Separate path and file name for more robust extension stripping
+  pathVector <- unlist(strsplit(fname, "/"))
+  file.name <- pathVector[length(pathVector)]
+  path <- paste(pathVector[-length(pathVector)], collapse="/")
+  if (length(pathVector) > 1) {
+      fname <- paste(path, file.name, sep="/")
+  } else {
+      fname <- file.name
+  }
   ## Strip any extensions
   fname <- sub("\\.gz$", "", fname)
   fname <- sub("\\.hdr$", "", fname)
