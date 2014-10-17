@@ -592,13 +592,23 @@ setMethod("qform", "nifti", function(object) { quaternion2mat44(object) })
 ## quaternion2rotation()
 #############################################################################
 
-quaternion2rotation <- function(b, c, d) {
-  a <- sqrt(1 - (b*b+c*c+d*d))
-  R <- matrix(c(a*a+b*b-c*c-d*d, 2*b*c+2*a*d, 2*b*d-2*a*c,  # column 1
-                2*b*c-2*a*d, a*a+c*c-b*b-d*d, 2*c*d+2*a*b,  # column 2
-                2*b*d+2*a*c, 2*c*d-2*a*b, a*a+d*d-c*c-b*b), # column 3
-              3, 3)
-  return(R)
+quaternion2rotation <- function(b, c, d, tol=1e-7) {
+    ## compute a parameter from b,c,d
+    a <- 1 - (b*b + c*c + d*d)
+    if (a < tol) {                      # special case
+        a <- 1 / sqrt(b*b + c*c +d*d)
+        b <- a * b
+        c <- a * c
+        d <- a * d                        # normalize (b,c,d) vector
+        a <- 0                            # a = 0 ==> 180 degree rotation
+    } else {
+        a <- sqrt(a)                     # angle = 2*arccos(a)
+    } # a <- sqrt(1 - (b*b+c*c+d*d))
+    R <- matrix(c(a*a+b*b-c*c-d*d, 2*b*c+2*a*d, 2*b*d-2*a*c,  # column 1
+                  2*b*c-2*a*d, a*a+c*c-b*b-d*d, 2*c*d+2*a*b,  # column 2
+                  2*b*d+2*a*c, 2*c*d-2*a*b, a*a+d*d-c*c-b*b), # column 3
+                3, 3)
+    return(R)
 }
 
 #############################################################################

@@ -13,7 +13,7 @@
 }
 \usage{
 quaternion2mat44(nim, tol = 1e-7)
-quaternion2rotation(b, c, d)
+quaternion2rotation(b, c, d, tol = 1e-7)
 }
 \arguments{
   \item{nim}{is an object of class \code{nifti}.}

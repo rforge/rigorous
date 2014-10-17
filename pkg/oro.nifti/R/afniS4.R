@@ -227,69 +227,84 @@ is.afni <- function(x) {
 #############################################################################
 
 readAFNI <- function(fname, vol=NULL, verbose=FALSE, warn=-1, call=NULL) {
-  if (is.null(call)) {
-    call <- match.call()
-  }
-  ## Warnings?
-  oldwarn <- getOption("warn")
+    if (is.null(call)) {
+        call <- match.call()
+    }
+    ## Warnings?
+    oldwarn <- getOption("warn")
   options(warn=warn)
   if (verbose) {
     cat(paste("  fname =", fname), fill=TRUE)
   }
   ## Strip any extensions
-  fileparts <- strsplit(fname, "\\.")[[1]]
-
-  if (length(fileparts) == 1) {
-    fname.head <- paste(fileparts[1], "HEAD", sep=".")
-    fname.brik <- paste(fileparts[1], "BRIK", sep=".")
-  } else {
-    ext <- tolower(fileparts[length(fileparts)])
-    if (ext == "head") {
-      fname.head <- fname
-      fname.brik <- paste(c(fileparts[-length(fileparts)], "BRIK"),
-                          collapse=".")
-    } else if (ext == "brik") {
-      fname.head <- paste(c(fileparts[-length(fileparts)], " HEAD"),
-                          collapse=".")
-      fname.brik <- fname
-    } else if (ext == "") {
-      fname.head <- paste(c(fileparts, "HEAD"), collapse=".")
-      fname.brik <- paste(c(fileparts, "BRIK"), collapse=".")
-    }
-  }
-
-  fname <- sub(".HEAD", "", fname)
-  fname <- sub(".head", "", fname)
-  fname <- sub(".BRIK", "", fname)
-  fname <- sub(".brik", "", fname)
+  fname <- sub("\\.gz$", "", fname)
+  fname <- sub("\\.HEAD$", "", fname)
+  fname <- sub("\\.head$", "", fname)
+  fname <- sub("\\.BRIK$", "", fname)
+  fname <- sub("\\.brik$", "", fname)
 
   if (! (file.exists(paste(fname, "HEAD", sep=".")) &&
-         file.exists(paste(fname, "BRIK", sep=".")))) {
+         file.exists(paste(fname, "BRIK", sep="."))) &&
+      ! (file.exists(paste(fname, "HEAD", sep=".")) &&
+         file.exists(paste(fname, "BRIK.gz", sep=".")))) {
     stop("Header or image file(s) not found! (expect Extension HEAD/BRIK)")
   }
-  ## if exist, upload
-  if (verbose) {
-    cat(paste("  files = ", fname, ".HEAD/BRIK", sep=""), fill=TRUE)
-  }
-  nim <- .read.afni.content(fname, vol=vol, verbose=verbose, warn=warn,
-                            call=call)
+## if exist, upload
+#  if (verbose) {
+#    cat(paste("  files = ", fname, ".HEAD/BRIK", sep=""), fill=TRUE)
+#  }
+## If uncompressed files exist, then upload!
+if ((file.exists(paste(fname, "head", sep=".")) &&
+        file.exists(paste(fname, "brik", sep="."))) || 
+        (file.exists(paste(fname, "HEAD", sep=".")) &&
+             file.exists(paste(fname, "BRIK", sep=".")))) {      
+    if (verbose) {
+        cat(paste("  files = ", fname, ".HEAD/BRIK", sep=""), fill=TRUE)
+    }
+    aim <- .read.afni.content(fname, vol=vol, gzipped=FALSE, verbose=verbose, 
+                              warn=warn, call=call)
+#    options(warn=oldwarn)
+#    return(aim)
+}
+## If compressed files exist, then upload!
+if ((file.exists(paste(fname, "head", sep=".")) &&
+       file.exists(paste(fname, "brik.gz", sep="."))) ||
+        (file.exists(paste(fname, "HEAD", sep=".")) &&
+        file.exists(paste(fname, "BRIK.gz", sep=".")))) {      
+    if (verbose) {
+        cat(paste("  files = ", fname, ".HEAD/BRIK.gz", sep=""), fill=TRUE)
+    }
+    aim <- .read.afni.content(fname, vol=vol, gzipped=TRUE, verbose=verbose, 
+                              warn=warn, call=call)
+#    options(warn=oldwarn)
+#    return(aim)
+}
+
+#  nim <- .read.afni.content(fname, vol=vol, verbose=verbose, warn=warn,
+#                            call=call)
   options(warn=oldwarn)
-  invisible(nim)
+#  invisible(nim)
+invisible(aim)
 }
 
 ############################################################################
 ############################################################################
 ############################################################################
 
-.read.afni.content <- function(fname, vol, verbose=FALSE, warn=-1,
-                              call=NULL) {
+.read.afni.content <- function(fname, vol, gzipped=FALSE, verbose=FALSE, 
+                               warn=-1, call=NULL) {
   ## we know these files exist
   fname.head <- paste(fname, "HEAD", sep=".")
-  fname.brik <- paste(fname, "BRIK", sep=".")
+  if (gzipped) {
+      fname.brik <- paste(fname, "BRIK", "gz", sep=".")
+  } else {
+      fname.brik <- paste(fname, "BRIK", sep=".")
+  }
   ## Warnings?
   oldwarn <- getOption("warn")
   options(warn=warn)
   ## read header file
+  ## Open header file
   conhead <- file(fname.head, "r")
   header <- readLines(conhead)
   close(conhead)
@@ -363,21 +378,26 @@ readAFNI <- function(fname, vol=NULL, verbose=FALSE, warn=-1, call=NULL) {
   ddim <- values$DATASET_DIMENSIONS[1:3]
   dt <- values$DATASET_RANK[2]
   scale <- values$BRICK_FLOAT_FACS
-  size <- file.info(fname.brik)$size / (prod(ddim) * dt)
+  ## size <- file.info(fname.brik)$size / (prod(ddim) * dt)
   if (is.null(values$BRICK_TYPES[1])) {
-    what <- switch(as.character(size),
-                   "2" = "int",
-                   "4" = "double",
-                   "16" = "complex",
-                   "int")
+      stop("BRICK_TYPES is unknown!")
+#    what <- switch(as.character(size),
+#                   "2" = "integer",
+#                   "4" = "double",
+#                   "16" = "complex",
+#                   "integer")
   } else {
     what <- switch(as.character(values$BRICK_TYPES[1]),
-                   "1" = "int",
+                   "1" = "integer",
                    "3" = "double",
                    "5" = "complex",
-                   "int")
+                   "integer")
+    size <- switch(what, 
+                   "integer" = 2,
+                   "double" = 4,
+                   "complex" = 16)
   }
-  endian <- if (regexpr("MSB",values$BYTEORDER_STRING[1]) != -1) "big" else "little"
+  endian <- if (regexpr("MSB", values$BYTEORDER_STRING[1]) != -1) "big" else "little"
   if (verbose) {
     cat(paste("  endianess =", endian), fill=TRUE)
   }
@@ -387,7 +407,12 @@ readAFNI <- function(fname, vol=NULL, verbose=FALSE, warn=-1, call=NULL) {
   dataCube <- numeric(prod(ddim) * length(vol))
   if ((as.integer(size) == size) && (length(vol) > 0)) {
     kk <- 1
-    conbrik <- file(fname.brik,"rb")
+    if (gzipped) {
+        conbrik <- gzfile(fname.brik, "rb")
+    } else {
+        conbrik <- file(fname.brik, "rb")
+    }
+#    conbrik <- file(fname.brik, "rb")
     for (k in 1:dt) {
       if (k %in% vol) {
         if (scale[k] != 0) {

@@ -29,7 +29,8 @@ readAFNI(fname, vol = NULL, verbose = FALSE, warn = -1, call = NULL)
 \details{
   The \code{readAFNI} function utilizes internal methods \code{readBin}
   and \code{readLines} to efficiently extract information from the
-  header and binary file(s).
+  header and binary file(s).  Compression is allowed on the BRIK file using
+  gzip.  
 
   Current acceptable data types include
   \describe{
@@ -56,6 +57,10 @@ afni.path <- system.file("afni", package="oro.nifti")
 orig <- readAFNI(file.path(afni.path, "ARzs_CW_avvr.DEL+orig"))
 image(orig, zlim=c(0.5,256), oma=rep(2,4))
 orthographic(orig, zlim=c(0.5,256), oma=rep(2,4))
+## Taken from the AFNI installation
+TT <- readAFNI(file.path(afni.path, "TT_N27_EZ_LR+tlrc"), verbose=TRUE)
+image(TT, zlim=c(0.5,256), oma=rep(2,4))
+orthographic(TT, zlim=c(0.5,256), oma=rep(2,4))
 }
 \keyword{file}
 \keyword{methods}
