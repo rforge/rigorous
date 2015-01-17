@@ -295,9 +295,6 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
     warning(paste("scl_slope =", nim@"scl_slope", "and data must be rescaled."))
     data <- data * nim@"scl_slope" + nim@"scl_inter"
   }
-
-  ##
-  ##
   ##
   ## THE SLOW BIT FOLLOWS
   ##
@@ -317,6 +314,7 @@ readNIfTI <- function(fname, verbose=FALSE, warn=-1, reorient=TRUE,
   ## This is a right-handed coordinate system.  However, the exact
   ## direction these axes point with respect to the subject depends on
   ## qform_code (Method 2) and sform_code (Method 3).
+  ##
   if (reorient) {
     nim@.Data <- reorient(nim, data, verbose=verbose)
     nim@"reoriented" <- TRUE
@@ -481,7 +479,7 @@ readANALYZE <- function(fname, SPM=FALSE, verbose=FALSE, warn=-1) {
   aim@"omin" <- readBin(fid, integer(), size=4, endian=endian)
   aim@"smax" <- readBin(fid, integer(), size=4, endian=endian)
   magic <- readBin(fid, raw(), n=4, endian=endian)
-  aim@"smin" <- as.integer(magic) # readBin(fid, integer(), size=4, endian=endian)
+  aim@"smin" <- readBin(magic, integer(), size=4, endian=endian)
   ## Test for "magic" field (should not exist)
   if (rawToChar(magic) == "ni1") { # now its actually NIfTI two-file format
     stop("This is in two-file NIfTI format, please use readNIfTI")
