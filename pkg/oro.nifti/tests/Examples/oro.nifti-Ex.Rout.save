@@ -1,7 +1,7 @@
 
-R version 3.0.2 (2013-09-25) -- "Frisbee Sailing"
-Copyright (C) 2013 The R Foundation for Statistical Computing
-Platform: x86_64-apple-darwin10.8.0 (64-bit)
+R Under development (unstable) (2015-01-07 r67351) -- "Unsuffered Consequences"
+Copyright (C) 2015 The R Foundation for Statistical Computing
+Platform: x86_64-unknown-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -22,7 +22,7 @@ Type 'q()' to quit R.
 > options(warn = 1)
 > library('oro.nifti')
 
-oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.4.1)
+oro.nifti: Rigorous - NIfTI+ANALYZE+AFNI Input / Output (version = 0.4.3)
 
 > 
 > base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
@@ -254,7 +254,6 @@ ANALYZE 7.5 format
 > ## lists of arrays which are nifti-ized using as(...)
 > options("niftiAuditTrail"=TRUE)
 > enableAuditTrail()
-Loading required package: XML
 > 
 > wrapper <- function(functionToWrap, nameOfCallingFunction, nim, ...) {
 +   if (!is(nim, "nifti")) 
@@ -294,9 +293,6 @@ Loading required package: XML
 > 
 > 
 > cleanEx()
-
-detaching ‘package:XML’
-
 > nameEx("aux_file-methods")
 > ### * aux_file-methods
 > 
@@ -480,7 +476,7 @@ detaching ‘package:XML’
 [1] "FSL3.2beta"
 > descrip(mniLR) <- paste(descrip(mniLR), version$version.string, sep="; ")
 > descrip(mniLR)
-[1] "FSL3.2beta; R version 3.0.2 (2013-09-25)"
+[1] "FSL3.2beta; R Under development (unstable) (2015-01-07 r67351)"
 > 
 > 
 > 
@@ -864,6 +860,13 @@ Class:   numeric   numeric character
 > orig <- readAFNI(file.path(afni.path, "ARzs_CW_avvr.DEL+orig"))
 > image(orig, zlim=c(0.5,256), oma=rep(2,4))
 > orthographic(orig, zlim=c(0.5,256), oma=rep(2,4))
+> ## Taken from the AFNI installation
+> TT <- readAFNI(file.path(afni.path, "TT_N27_EZ_LR+tlrc"), verbose=TRUE)
+  fname = /home/brandon/Software/oro.nifti.Rcheck/oro.nifti/afni/TT_N27_EZ_LR+tlrc
+  files = /home/brandon/Software/oro.nifti.Rcheck/oro.nifti/afni/TT_N27_EZ_LR+tlrc.HEAD/BRIK.gz
+  endianess = big
+> image(TT, zlim=c(0.5,256), oma=rep(2,4))
+> orthographic(TT, zlim=c(0.5,256), oma=rep(2,4))
 > 
 > 
 > 
@@ -1157,7 +1160,7 @@ QForm_code and SForm_code unset: Orientation by Method 1.
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  6.611 0.466 7.155 0 0 
+Time elapsed:  8.515 0.213 8.719 0 0 
 > grDevices::dev.off()
 null device 
           1 

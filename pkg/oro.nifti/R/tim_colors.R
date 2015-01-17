@@ -1,6 +1,6 @@
 ##
 ##
-## Copyright (c) 2009, Brandon Whitcher and Volker Schmid
+## Copyright (c) 2009, 2015, Brandon Whitcher and Volker Schmid
 ## All rights reserved.
 ## 
 ## Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@
 ##
 
 tim.colors <- function(n=64) {
-  ## Tim Hoar's original 64 color definition definition:
+  ## Tim Hoar's original 64 color definition:
   orig <- c("#00008F", "#00009F", "#0000AF", "#0000BF",
             "#0000CF", "#0000DF", "#0000EF", "#0000FF",
             "#0010FF", "#0020FF", "#0030FF", "#0040FF",
