@@ -42,7 +42,9 @@ urlfile <- file.path(system.file("nifti", package="oro.nifti"),
                      "mniLR.nii.gz")
 mniLR <- readNIfTI(urlfile)
 descrip(mniLR)
+\dontrun{
 descrip(mniLR) <- paste(descrip(mniLR), version$version.string, sep="; ")
 descrip(mniLR)
+}
 }
 \keyword{methods}

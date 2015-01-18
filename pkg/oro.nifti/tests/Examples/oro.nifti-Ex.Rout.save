@@ -474,9 +474,10 @@ ANALYZE 7.5 format
 > mniLR <- readNIfTI(urlfile)
 > descrip(mniLR)
 [1] "FSL3.2beta"
-> descrip(mniLR) <- paste(descrip(mniLR), version$version.string, sep="; ")
-> descrip(mniLR)
-[1] "FSL3.2beta; R Under development (unstable) (2015-01-07 r67351)"
+> ## Not run: 
+> ##D descrip(mniLR) <- paste(descrip(mniLR), version$version.string, sep="; ")
+> ##D descrip(mniLR)
+> ## End(Not run)
 > 
 > 
 > 
@@ -861,10 +862,7 @@ Class:   numeric   numeric character
 > image(orig, zlim=c(0.5,256), oma=rep(2,4))
 > orthographic(orig, zlim=c(0.5,256), oma=rep(2,4))
 > ## Taken from the AFNI installation
-> TT <- readAFNI(file.path(afni.path, "TT_N27_EZ_LR+tlrc"), verbose=TRUE)
-  fname = /home/brandon/Software/oro.nifti.Rcheck/oro.nifti/afni/TT_N27_EZ_LR+tlrc
-  files = /home/brandon/Software/oro.nifti.Rcheck/oro.nifti/afni/TT_N27_EZ_LR+tlrc.HEAD/BRIK.gz
-  endianess = big
+> TT <- readAFNI(file.path(afni.path, "TT_N27_EZ_LR+tlrc"))
 > image(TT, zlim=c(0.5,256), oma=rep(2,4))
 > orthographic(TT, zlim=c(0.5,256), oma=rep(2,4))
 > 
@@ -1160,7 +1158,7 @@ QForm_code and SForm_code unset: Orientation by Method 1.
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  8.515 0.213 8.719 0 0 
+Time elapsed:  8.468 0.215 8.698 0 0 
 > grDevices::dev.off()
 null device 
           1 

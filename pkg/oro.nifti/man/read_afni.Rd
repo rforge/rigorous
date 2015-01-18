@@ -58,7 +58,7 @@ orig <- readAFNI(file.path(afni.path, "ARzs_CW_avvr.DEL+orig"))
 image(orig, zlim=c(0.5,256), oma=rep(2,4))
 orthographic(orig, zlim=c(0.5,256), oma=rep(2,4))
 ## Taken from the AFNI installation
-TT <- readAFNI(file.path(afni.path, "TT_N27_EZ_LR+tlrc"), verbose=TRUE)
+TT <- readAFNI(file.path(afni.path, "TT_N27_EZ_LR+tlrc"))
 image(TT, zlim=c(0.5,256), oma=rep(2,4))
 orthographic(TT, zlim=c(0.5,256), oma=rep(2,4))
 }
